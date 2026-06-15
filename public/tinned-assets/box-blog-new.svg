@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 150.1 150" style="enable-background:new 0 0 150.1 150;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:#B79A79;}
+	.st2{fill:url(#SVGID_2_);}
+	.st3{fill:#C6A887;}
+	.st4{fill:url(#SVGID_3_);}
+	.st5{fill:#D3B28D;}
+	.st6{fill:#E9E9E9;}
+	.st7{fill:#C9C9C9;}
+	.st8{fill:#B9B9B9;}
+	.st9{opacity:0.35;fill:#B9B9B9;enable-background:new    ;}
+	.st10{fill:#FC751B;}
+	.st11{fill:#D35E1C;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="26.4595" y1="66.3895" x2="123.4417" y2="83.4901" gradientTransform="matrix(-1 0 0 -1 150.2 150.1)">
+	<stop  offset="0" style="stop-color:#987758"/>
+	<stop  offset="0.363" style="stop-color:#9D7B59"/>
+	<stop  offset="0.8209" style="stop-color:#AD865B"/>
+	<stop  offset="0.8659" style="stop-color:#AF875B"/>
+</linearGradient>
+<rect x="32.7" y="32.7" class="st0" width="85" height="84.8"/>
+<polygon class="st1" points="34.2,116 34.2,34.3 23.8,23.8 23.8,126.5 "/>
+<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="23.6006" y1="28.8398" x2="126.4006" y2="28.8398" gradientTransform="matrix(-1 0 0 -1 150.2 150.1)">
+	<stop  offset="3.584340e-03" style="stop-color:#9E7951"/>
+	<stop  offset="0.8746" style="stop-color:#8C6E50"/>
+</linearGradient>
+<polygon class="st2" points="116.2,116 34.2,116 23.8,126.5 126.6,126.5 "/>
+<polygon class="st3" points="34.2,34.3 116.2,34.3 126.6,23.8 23.8,23.8 "/>
+<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="23.6006" y1="74.9398" x2="34.0006" y2="74.9398" gradientTransform="matrix(-1 0 0 -1 150.2 150.1)">
+	<stop  offset="3.584340e-03" style="stop-color:#9E7951"/>
+	<stop  offset="0.8746" style="stop-color:#8C6E50"/>
+</linearGradient>
+<polygon class="st4" points="116.2,34.3 116.2,116 126.6,126.5 126.6,23.8 "/>
+<polygon class="st5" points="0.1,28 23.8,23.8 23.8,126.5 0.1,122.3 "/>
+<polygon class="st5" points="27.9,150.1 23.8,126.5 126.6,126.5 122.5,150.1 "/>
+<polygon class="st5" points="122.5,0.2 126.6,23.8 23.8,23.8 27.9,0.2 "/>
+<polygon class="st5" points="126.6,23.8 150.3,28 150.3,122.3 126.6,126.5 "/>
+<g>
+	<polygon class="st6" points="50.1,40.4 50.1,109.2 86.7,109.2 103.2,92.7 103.2,40.4 	"/>
+	<rect x="56.5" y="78.9" class="st7" width="40.2" height="2"/>
+	<rect x="56.5" y="73.7" class="st7" width="40.2" height="2"/>
+	<rect x="60.7" y="84.3" class="st7" width="17.7" height="2"/>
+	<rect x="56.5" y="84.3" class="st7" width="2.5" height="2"/>
+	<rect x="60.7" y="88.9" class="st7" width="17.7" height="2"/>
+	<rect x="56.5" y="88.9" class="st7" width="2.5" height="2"/>
+	<rect x="56.5" y="94.3" class="st7" width="40.2" height="2"/>
+	<rect x="56.5" y="99.6" class="st7" width="36.7" height="2"/>
+	<polygon class="st8" points="86.7,109.2 86.7,92.7 103.2,92.7 	"/>
+	<polygon class="st9" points="86.7,92.7 86.7,109.2 70.1,109.2 	"/>
+	<g>
+		<rect x="56.5" y="46.9" class="st10" width="40.2" height="20.5"/>
+		<polygon class="st11" points="56.5,67.4 67,58.7 73,63.1 86.7,53.6 96.8,67.4 		"/>
+		<circle class="st11" cx="74.5" cy="53.6" r="2.4"/>
+	</g>
+</g>
+</svg>

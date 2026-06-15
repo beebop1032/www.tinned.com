@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "stores": "Winkels",
+    "blogs": "Blogs",
+    "businesses": "Etalages",
+    "travel": "Reizen",
+    "cart": "Winkelwagen",
+    "login": "Inloggen",
+    "dashboard": "Mijn ruimte",
+    "admin": "Beheer"
+  },
+  "home": {
+    "headline": "Maak je online aanwezigheid",
+    "subheadline": "Één account, zoveel Boxes als je wilt.",
+    "cta": "Maak mijn Box"
+  },
+  "auth": {
+    "login": "Inloggen",
+    "register": "Registreren",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "submit": "Bevestigen"
+  },
+  "checkout": {
+    "title": "Bestelling",
+    "confirm": "Bevestigen",
+    "address": "Leveradres",
+    "payment": "Betaling"
+  },
+  "common": {
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "loading": "Laden…",
+    "error": "Er is een fout opgetreden."
+  }
+}

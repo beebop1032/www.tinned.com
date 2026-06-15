@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "stores": "Negozi",
+    "blogs": "Blog",
+    "businesses": "Vetrine",
+    "travel": "Viaggi",
+    "cart": "Carrello",
+    "login": "Accedi",
+    "dashboard": "Il mio spazio",
+    "admin": "Amministrazione"
+  },
+  "home": {
+    "headline": "Crea la tua presenza online",
+    "subheadline": "Un account, quante Box vuoi.",
+    "cta": "Crea la mia Box"
+  },
+  "auth": {
+    "login": "Accedi",
+    "register": "Registrati",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Conferma"
+  },
+  "checkout": {
+    "title": "Ordine",
+    "confirm": "Conferma",
+    "address": "Indirizzo di consegna",
+    "payment": "Pagamento"
+  },
+  "common": {
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "loading": "Caricamento…",
+    "error": "Si è verificato un errore."
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "stores": "Shops",
+    "blogs": "Blogs",
+    "businesses": "Schaufenster",
+    "travel": "Reisen",
+    "cart": "Warenkorb",
+    "login": "Anmelden",
+    "dashboard": "Mein Bereich",
+    "admin": "Verwaltung"
+  },
+  "home": {
+    "headline": "Erstelle deine Online-Präsenz",
+    "subheadline": "Ein Konto, so viele Boxes wie du willst.",
+    "cta": "Meine Box erstellen"
+  },
+  "auth": {
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "submit": "Bestätigen"
+  },
+  "checkout": {
+    "title": "Bestellung",
+    "confirm": "Bestätigen",
+    "address": "Lieferadresse",
+    "payment": "Zahlung"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "loading": "Laden…",
+    "error": "Ein Fehler ist aufgetreten."
+  }
+}

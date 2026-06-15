@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "stores": "Stores",
+    "blogs": "Blogs",
+    "businesses": "Businesses",
+    "travel": "Travel",
+    "cart": "Cart",
+    "login": "Log in",
+    "dashboard": "My space",
+    "admin": "Admin"
+  },
+  "home": {
+    "headline": "Build your online presence",
+    "subheadline": "One account, as many Boxes as you want.",
+    "cta": "Create my Box"
+  },
+  "auth": {
+    "login": "Log in",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit"
+  },
+  "checkout": {
+    "title": "Order",
+    "confirm": "Confirm",
+    "address": "Delivery address",
+    "payment": "Payment"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading…",
+    "error": "An error occurred."
+  }
+}

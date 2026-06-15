@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "stores": "Tiendas",
+    "blogs": "Blogs",
+    "businesses": "Escaparates",
+    "travel": "Viajes",
+    "cart": "Carrito",
+    "login": "Iniciar sesión",
+    "dashboard": "Mi espacio",
+    "admin": "Administración"
+  },
+  "home": {
+    "headline": "Crea tu presencia en línea",
+    "subheadline": "Una cuenta, todas las Boxes que quieras.",
+    "cta": "Crear mi Box"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Confirmar"
+  },
+  "checkout": {
+    "title": "Pedido",
+    "confirm": "Confirmar",
+    "address": "Dirección de entrega",
+    "payment": "Pago"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "loading": "Cargando…",
+    "error": "Se ha producido un error."
+  }
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 150.2 150" style="enable-background:new 0 0 150.2 150;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:url(#SVGID_1_);}
+	.st1{fill:#B79A79;}
+	.st2{fill:url(#SVGID_2_);}
+	.st3{fill:#C6A887;}
+	.st4{fill:url(#SVGID_3_);}
+	.st5{fill:#D3B28D;}
+	.st6{fill:#7C3F2C;}
+	.st7{fill:#FFC14F;}
+	.st8{fill:#AE583E;}
+	.st9{fill:#C0694E;}
+	.st10{fill:#FF4343;}
+	.st11{fill:#F75757;}
+</style>
+<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="26.5589" y1="66.4997" x2="123.5411" y2="83.6003" gradientTransform="matrix(-1 0 0 -1 150.2 150.1)">
+	<stop  offset="0" style="stop-color:#987758"/>
+	<stop  offset="0.363" style="stop-color:#9D7B59"/>
+	<stop  offset="0.8209" style="stop-color:#AD865B"/>
+	<stop  offset="0.8659" style="stop-color:#AF875B"/>
+</linearGradient>
+<rect x="32.6" y="32.6" class="st0" width="85" height="84.8"/>
+<polygon class="st1" points="34.1,115.9 34.1,34.2 23.7,23.7 23.7,126.4 "/>
+<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="23.7" y1="28.95" x2="126.5" y2="28.95" gradientTransform="matrix(-1 0 0 -1 150.2 150.1)">
+	<stop  offset="3.584340e-03" style="stop-color:#9E7951"/>
+	<stop  offset="0.8746" style="stop-color:#8C6E50"/>
+</linearGradient>
+<polygon class="st2" points="116.1,115.9 34.1,115.9 23.7,126.4 126.5,126.4 "/>
+<polygon class="st3" points="34.1,34.2 116.1,34.2 126.5,23.7 23.7,23.7 "/>
+<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="23.7" y1="75.05" x2="34.1" y2="75.05" gradientTransform="matrix(-1 0 0 -1 150.2 150.1)">
+	<stop  offset="3.584340e-03" style="stop-color:#9E7951"/>
+	<stop  offset="0.8746" style="stop-color:#8C6E50"/>
+</linearGradient>
+<polygon class="st4" points="116.1,34.2 116.1,115.9 126.5,126.4 126.5,23.7 "/>
+<polygon class="st5" points="0,27.9 23.7,23.7 23.7,126.4 0,122.2 "/>
+<polygon class="st5" points="27.8,150 23.7,126.4 126.5,126.4 122.4,150 "/>
+<polygon class="st5" points="122.4,0.1 126.5,23.7 23.7,23.7 27.8,0.1 "/>
+<polygon class="st5" points="126.5,23.7 150.2,27.9 150.2,122.2 126.5,126.4 "/>
+<g>
+	
+		<image style="overflow:visible;opacity:0.2;" width="86" height="84" xlink:href="BA1410D85FA67F67.png"  transform="matrix(1 0 0 1 32 36)">
+	</image>
+	<g>
+		<g>
+			<path class="st6" d="M41.3,59.3v41.6c0,4.4,3.6,7.9,7.9,7.9h51.6c4.4,0,7.9-3.6,7.9-7.9V59.3c0-2.4-1.9-4.3-4.3-4.3h-59
+				C43.2,55,41.3,56.9,41.3,59.3z"/>
+			<path class="st7" d="M87,43.3H63.2c-3,0-5.4,2.7-5.4,6.1v10.1c0,1.2,1,2.2,2.2,2.2s2.2-1,2.2-2.2V49.4c0-1,0.6-1.7,1-1.7H87
+				c0.4,0,1,0.7,1,1.7v10.1c0,1.2,1,2.2,2.2,2.2s2.2-1,2.2-2.2V49.4C92.4,46,89.9,43.3,87,43.3z"/>
+			<path class="st8" d="M108.8,59.3v5.9c0,0.8-0.1,1.6-0.2,2.4c-1.1,5.7-6.1,9.9-12.1,9.9H53.6c-6.8,0-12.3-5.5-12.3-12.3v-5.9
+				c0-2.1,1.5-3.8,3.5-4.2c0.2,0,0.5-0.1,0.8-0.1h59C106.9,55,108.8,56.9,108.8,59.3z"/>
+			<path class="st9" d="M108.8,59.3v5.9c0,0.8-0.1,1.6-0.2,2.4c-2.2,2.1-5.2,3.5-8.6,3.5H57.1c-6.8,0-12.3-5.5-12.3-12.3v-3.6
+				c0.2,0,0.5-0.1,0.8-0.1h59C106.9,55,108.8,56.9,108.8,59.3z"/>
+			<path class="st10" d="M71.8,84.3L71.8,84.3l-7-30.3c-0.1-1.1-0.9-2-2-2h-5.4c-1.1,0-1.8,0.9-2,2l-7,30.2c-0.1,0.6,0,1.3,0.5,1.8
+				l9.8,9.8c0.8,0.8,2,0.8,2.8,0l9.8-9.8C71.7,85.6,71.9,84.9,71.8,84.3z"/>
+			<path class="st11" d="M68.7,71L65,55h-9.9l-3.4,14.8c1.6,0.8,3.4,1.2,5.4,1.2H68.7z"/>
+		</g>
+	</g>
+</g>
+</svg>

@@ -1,0 +1,31 @@
+{
+  "name": "tinned-v2-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 4001",
+    "build": "next build",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "geist": "^1.7.2",
+    "lucide-react": "^0.511.0",
+    "next": "^15.5.18",
+    "next-intl": "^4.13.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.19",
+    "@types/react": "^19.0.14",
+    "@types/react-dom": "^19.0.6",
+    "postcss": "^8.5.10",
+    "typescript": "5.8.2"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.10"
+    }
+  }
+}

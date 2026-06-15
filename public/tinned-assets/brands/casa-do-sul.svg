@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Outer ring — ceramic plate shape -->
+  <circle cx="100" cy="100" r="95" stroke="#C4882A" stroke-width="3"/>
+  <!-- Inner ring -->
+  <circle cx="100" cy="100" r="76" stroke="#C4882A" stroke-width="1"/>
+  <!-- Sun — 8 rays (Portugal = land of sun) -->
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(0 100 100)"/>
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(45 100 100)"/>
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(90 100 100)"/>
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(135 100 100)"/>
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(180 100 100)"/>
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(225 100 100)"/>
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(270 100 100)"/>
+  <rect x="97.5" y="56" width="5" height="20" rx="2.5" fill="#C4882A" transform="rotate(315 100 100)"/>
+  <!-- Center disk -->
+  <circle cx="100" cy="100" r="11" fill="#C4882A"/>
+  <!-- 4 azulejo compass points -->
+  <circle cx="100" cy="33" r="4" fill="#C4882A"/>
+  <circle cx="167" cy="100" r="4" fill="#C4882A"/>
+  <circle cx="100" cy="167" r="4" fill="#C4882A"/>
+  <circle cx="33" cy="100" r="4" fill="#C4882A"/>
+</svg>
