@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ExternalLink, Loader2, PackageCheck, Printer, RefreshCcw } from "lucide-react";
+import { ExternalLink, Loader2, PackageCheck, Printer, RefreshCcw } from "lucide-react";
 import { AUTH_STORAGE_KEY, readStoredSession, sessionHasRole, type TinnedSession } from "@/lib/auth";
 import {
   createShippingLabel,
@@ -154,11 +154,6 @@ export function ShippingLabelsAdminClient() {
           Actualiser
         </button>
       </div>
-
-      <nav className="admin-nav" aria-label="Navigation back-office">
-        <Link href="/admin"><ArrowLeft size={17} aria-hidden />Dashboard</Link>
-        <Link className="is-active" href="/admin/shipping-labels"><Printer size={17} aria-hidden />Etiquettes</Link>
-      </nav>
 
       {message || error ? <div className={`admin-alert ${error ? "is-error" : "is-success"}`}>{error || message}</div> : null}
 

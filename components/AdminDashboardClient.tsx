@@ -3,15 +3,11 @@
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import {
-  BadgeCheck,
   Boxes,
   Building2,
-  Handshake,
   ImagePlus,
-  Mail,
   LayoutDashboard,
   Loader2,
-  LockKeyhole,
   PackagePlus,
   Pencil,
   Plus,
@@ -33,7 +29,6 @@ import {
   type AdminVariantInput
 } from "@/lib/admin-api";
 import { AUTH_STORAGE_KEY, normalizeSession, sessionHasRole, type TinnedSession } from "@/lib/auth";
-import { loginCustomer } from "@/lib/customer-api";
 import { money } from "@/lib/format";
 import type { Box, BoxType, Product } from "@/lib/types";
 import { VendorPageCmsClient } from "@/components/VendorPageCmsClient";
@@ -137,57 +132,6 @@ function fileLabel(file: File | null, fallback: string) {
   return file ? file.name : fallback;
 }
 
-function AdminLogin({ onLogin }: { onLogin: (session: TinnedSession) => void }) {
-  const [email, setEmail] = useState("admin@tinned.local");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError("");
-    setSubmitting(true);
-    try {
-      const session = await loginCustomer({ email, password });
-      if (!isAdminSession(session)) {
-        throw new Error("Ce compte n'a pas les droits admin.");
-      }
-      window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-      window.dispatchEvent(new Event("tinned-auth-updated"));
-      onLogin(session);
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "Connexion impossible.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <section className="admin-login-shell">
-      <form className="admin-login" onSubmit={submit}>
-        <span className="admin-login-icon"><LockKeyhole size={20} aria-hidden /></span>
-        <div>
-          <p className="eyebrow">Admin</p>
-          <h1>Connexion back-office</h1>
-        </div>
-        <label className="field">
-          <span>Email</span>
-          <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" autoComplete="email" required />
-        </label>
-        <label className="field">
-          <span>Mot de passe</span>
-          <input value={password} onChange={(event) => setPassword(event.target.value)} type="password" autoComplete="current-password" required />
-        </label>
-        {error ? <p className="form-error">{error}</p> : null}
-        <button className="button admin-submit" type="submit" disabled={submitting}>
-          {submitting ? <Loader2 size={18} aria-hidden className="spin" /> : <BadgeCheck size={18} aria-hidden />}
-          Entrer dans le dashboard
-        </button>
-      </form>
-    </section>
-  );
-}
-
 function boxFormForSection(section: AdminSection): BoxFormState {
   const type: BoxType =
     section === "overview" || section === "vendor-page" || section === "newsletter" ? "store" : section;
@@ -219,7 +163,6 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
   const [productFormOpen, setProductFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  const isAdmin = isAdminSession(session);
   const totalVariants = data.products.reduce((total, product) => total + product.variants.length, 0);
   const activeStores = data.storeBoxes.filter((box) => box.active !== false).length;
 
@@ -488,14 +431,6 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
     );
   }
 
-  if (!isAdmin) {
-    return <AdminLogin onLogin={(nextSession) => {
-      setSession(nextSession);
-      setLoading(true);
-      void loadData("initial");
-    }} />;
-  }
-
   return (
     <section className="admin-shell">
       <div className="admin-header">
@@ -525,16 +460,6 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
           Actualiser
         </button>
       </div>
-
-      <nav className="admin-nav" aria-label="Navigation back-office">
-        <Link className={section === "overview" ? "is-active" : ""} href="/admin"><LayoutDashboard size={17} aria-hidden />Vue d'ensemble</Link>
-        <Link className={section === "store" ? "is-active" : ""} href="/admin/store-box"><Store size={17} aria-hidden />Store Box</Link>
-        <Link className={section === "business" ? "is-active" : ""} href="/admin/business-box"><Building2 size={17} aria-hidden />Business Box</Link>
-        <Link className={section === "blog" ? "is-active" : ""} href="/admin/blog-box"><Boxes size={17} aria-hidden />Blog Box</Link>
-        <Link href="/admin/shipping-labels"><Printer size={17} aria-hidden />Etiquettes</Link>
-        <Link href="/admin/vendor-page"><Handshake size={17} aria-hidden />Fournisseurs</Link>
-        <Link href="/admin/newsletter"><Mail size={17} aria-hidden />Newsletter</Link>
-      </nav>
 
       <div className="admin-kpis" aria-label="Indicateurs catalogue">
         <article>

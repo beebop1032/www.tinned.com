@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
+import { ClipboardList, MoveRight } from "lucide-react";
 import { readStoredSession } from "@/lib/auth";
 import { fetchAdminShipping } from "@/lib/admin-api";
+import { money } from "@/lib/format";
 import type { AdminStoreOrder } from "@/lib/admin-api";
 
 const STATUS_FLOW = ["open", "waiting_store", "preparing", "shipped", "completed"] as const;
@@ -56,47 +58,66 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-xl font-bold mb-4">Commandes vendeurs</h1>
-      {error && <p className="text-red-600 mb-3">{error}</p>}
-      {orders.length === 0 && <p className="text-gray-500">Aucune commande.</p>}
-      <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 text-left">Boutique</th>
-            <th className="p-2 text-left">Statut</th>
-            <th className="p-2 text-left">Total</th>
-            <th className="p-2 text-left">Date</th>
-            <th className="p-2 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map(o => {
-            const currentIdx = STATUS_FLOW.indexOf(o.status as typeof STATUS_FLOW[number]);
-            const nextStatus = currentIdx >= 0 && currentIdx < STATUS_FLOW.length - 1 ? STATUS_FLOW[currentIdx + 1] : null;
-            return (
-              <tr key={o.id} className="border-t">
-                <td className="p-2">{o.storeNameSnapshot}</td>
-                <td className="p-2">
-                  <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">{STATUS_LABELS[o.status] ?? o.status}</span>
-                </td>
-                <td className="p-2">{(o.totalCents / 100).toFixed(2)} {o.currency}</td>
-                <td className="p-2">{new Date(o.createdAt).toLocaleDateString("fr-BE")}</td>
-                <td className="p-2">
-                  {nextStatus && (
-                    <button
-                      onClick={() => advanceStatus(o)}
-                      className="text-xs text-blue-600 hover:underline"
-                    >
-                      → {STATUS_LABELS[nextStatus]}
-                    </button>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <section className="admin-shell">
+      <div className="admin-header">
+        <div>
+          <p className="eyebrow">Back-office / Ventes</p>
+          <h1>Commandes vendeurs</h1>
+          <p>Suivez l'avancement de chaque expédition boutique et faites-la progresser dans le flux.</p>
+        </div>
+      </div>
+
+      {error ? <div className="admin-alert is-error" role="status">{error}</div> : null}
+
+      <section className="admin-panel">
+        <header className="admin-panel-header">
+          <div>
+            <span className="admin-panel-icon"><ClipboardList size={18} aria-hidden /></span>
+            <h2>Expéditions boutiques</h2>
+          </div>
+          <span className="admin-panel-count">{orders.length}</span>
+        </header>
+
+        {orders.length === 0 ? (
+          <p className="admin-empty-inline">Aucune commande pour le moment.</p>
+        ) : (
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Boutique</th>
+                  <th>Statut</th>
+                  <th>Total</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map(o => {
+                  const currentIdx = STATUS_FLOW.indexOf(o.status as typeof STATUS_FLOW[number]);
+                  const nextStatus = currentIdx >= 0 && currentIdx < STATUS_FLOW.length - 1 ? STATUS_FLOW[currentIdx + 1] : null;
+                  return (
+                    <tr key={o.id}>
+                      <td><strong>{o.storeNameSnapshot}</strong></td>
+                      <td><span className={`admin-status is-${o.status}`}>{STATUS_LABELS[o.status] ?? o.status}</span></td>
+                      <td>{money(o.totalCents, o.currency)}</td>
+                      <td>{new Date(o.createdAt).toLocaleDateString("fr-BE")}</td>
+                      <td>
+                        {nextStatus ? (
+                          <button className="admin-manage-button" type="button" onClick={() => advanceStatus(o)}>
+                            <MoveRight size={14} aria-hidden />
+                            {STATUS_LABELS[nextStatus]}
+                          </button>
+                        ) : <span className="admin-table-muted">—</span>}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    </section>
   );
 }

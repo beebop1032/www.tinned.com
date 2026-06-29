@@ -3605,3 +3605,330 @@ button.button:disabled {
 .faq-item summary { cursor: pointer; font-weight: 700; }
 .video-embed { position: relative; aspect-ratio: 16 / 9; }
 .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: var(--radius); }
+
+/* =========================================================
+   Back-office — coquille type CMS (sidebar + main)
+   ========================================================= */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.admin-sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  width: 264px;
+  flex-shrink: 0;
+  height: 100vh;
+  padding: 20px 14px;
+  background: #1A1208;
+  color: rgba(251, 245, 230, 0.92);
+  overflow-y: auto;
+}
+
+.admin-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 6px 8px 18px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-sidebar-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--teal);
+  color: #fff;
+  font: 700 20px/1 var(--font-brand), sans-serif;
+}
+
+.admin-sidebar-brand strong {
+  display: block;
+  font: 700 17px/1.1 var(--font-brand), sans-serif;
+  color: #fff;
+}
+
+.admin-sidebar-brand span {
+  font-size: 12px;
+  color: rgba(251, 245, 230, 0.55);
+}
+
+.admin-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  padding-top: 6px;
+}
+
+.admin-sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-sidebar-label {
+  margin: 0 0 6px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(251, 245, 230, 0.4);
+}
+
+.admin-side-link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 10px;
+  border-radius: 9px;
+  color: rgba(251, 245, 230, 0.82);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-side-link svg {
+  flex-shrink: 0;
+  color: rgba(251, 245, 230, 0.62);
+}
+
+.admin-side-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.admin-side-link.is-active {
+  background: rgba(2, 162, 157, 0.18);
+  color: #fff;
+  box-shadow: inset 3px 0 0 var(--teal);
+}
+
+.admin-side-link.is-active svg {
+  color: var(--teal);
+}
+
+.admin-sidebar-footer {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.admin-sidebar-avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-weight: 700;
+}
+
+.admin-sidebar-user div {
+  min-width: 0;
+}
+
+.admin-sidebar-user strong {
+  display: block;
+  font-size: 13px;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-sidebar-user span {
+  font: 400 11px/1 var(--font-mono), monospace;
+  color: rgba(251, 245, 230, 0.5);
+}
+
+.admin-sidebar-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+  background: transparent;
+  color: rgba(251, 245, 230, 0.85);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-sidebar-logout:hover {
+  background: rgba(232, 104, 42, 0.16);
+  border-color: rgba(232, 104, 42, 0.4);
+  color: #fff;
+}
+
+.admin-main {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg);
+}
+
+.admin-main .admin-shell {
+  width: min(1180px, calc(100% - 56px));
+  padding-top: 36px;
+}
+
+.admin-boot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 100vh;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.admin-inline-state {
+  display: block;
+  width: min(1180px, calc(100% - 56px));
+  margin: 0 auto;
+  padding: 48px 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* Tableau back-office */
+.admin-table-wrap {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin-table thead th {
+  padding: 11px 14px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  border-bottom: 1px solid var(--stone);
+}
+
+.admin-table tbody td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(1, 126, 122, 0.04);
+}
+
+.admin-table-muted {
+  color: var(--text-faint);
+}
+
+.admin-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--muted);
+}
+
+.admin-status.is-shipped,
+.admin-status.is-completed {
+  background: rgba(1, 126, 122, 0.1);
+  color: var(--forest);
+}
+
+.admin-status.is-cancelled {
+  background: rgba(232, 104, 42, 0.12);
+  color: #a23f31;
+}
+
+@media (max-width: 900px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 14px;
+    padding: 14px 16px;
+  }
+
+  .admin-sidebar-brand {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .admin-sidebar-nav {
+    flex: 1 1 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0;
+  }
+
+  .admin-sidebar-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .admin-sidebar-label {
+    display: none;
+  }
+
+  .admin-sidebar-footer {
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .admin-sidebar-user {
+    display: none;
+  }
+
+  .admin-sidebar-logout {
+    width: auto;
+    padding: 0 14px;
+  }
+
+  .admin-main .admin-shell {
+    width: calc(100% - 32px);
+  }
+}

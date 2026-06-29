@@ -46,17 +46,23 @@ export default function AdminLandingPage() {
       .finally(() => setLoading(false));
   }, [boxId]);
 
-  if (loading) return <p>Chargement…</p>;
-  if (denied) return <p>Accès refusé.</p>;
-  if (error || !box) return <p>{error ?? "Box introuvable."}</p>;
+  if (loading) return <p className="admin-shell admin-inline-state">Chargement…</p>;
+  if (denied) return <p className="admin-shell admin-inline-state">Accès refusé.</p>;
+  if (error || !box) return <p className="admin-shell admin-inline-state">{error ?? "Box introuvable."}</p>;
 
   const boxType = box.type ?? "store";
   const boxIri = `/api/${RESOURCE_PATH[boxType]}/${box.id}`;
 
   return (
-    <div>
-      <h1>Landing — {box.name}</h1>
+    <section className="admin-shell">
+      <div className="admin-header">
+        <div>
+          <p className="eyebrow">Back-office / Contenu</p>
+          <h1>Landing — {box.name}</h1>
+          <p>Composez la page d'atterrissage publique de cette box, bloc par bloc.</p>
+        </div>
+      </div>
       <LandingEditor boxIri={boxIri} boxSlug={box.slug} />
-    </div>
+    </section>
   );
 }
