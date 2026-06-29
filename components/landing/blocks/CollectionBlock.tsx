@@ -47,9 +47,12 @@ export async function CollectionBlock({ block, box }: { block: Extract<Block, { 
       : [];
     body = (
       <div className="grid">
-        {children.slice(0, limit).map((b) => (
-          <BoxCard key={b.id} box={b} type={b.type!} />
-        ))}
+        {children
+          .filter((b) => b.type)
+          .slice(0, limit)
+          .map((b) => (
+            <BoxCard key={b.id} box={b} type={b.type!} />
+          ))}
       </div>
     );
   }
