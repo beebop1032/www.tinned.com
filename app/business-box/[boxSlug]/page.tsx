@@ -3,7 +3,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BoxCard } from "@/components/BoxCard";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
-import { getBox, getBoxes, getBoxesForBusiness } from "@/lib/api";
+import { getBox, getBoxes, getBoxesForBusiness, getLanding } from "@/lib/api";
+import { LandingBlocks } from "@/components/landing/LandingBlocks";
 
 type Props = { params: Promise<{ boxSlug: string }> };
 
@@ -29,6 +30,11 @@ export default async function BusinessBoxDetailPage({ params }: { params: Promis
     getBoxesForBusiness("blog", boxSlug)
   ]);
   if (!box) notFound();
+
+  const landing = await getLanding(boxSlug);
+  if (landing) {
+    return <LandingBlocks landing={landing} box={box} />;
+  }
 
   return (
     <>
