@@ -50,9 +50,11 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     setLoaded(false);
     loadLanding(boxSlug, locale)
       .then((landing) => {
+        if (cancelled) return;
         if (landing) {
           setId(landing.id);
           setTitle(landing.title);
@@ -66,12 +68,18 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
         }
       })
       .catch(() => {
+        if (cancelled) return;
         setId(undefined);
         setTitle("");
         setMetaDescription("");
         setBlocks([]);
       })
-      .finally(() => setLoaded(true));
+      .finally(() => {
+        if (!cancelled) setLoaded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [boxSlug, locale]);
 
   function updateBlockAt(i: number, next: Block) {
