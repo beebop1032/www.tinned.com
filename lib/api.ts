@@ -1,5 +1,5 @@
 import { cache } from "react";
-import type { Article, Box, BoxType, Product, StaticPage, Trip } from "./types";
+import type { Article, Box, BoxType, LandingPage, Product, StaticPage, Trip } from "./types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -102,3 +102,10 @@ export const getFaq = cache(async function getFaq(locale = "fr"): Promise<Static
   const remote = await fetchApi<HydraCollection<StaticPage>>(`/static_pages?slug=faq&locale=${locale}`);
   return remote ? (collection(remote)[0] ?? null) : null;
 });
+
+export async function getLanding(boxSlug: string, locale = "fr"): Promise<LandingPage | null> {
+  const remote = await fetchApi<HydraCollection<LandingPage>>(
+    `/landing_pages?box.slug=${encodeURIComponent(boxSlug)}&locale=${locale}`
+  );
+  return remote ? (collection(remote)[0] ?? null) : null;
+}

@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { BoxCard } from "@/components/BoxCard";
 import { TripCard } from "@/components/TripCard";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
-import { getBox, getBoxes, getBoxesForTravel, getTrips } from "@/lib/api";
+import { getBox, getBoxes, getBoxesForTravel, getLanding, getTrips } from "@/lib/api";
+import { LandingBlocks } from "@/components/landing/LandingBlocks";
 
 type Props = { params: Promise<{ boxSlug: string }> };
 
@@ -31,6 +32,11 @@ export default async function TravelBoxDetailPage({ params }: Props) {
     getTrips(boxSlug),
   ]);
   if (!box) notFound();
+
+  const landing = await getLanding(boxSlug);
+  if (landing) {
+    return <LandingBlocks landing={landing} box={box} />;
+  }
 
   const linkedBoxes = [...businesses, ...blogs];
 

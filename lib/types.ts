@@ -1,3 +1,5 @@
+import type { Block } from "./blocks";
+
 export type BoxType = "business" | "store" | "blog" | "travel";
 
 export type Box = {
@@ -83,4 +85,13 @@ export type Trip = {
   imagePath?: string | null;
   publishedAt?: string | null;
   travelBox?: Box | null;
+};
+
+export type LandingPage = {
+  id: number;
+  locale: string;
+  box: string;                 // IRI de la box
+  title: string;
+  metaDescription?: string | null;
+  blocks: Block[];
 };

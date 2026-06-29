@@ -3,7 +3,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/ArticleCard";
 import { BoxCard } from "@/components/BoxCard";
-import { getArticles, getBox, getBoxes } from "@/lib/api";
+import { getArticles, getBox, getBoxes, getLanding } from "@/lib/api";
+import { LandingBlocks } from "@/components/landing/LandingBlocks";
 
 type Props = { params: Promise<{ boxSlug: string }> };
 
@@ -25,6 +26,11 @@ export default async function BlogBoxDetailPage({ params }: { params: Promise<{ 
   const { boxSlug } = await params;
   const [box, articles] = await Promise.all([getBox("blog", boxSlug), getArticles(boxSlug)]);
   if (!box) notFound();
+
+  const landing = await getLanding(boxSlug);
+  if (landing) {
+    return <LandingBlocks landing={landing} box={box} />;
+  }
 
   return (
     <>

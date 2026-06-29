@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/ProductCard";
 import { BoxCard } from "@/components/BoxCard";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
-import { getBlogsForStore, getBox, getBoxes, getProducts } from "@/lib/api";
+import { getBlogsForStore, getBox, getBoxes, getLanding, getProducts } from "@/lib/api";
+import { LandingBlocks } from "@/components/landing/LandingBlocks";
 
 type Props = { params: Promise<{ boxSlug: string }> };
 
@@ -26,6 +27,11 @@ export default async function StoreBoxDetailPage({ params }: { params: Promise<{
   const { boxSlug } = await params;
   const [box, products, blogs] = await Promise.all([getBox("store", boxSlug), getProducts(boxSlug), getBlogsForStore(boxSlug)]);
   if (!box) notFound();
+
+  const landing = await getLanding(boxSlug);
+  if (landing) {
+    return <LandingBlocks landing={landing} box={box} />;
+  }
 
   return (
     <>

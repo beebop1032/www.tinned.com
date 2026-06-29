@@ -73,6 +73,10 @@ export default function EditBoxPage() {
             <Link href={`/dashboard/boxes/${id}/trips?type=travel`} className="text-blue-600 text-sm hover:underline mr-4">Gérer les voyages</Link>
           </div>
         )}
+        <div className="border-t pt-4">
+          <p className="text-sm font-medium mb-2">Landing page</p>
+          <a className="button" href={`/dashboard/boxes/${id}/landing?type=${type}`}>Éditer la landing</a>
+        </div>
         <div className="flex gap-3">
           <Link href="/dashboard/boxes" className="border px-4 py-2 rounded text-sm">Annuler</Link>
           <button type="submit" disabled={saving} className="bg-black text-white px-6 py-2 rounded text-sm disabled:opacity-50">

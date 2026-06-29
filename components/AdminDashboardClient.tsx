@@ -694,6 +694,7 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
                   <strong>{box.name}</strong>
                   <span>{box.type === "store" ? "Store Box" : box.type === "business" ? "Business Box" : "Blog Box"} / {box.slug}</span>
                 </div>
+                <a href={`/admin/landing/${box.id}`} style={{ fontSize: "0.8rem", marginLeft: "0.5rem" }}>Landing</a>
                 {section === "store" ? (
                   <button className={`admin-manage-button ${selectedStoreId === box.id ? "is-active" : ""}`} type="button" onClick={() => manageStore(box)}>
                     Gérer
