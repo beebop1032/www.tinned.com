@@ -3594,3 +3594,14 @@ button.button:disabled {
   letter-spacing: -0.025em;
   color: var(--forest);
 }
+
+/* Landing blocks */
+.prose { max-width: 70ch; }
+.prose h2 { margin-top: 1.4em; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 22px; }
+.stat { display: grid; gap: 6px; }
+.stat-value { font: 700 32px/1 var(--font-mono); color: var(--forest); }
+.faq-item { border-bottom: 1px solid var(--stone); padding: 14px 0; }
+.faq-item summary { cursor: pointer; font-weight: 700; }
+.video-embed { position: relative; aspect-ratio: 16 / 9; }
+.video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: var(--radius); }
