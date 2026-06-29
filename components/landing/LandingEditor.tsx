@@ -42,8 +42,11 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
   const [loaded, setLoaded] = useState(false);
   const [addType, setAddType] = useState<BlockType>("hero");
 
-  // Suppress unused-catalog lint until catalog-driven UI is added
-  void catalog;
+  // Types proposés au menu « Ajouter un bloc » : pilotés par le catalogue de l'API
+  // (/api/block_catalog = source de vérité), repli sur le miroir statique si l'endpoint
+  // est indisponible, filtrés aux types connus du front (qui ont un libellé).
+  const addableTypes = (catalog ? Object.keys(catalog.types) : Object.keys(BLOCK_LABELS))
+    .filter((t): t is BlockType => t in BLOCK_LABELS);
 
   useEffect(() => {
     fetchBlockCatalog(process.env.NEXT_PUBLIC_API_URL ?? "").then(setCatalog);
@@ -170,7 +173,7 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
           {/* Add block */}
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "1rem" }}>
             <select value={addType} onChange={(e) => setAddType(e.target.value as BlockType)}>
-              {(Object.keys(BLOCK_LABELS) as BlockType[]).map((t) => (
+              {addableTypes.map((t) => (
                 <option key={t} value={t}>{BLOCK_LABELS[t]}</option>
               ))}
             </select>
