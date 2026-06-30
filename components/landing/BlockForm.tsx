@@ -1,5 +1,6 @@
 "use client";
 
+import { Plus, Trash2 } from "lucide-react";
 import type { Block, Cta } from "../../lib/blocks";
 
 type Props<T extends Block> = { block: T; onChange: (b: Block) => void };
@@ -74,13 +75,14 @@ function GalleryFields({ block, onChange }: Props<Extract<Block, { type: "galler
               }}
             />
           </label>
-          <button type="button" onClick={() => onChange({ ...block, images: block.images.filter((_, j) => j !== i) })}>
-            ✕
+          <button type="button" className="icon-button danger" aria-label="Supprimer" onClick={() => onChange({ ...block, images: block.images.filter((_, j) => j !== i) })}>
+            <Trash2 size={16} aria-hidden />
           </button>
         </div>
       ))}
-      <button type="button" onClick={() => onChange({ ...block, images: [...block.images, { path: "" }] })}>
-        + Ajouter
+      <button type="button" className="button secondary landing-repeat-add" onClick={() => onChange({ ...block, images: [...block.images, { path: "" }] })}>
+        <Plus size={16} aria-hidden />
+        Ajouter une image
       </button>
     </>
   );
@@ -207,17 +209,21 @@ function FeaturesFields({ block, onChange }: Props<Extract<Block, { type: "featu
           </label>
           <button
             type="button"
+            className="icon-button danger"
+            aria-label="Supprimer"
             onClick={() => onChange({ ...block, items: block.items.filter((_, j) => j !== i) })}
           >
-            ✕
+            <Trash2 size={16} aria-hidden />
           </button>
         </div>
       ))}
       <button
         type="button"
+        className="button secondary landing-repeat-add"
         onClick={() => onChange({ ...block, items: [...block.items, { title: "", text: "" }] })}
       >
-        + Ajouter
+        <Plus size={16} aria-hidden />
+        Ajouter un élément
       </button>
     </>
   );
@@ -254,17 +260,21 @@ function StatsFields({ block, onChange }: Props<Extract<Block, { type: "stats" }
           </label>
           <button
             type="button"
+            className="icon-button danger"
+            aria-label="Supprimer"
             onClick={() => onChange({ ...block, items: block.items.filter((_, j) => j !== i) })}
           >
-            ✕
+            <Trash2 size={16} aria-hidden />
           </button>
         </div>
       ))}
       <button
         type="button"
+        className="button secondary landing-repeat-add"
         onClick={() => onChange({ ...block, items: [...block.items, { value: "", label: "" }] })}
       >
-        + Ajouter
+        <Plus size={16} aria-hidden />
+        Ajouter une statistique
       </button>
     </>
   );
@@ -327,17 +337,21 @@ function FaqFields({ block, onChange }: Props<Extract<Block, { type: "faq" }>>) 
           </label>
           <button
             type="button"
+            className="icon-button danger"
+            aria-label="Supprimer"
             onClick={() => onChange({ ...block, items: block.items.filter((_, j) => j !== i) })}
           >
-            ✕
+            <Trash2 size={16} aria-hidden />
           </button>
         </div>
       ))}
       <button
         type="button"
+        className="button secondary landing-repeat-add"
         onClick={() => onChange({ ...block, items: [...block.items, { question: "", answer: "" }] })}
       >
-        + Ajouter
+        <Plus size={16} aria-hidden />
+        Ajouter une question
       </button>
     </>
   );

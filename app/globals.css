@@ -3164,6 +3164,116 @@ button.button:disabled {
   border-top: 1px solid var(--ad-line);
 }
 
+/* --- Landing editor --- */
+.admin-locale-tabs {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 22px;
+  padding: 4px;
+  border: 1px solid var(--ad-line, rgba(26, 18, 8, 0.08));
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.admin-locale-tabs button {
+  min-width: 46px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-soft);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-locale-tabs button:hover {
+  background: rgba(26, 18, 8, 0.05);
+  color: var(--ink);
+}
+
+.admin-locale-tabs button.is-active {
+  background: var(--forest);
+  color: #fff;
+}
+
+.landing-meta {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.landing-block {
+  margin-bottom: 16px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.landing-block-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--ad-line);
+  background: var(--bg);
+}
+
+.landing-block-type {
+  font-family: var(--font-brand), sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.landing-block-actions {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.landing-block-body {
+  display: grid;
+  gap: 16px;
+  padding: 20px 18px;
+}
+
+.landing-block-body .admin-form-grid {
+  gap: 14px;
+  align-items: end;
+}
+
+.landing-repeat-add {
+  justify-self: start;
+}
+
+.landing-editor-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 16px 18px;
+  border: 1px dashed rgba(26, 18, 8, 0.18);
+  border-radius: var(--ad-radius);
+  background: var(--bg);
+}
+
+.landing-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+}
+
+.landing-add > span {
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .admin-variants-head {
   display: flex;
   align-items: center;

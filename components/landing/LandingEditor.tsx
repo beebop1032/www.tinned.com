@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronDown, ChevronUp, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import type { Block, BlockCatalog, BlockType } from "../../lib/blocks";
 import { BLOCK_LABELS, fetchBlockCatalog } from "../../lib/blocks";
 import { loadLanding, saveLanding } from "../../lib/landing-api";
@@ -125,13 +126,12 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
 
   return (
     <div>
-      {/* Locale selector */}
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
+      <div className="admin-locale-tabs">
         {LOCALES.map((l) => (
           <button
             key={l}
             type="button"
-            className={l === locale ? "pill" : undefined}
+            className={l === locale ? "is-active" : undefined}
             onClick={() => setLocale(l)}
           >
             {l.toUpperCase()}
@@ -140,56 +140,72 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
       </div>
 
       {error && (
-        <p style={{ color: "crimson", whiteSpace: "pre-line", marginBottom: "1rem" }}>{error}</p>
+        <div className="admin-alert is-error" role="status" style={{ whiteSpace: "pre-line" }}>
+          {error}
+        </div>
       )}
 
       {!loaded ? (
-        <p>Chargement…</p>
+        <p className="admin-empty-inline">Chargement…</p>
       ) : (
         <>
-          <label className="field">
-            <span>Titre de la page</span>
-            <input value={title} onChange={(e) => setTitle(e.target.value)} />
-          </label>
+          <div className="landing-meta">
+            <label className="field">
+              <span>Titre de la page</span>
+              <input value={title} onChange={(e) => setTitle(e.target.value)} />
+            </label>
+            <label className="field">
+              <span>Meta description</span>
+              <input value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} />
+            </label>
+          </div>
 
-          <label className="field">
-            <span>Meta description</span>
-            <input value={metaDescription} onChange={(e) => setMetaDescription(e.target.value)} />
-          </label>
-
-          {/* Blocks list */}
           {blocks.map((b, i) => (
-            <div key={b.id} className="admin-panel" style={{ marginBottom: "1rem", padding: "1rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                <strong>{BLOCK_LABELS[b.type]}</strong>
-                <button type="button" disabled={i === 0} onClick={() => move(i, -1)}>↑</button>
-                <button type="button" disabled={i === blocks.length - 1} onClick={() => move(i, 1)}>↓</button>
-                <button type="button" onClick={() => removeAt(i)}>✕</button>
+            <div key={b.id} className="admin-panel landing-block">
+              <div className="landing-block-header">
+                <span className="landing-block-type">{BLOCK_LABELS[b.type]}</span>
+                <div className="landing-block-actions">
+                  <button type="button" className="icon-button" disabled={i === 0} onClick={() => move(i, -1)} aria-label="Monter le bloc">
+                    <ChevronUp size={16} aria-hidden />
+                  </button>
+                  <button type="button" className="icon-button" disabled={i === blocks.length - 1} onClick={() => move(i, 1)} aria-label="Descendre le bloc">
+                    <ChevronDown size={16} aria-hidden />
+                  </button>
+                  <button type="button" className="icon-button danger" onClick={() => removeAt(i)} aria-label="Supprimer le bloc">
+                    <Trash2 size={16} aria-hidden />
+                  </button>
+                </div>
               </div>
-              <BlockForm block={b} onChange={(next) => updateBlockAt(i, next)} />
+              <div className="landing-block-body">
+                <BlockForm block={b} onChange={(next) => updateBlockAt(i, next)} />
+              </div>
             </div>
           ))}
 
-          {/* Add block */}
-          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "1rem" }}>
-            <select value={addType} onChange={(e) => setAddType(e.target.value as BlockType)}>
-              {addableTypes.map((t) => (
-                <option key={t} value={t}>{BLOCK_LABELS[t]}</option>
-              ))}
-            </select>
-            <button
-              type="button"
-              className="button"
-              onClick={() => setBlocks((prev) => [...prev, makeBlock(addType)])}
-            >
-              Ajouter
+          <div className="landing-editor-footer">
+            <div className="landing-add">
+              <span>Ajouter un bloc</span>
+              <label className="field" style={{ minWidth: "200px" }}>
+                <select value={addType} onChange={(e) => setAddType(e.target.value as BlockType)}>
+                  {addableTypes.map((t) => (
+                    <option key={t} value={t}>{BLOCK_LABELS[t]}</option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                className="button secondary"
+                onClick={() => setBlocks((prev) => [...prev, makeBlock(addType)])}
+              >
+                <Plus size={16} aria-hidden />
+                Ajouter
+              </button>
+            </div>
+            <button type="button" className="button" onClick={handleSave} disabled={saving}>
+              {saving ? <Loader2 className="spin" size={16} aria-hidden /> : <Save size={16} aria-hidden />}
+              {saving ? "Enregistrement…" : "Enregistrer"}
             </button>
           </div>
-
-          {/* Save */}
-          <button type="button" className="button" onClick={handleSave} disabled={saving}>
-            {saving ? "Enregistrement…" : "Enregistrer"}
-          </button>
         </>
       )}
     </div>
