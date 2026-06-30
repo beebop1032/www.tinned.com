@@ -105,7 +105,7 @@ export function StandaloneLandingsClient() {
           {loading ? (
             <p className="admin-empty-inline">Chargement des landing pages…</p>
           ) : groups.length ? groups.map((group) => (
-            <article className="admin-list-item" key={group.slug}>
+            <article className="admin-list-item has-actions" key={group.slug}>
               <span className="admin-thumb"><LayoutTemplate size={17} aria-hidden /></span>
               <div>
                 <strong>{group.title}</strong>

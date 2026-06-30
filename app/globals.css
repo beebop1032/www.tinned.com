@@ -3420,6 +3420,10 @@ a.admin-kpi {
   grid-template-columns: 44px minmax(0, 1fr) auto auto;
 }
 
+.admin-list-item.has-actions {
+  grid-template-columns: 44px minmax(0, 1fr) auto auto;
+}
+
 .admin-manage-button {
   display: inline-flex;
   align-items: center;
