@@ -6,6 +6,7 @@ import { BoxCard } from "@/components/BoxCard";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { getBlogsForStore, getBox, getBoxes, getLanding, getProducts } from "@/lib/api";
 import { LandingBlocks } from "@/components/landing/LandingBlocks";
+import { NotifyMeForm } from "@/components/NotifyMeForm";
 
 type Props = { params: Promise<{ boxSlug: string }> };
 
@@ -48,6 +49,9 @@ export default async function StoreBoxDetailPage({ params }: { params: Promise<{
       <section className="container section">
         <div className="section-header"><div><h2>Produits de la boutique</h2><p>Prix, options et disponibilité sont visibles avant l'ajout au panier.</p></div></div>
         <div className="grid">{products.map((product) => <ProductCard key={product.slug} product={{ ...product, storeBox: box }} />)}</div>
+      </section>
+      <section className="container section">
+        <NotifyMeForm targetType="box" boxIri={`/api/store_boxes/${box.id}`} boxName={box.name} />
       </section>
       {box.businessBox || blogs.length ? (
         <section className="container section interbox-section">

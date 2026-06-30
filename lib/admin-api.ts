@@ -767,3 +767,34 @@ export async function updateCoupon(id: number, input: AdminCouponInput, token: s
 export async function deleteCoupon(id: number, token: string) {
   await adminFetch<undefined>(`/coupons/${id}`, token, { method: "DELETE" });
 }
+
+export type AdminSubscription = {
+  "@id"?: string;
+  id: number;
+  email: string;
+  targetType: "tinned" | "box" | "product";
+  box?: string | null;
+  product?: string | null;
+  boxSlug?: string | null;
+  productSlug?: string | null;
+  consentTinned: boolean;
+  status: "pending" | "confirmed" | "unsubscribed";
+  locale: string;
+  confirmedAt?: string | null;
+  createdAt: string;
+};
+
+export async function fetchSubscriptions(
+  token: string,
+  params?: { status?: string; targetType?: string }
+) {
+  const query = new URLSearchParams();
+  if (params?.status) query.set("status", params.status);
+  if (params?.targetType) query.set("targetType", params.targetType);
+  query.set("order[createdAt]", "desc");
+  const payload = await adminFetch<HydraCollection<AdminSubscription>>(
+    `/subscriptions?${query.toString()}`,
+    token
+  );
+  return collection(payload);
+}

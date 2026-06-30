@@ -4,6 +4,7 @@ import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BellRing,
   Boxes,
   Building2,
   ClipboardList,
@@ -42,7 +43,10 @@ const NAV: NavGroup[] = [
   },
   {
     title: "Clients",
-    items: [{ href: "/admin/accounts", label: "Comptes", icon: <Users size={18} aria-hidden /> }]
+    items: [
+      { href: "/admin/accounts", label: "Comptes", icon: <Users size={18} aria-hidden /> },
+      { href: "/admin/subscriptions", label: "Abonnements", icon: <BellRing size={18} aria-hidden /> }
+    ]
   },
   {
     title: "Ventes",

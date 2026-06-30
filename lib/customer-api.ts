@@ -204,6 +204,46 @@ export async function validateCoupon(code: string, subtotalCents: number): Promi
   });
 }
 
+export type SubscribeInput = {
+  email: string;
+  targetType: "tinned" | "box" | "product";
+  boxIri?: string;
+  productIri?: string;
+  consentTinned?: boolean;
+  locale?: string;
+};
+
+export type SubscriptionResult = {
+  id: number;
+  email: string;
+  targetType: string;
+  status: "pending" | "confirmed" | "unsubscribed";
+};
+
+export async function subscribe(input: SubscribeInput, token?: string): Promise<SubscriptionResult> {
+  const headers: Record<string, string> = { "content-type": "application/ld+json" };
+  if (token) headers.authorization = `Bearer ${token}`;
+
+  return apiFetch<SubscriptionResult>("/subscriptions", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      email: input.email.trim().toLowerCase(),
+      targetType: input.targetType,
+      box: input.boxIri ?? null,
+      product: input.productIri ?? null,
+      consentTinned: input.consentTinned ?? false,
+      locale: input.locale ?? "fr"
+    })
+  });
+}
+
+export async function confirmSubscription(token: string): Promise<{ confirmed: boolean }> {
+  return apiFetch<{ confirmed: boolean }>(`/subscriptions/confirm/${encodeURIComponent(token)}`, {
+    method: "GET"
+  });
+}
+
 export async function fetchDeliveryMethods(countryCode: string): Promise<CarrierOption[]> {
   const payload = await apiFetch<HydraCollection<CarrierOption> | CarrierOption[]>(
     `/delivery_methods?active=true&countryCode=${encodeURIComponent(countryCode)}&order[position]=asc`
