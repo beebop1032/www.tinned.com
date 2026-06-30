@@ -12,6 +12,7 @@ import {
   Loader2,
   LogOut,
   Mail,
+  Plane,
   Printer,
   Store
 } from "lucide-react";
@@ -31,7 +32,8 @@ const NAV: NavGroup[] = [
     items: [
       { href: "/admin/store-box", label: "Store Box", icon: <Store size={18} aria-hidden /> },
       { href: "/admin/business-box", label: "Business Box", icon: <Building2 size={18} aria-hidden /> },
-      { href: "/admin/blog-box", label: "Blog Box", icon: <Boxes size={18} aria-hidden /> }
+      { href: "/admin/blog-box", label: "Blog Box", icon: <Boxes size={18} aria-hidden /> },
+      { href: "/admin/travel-box", label: "Travel Box", icon: <Plane size={18} aria-hidden /> }
     ]
   },
   {

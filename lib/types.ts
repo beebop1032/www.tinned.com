@@ -21,6 +21,7 @@ export type Box = {
   blogBoxes?: Box[];
   products?: Product[];
   articles?: Article[];
+  trips?: Trip[];
 };
 
 export type ProductAttributeValue = {
@@ -83,6 +84,7 @@ export type Trip = {
   excerpt?: string | null;
   body?: string | null;
   imagePath?: string | null;
+  published?: boolean;
   publishedAt?: string | null;
   travelBox?: Box | null;
 };

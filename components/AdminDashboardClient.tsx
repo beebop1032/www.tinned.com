@@ -8,8 +8,10 @@ import {
   ImagePlus,
   LayoutDashboard,
   Loader2,
+  MapPin,
   PackagePlus,
   Pencil,
+  Plane,
   Plus,
   Printer,
   RefreshCcw,
@@ -33,11 +35,13 @@ import { money } from "@/lib/format";
 import type { Box, BoxType, Product } from "@/lib/types";
 import { VendorPageCmsClient } from "@/components/VendorPageCmsClient";
 import { NewsletterBlockCmsClient } from "@/components/NewsletterBlockCmsClient";
+import { TravelTripsPanel } from "@/components/admin/TravelTripsPanel";
 
 type AdminData = {
   businessBoxes: Box[];
   storeBoxes: Box[];
   blogBoxes: Box[];
+  travelBoxes: Box[];
   products: Product[];
 };
 
@@ -83,6 +87,7 @@ const emptyData: AdminData = {
   businessBoxes: [],
   storeBoxes: [],
   blogBoxes: [],
+  travelBoxes: [],
   products: []
 };
 
@@ -139,7 +144,13 @@ function boxFormForSection(section: AdminSection): BoxFormState {
 }
 
 function sectionLabel(section: BoxType) {
-  return section === "store" ? "Store Box" : section === "business" ? "Business Box" : "Blog Box";
+  return section === "store"
+    ? "Store Box"
+    : section === "business"
+      ? "Business Box"
+      : section === "travel"
+        ? "Travel Box"
+        : "Blog Box";
 }
 
 export function AdminDashboardClient({ section = "overview" }: { section?: AdminSection }) {
@@ -162,9 +173,10 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
   const [selectedStoreId, setSelectedStoreId] = useState<number | null>(null);
   const [productFormOpen, setProductFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [selectedTravelId, setSelectedTravelId] = useState<number | null>(null);
 
   const totalVariants = data.products.reduce((total, product) => total + product.variants.length, 0);
-  const activeStores = data.storeBoxes.filter((box) => box.active !== false).length;
+  const totalTrips = data.travelBoxes.reduce((total, box) => total + (box.trips?.length ?? 0), 0);
 
   const boxSection: BoxType =
     section === "overview" || section === "vendor-page" || section === "newsletter" ? "store" : section;
@@ -174,7 +186,10 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
       ? data.businessBoxes
       : section === "blog"
         ? data.blogBoxes
-        : [];
+        : section === "travel"
+          ? data.travelBoxes
+          : [];
+  const selectedTravel = data.travelBoxes.find((box) => box.id === selectedTravelId) ?? null;
   const selectedStore = data.storeBoxes.find((box) => box.id === selectedStoreId) ?? null;
   const selectedProducts = useMemo(
     () => selectedStore ? data.products.filter((product) => product.storeBox?.id === selectedStore.id) : [],
@@ -218,6 +233,7 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
     setBoxForm(boxFormForSection(section));
     setBoxFormOpen(false);
     setSelectedStoreId(null);
+    setSelectedTravelId(null);
     setProductFormOpen(false);
     setEditingProduct(null);
   }, [section]);
@@ -469,8 +485,8 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
         </article>
         <article>
           <Store size={21} aria-hidden />
-          <span>Store Box actives</span>
-          <strong>{activeStores}</strong>
+          <span>Store Box</span>
+          <strong>{data.storeBoxes.length}</strong>
         </article>
         <article>
           <Boxes size={21} aria-hidden />
@@ -478,9 +494,19 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
           <strong>{data.blogBoxes.length}</strong>
         </article>
         <article>
+          <Plane size={21} aria-hidden />
+          <span>Travel Box</span>
+          <strong>{data.travelBoxes.length}</strong>
+        </article>
+        <article>
           <Tags size={21} aria-hidden />
           <span>Variantes</span>
           <strong>{totalVariants}</strong>
+        </article>
+        <article>
+          <MapPin size={21} aria-hidden />
+          <span>Voyages</span>
+          <strong>{totalTrips}</strong>
         </article>
       </div>
 
@@ -512,17 +538,23 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
               <strong>Blog Box</strong>
               <span>Organiser les espaces éditoriaux reliés aux boutiques.</span>
             </Link>
+            <Link className="admin-entry-card" href="/admin/travel-box">
+              <Plane size={23} aria-hidden />
+              <strong>Travel Box</strong>
+              <span>Gérer les carnets de voyage et leurs étapes.</span>
+            </Link>
             <Link className="admin-entry-card" href="/admin/shipping-labels">
               <Printer size={23} aria-hidden />
-              <strong>Etiquettes</strong>
-              <span>Preparer et suivre les impressions des expeditions boutiques.</span>
+              <strong>Étiquettes</strong>
+              <span>Préparer et suivre les impressions des expéditions boutiques.</span>
             </Link>
           </div>
           <div className="admin-overview-lists">
             {([
               { title: "Store Box", boxes: data.storeBoxes, href: "/admin/store-box", icon: <Store size={18} aria-hidden /> },
               { title: "Business Box", boxes: data.businessBoxes, href: "/admin/business-box", icon: <Building2 size={18} aria-hidden /> },
-              { title: "Blog Box", boxes: data.blogBoxes, href: "/admin/blog-box", icon: <Boxes size={18} aria-hidden /> }
+              { title: "Blog Box", boxes: data.blogBoxes, href: "/admin/blog-box", icon: <Boxes size={18} aria-hidden /> },
+              { title: "Travel Box", boxes: data.travelBoxes, href: "/admin/travel-box", icon: <Plane size={18} aria-hidden /> }
             ] as const).map((group) => (
               <section className="admin-panel admin-overview-panel" key={group.title}>
                 <header className="admin-panel-header">
@@ -548,7 +580,7 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
           </div>
         </>
       ) : (
-      <div className={`admin-catalog-layout ${section !== "store" || !selectedStore ? "is-single" : ""}`}>
+      <div className={`admin-catalog-layout ${(section === "store" && selectedStore) || (section === "travel" && selectedTravel) ? "" : "is-single"}`}>
         <section className="admin-panel admin-box-catalog">
           <header className="admin-panel-header">
             <div>
@@ -617,11 +649,15 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
                 <span className="admin-thumb">{box.logoPath ? <img src={box.logoPath} alt="" /> : <Boxes size={17} aria-hidden />}</span>
                 <div>
                   <strong>{box.name}</strong>
-                  <span>{box.type === "store" ? "Store Box" : box.type === "business" ? "Business Box" : "Blog Box"} / {box.slug}</span>
+                  <span>{box.type === "store" ? "Store Box" : box.type === "business" ? "Business Box" : box.type === "travel" ? "Travel Box" : "Blog Box"} / {box.slug}</span>
                 </div>
                 <a href={`/admin/landing/${box.id}`} style={{ fontSize: "0.8rem", marginLeft: "0.5rem" }}>Landing</a>
                 {section === "store" ? (
                   <button className={`admin-manage-button ${selectedStoreId === box.id ? "is-active" : ""}`} type="button" onClick={() => manageStore(box)}>
+                    Gérer
+                  </button>
+                ) : section === "travel" ? (
+                  <button className={`admin-manage-button ${selectedTravelId === box.id ? "is-active" : ""}`} type="button" onClick={() => setSelectedTravelId(box.id)}>
                     Gérer
                   </button>
                 ) : null}
@@ -726,6 +762,14 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
               </div>
             </>
         </section>
+        ) : null}
+
+        {section === "travel" && selectedTravel && session?.token ? (
+          <TravelTripsPanel
+            travelBox={selectedTravel}
+            token={session.token}
+            onChange={() => void loadData("initial")}
+          />
         ) : null}
       </div>
       )}

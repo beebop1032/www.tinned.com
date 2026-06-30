@@ -1,4 +1,4 @@
-import type { Box, BoxType, Product } from "./types";
+import type { Box, BoxType, Product, Trip } from "./types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -143,6 +143,9 @@ async function adminFetch<T>(path: string, token: string, init: RequestInit = {}
   if (!response.ok) {
     throw new Error(await parseApiError(response));
   }
+  if (response.status === 204 || response.headers.get("content-length") === "0") {
+    return undefined as T;
+  }
   return (await response.json()) as T;
 }
 
@@ -197,18 +200,23 @@ export function priceFromCents(cents: number) {
 }
 
 export async function fetchAdminData() {
-  const [businessBoxes, storeBoxes, blogBoxes, products] = await Promise.all([
+  const [businessBoxes, storeBoxes, blogBoxes, travelBoxes, products] = await Promise.all([
     fetchBoxes("business"),
     fetchBoxes("store"),
     fetchBoxes("blog"),
+    fetchBoxes("travel"),
     fetchProducts()
   ]);
 
-  return { businessBoxes, storeBoxes, blogBoxes, products };
+  return { businessBoxes, storeBoxes, blogBoxes, travelBoxes, products };
 }
 
 export async function fetchBoxes(type: BoxType) {
-  const resource = type === "business" ? "business_boxes" : type === "store" ? "store_boxes" : "blog_boxes";
+  const resource =
+    type === "business" ? "business_boxes"
+      : type === "store" ? "store_boxes"
+        : type === "travel" ? "travel_boxes"
+          : "blog_boxes";
   const payload = await publicFetch<HydraCollection<Box>>(`/${resource}?order[createdAt]=desc`);
   return collection(payload).map((box) => ({ ...box, type }));
 }
@@ -294,6 +302,13 @@ export async function createAdminBox(input: AdminBoxInput, token: string) {
 
   if (input.type === "store") {
     return adminFetch<Box>("/store_boxes", token, jsonInit({
+      ...basePayload,
+      businessBox: input.businessBoxId ? `/api/business_boxes/${input.businessBoxId}` : null
+    }));
+  }
+
+  if (input.type === "travel") {
+    return adminFetch<Box>("/travel_boxes", token, jsonInit({
       ...basePayload,
       businessBox: input.businessBoxId ? `/api/business_boxes/${input.businessBoxId}` : null
     }));
@@ -432,4 +447,55 @@ export async function updateAdminProduct(input: AdminProductInput, product: Prod
       await adminFetch("/product_variants", token, jsonInit(payload));
     }
   }
+}
+
+export type AdminTripInput = {
+  travelBoxId: number;
+  title: string;
+  slug: string;
+  locale: string;
+  excerpt?: string;
+  body: string;
+  imagePath?: string;
+  published: boolean;
+  publishedAt?: string;
+};
+
+export async function fetchAdminTrips(travelBoxId: number, token: string) {
+  const payload = await adminFetch<HydraCollection<Trip>>(
+    `/trips?travelBox.id=${travelBoxId}&order[publishedAt]=desc`,
+    token
+  );
+  return collection(payload);
+}
+
+export async function createAdminTrip(input: AdminTripInput, token: string) {
+  return adminFetch<Trip>("/trips", token, jsonInit({
+    travelBox: `/api/travel_boxes/${input.travelBoxId}`,
+    title: input.title,
+    slug: input.slug,
+    locale: input.locale,
+    excerpt: input.excerpt || null,
+    body: input.body,
+    imagePath: input.imagePath || null,
+    published: input.published,
+    publishedAt: input.publishedAt || null
+  }));
+}
+
+export async function updateAdminTrip(id: number, input: AdminTripInput, token: string) {
+  return adminFetch<Trip>(`/trips/${id}`, token, patchInit({
+    title: input.title,
+    slug: input.slug,
+    locale: input.locale,
+    excerpt: input.excerpt || null,
+    body: input.body,
+    imagePath: input.imagePath || null,
+    published: input.published,
+    publishedAt: input.publishedAt || null
+  }));
+}
+
+export async function deleteAdminTrip(id: number, token: string) {
+  await adminFetch<undefined>(`/trips/${id}`, token, { method: "DELETE" });
 }
