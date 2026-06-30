@@ -8,6 +8,7 @@ import { UserRound, ShoppingBag, Search } from "lucide-react";
 import { NavPrimary } from "@/components/NavPrimary";
 import { CartCountBadge } from "@/components/CartCountBadge";
 import { CartToast } from "@/components/CartToast";
+import { CartDrawer } from "@/components/CartDrawer";
 
 export function SiteFrame({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -84,6 +85,7 @@ export function SiteFrame({ children }: { children: ReactNode }) {
         </div>
       </footer>
       <CartToast />
+      <CartDrawer />
     </div>
   );
 }
