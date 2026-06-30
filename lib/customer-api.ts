@@ -186,12 +186,13 @@ export async function resetPassword(input: { token: string; password: string }):
   });
 }
 
-export async function createCheckoutOrder(payload: CheckoutPayload, token: string): Promise<StoredOrder> {
+export async function createCheckoutOrder(payload: CheckoutPayload, token?: string): Promise<StoredOrder> {
   return apiFetch<StoredOrder>("/checkout", {
     method: "POST",
     headers: {
       "content-type": "application/ld+json",
-      authorization: `Bearer ${token}`
+      // Guest checkout: send the token only when the buyer is logged in.
+      ...(token ? { authorization: `Bearer ${token}` } : {})
     },
     body: JSON.stringify(payload)
   });

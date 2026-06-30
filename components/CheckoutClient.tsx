@@ -222,7 +222,7 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!items || !selectedGroups.length || !session?.token) return;
+    if (!items || !selectedGroups.length) return;
 
     const formData = new FormData(event.currentTarget);
     const selectedLineKeys = new Set(
@@ -254,9 +254,9 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
         carrierSelections: effectiveCarrierSelections,
         paymentMethod,
         couponCode: appliedCoupon?.code
-      }, session.token);
+      }, session?.token);
 
-      if (saveAddress && selectedSavedId === "new") {
+      if (saveAddress && selectedSavedId === "new" && session?.token) {
         void createMyAddress(session.token, {
           firstName: String(formData.get("firstName") ?? ""),
           lastName: String(formData.get("lastName") ?? ""),
@@ -291,17 +291,6 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
       <section className="container section">
         <h1 className="page-title">Commande</h1>
         <p className="lead">Chargement du checkout.</p>
-      </section>
-    );
-  }
-
-  if (!session) {
-    return (
-      <section className="container section cart-empty">
-        <span className="eyebrow">Compte requis</span>
-        <h1 className="page-title">Connectez-vous pour finaliser.</h1>
-        <p className="lead">Votre panier est conservé. La connexion permet de sauvegarder l'adresse, choisir la livraison et suivre chaque panier boutique.</p>
-        <Link className="button" href="/auth?redirect=/checkout">Se connecter</Link>
       </section>
     );
   }
@@ -341,11 +330,16 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
               <UserRound size={19} aria-hidden />
               <h2>Compte client</h2>
             </header>
+            {!session ? (
+              <p className="field-help checkout-guest-hint">
+                Vous commandez en tant qu'invité. <Link href="/auth?redirect=/checkout">Se connecter</Link> pour retrouver vos adresses et commandes.
+              </p>
+            ) : null}
             <div className="form-grid">
-              <label className="field"><span>Email</span><input name="email" type="email" required defaultValue={session.email} /></label>
-              <label className="field"><span>Téléphone</span><input name="phone" type="tel" required placeholder="+32" defaultValue={session.phone} /></label>
-              <label className="field"><span>Prénom</span><input name="firstName" required defaultValue={session.firstName} /></label>
-              <label className="field"><span>Nom</span><input name="lastName" required defaultValue={session.lastName} /></label>
+              <label className="field"><span>Email</span><input name="email" type="email" required defaultValue={session?.email ?? ""} /></label>
+              <label className="field"><span>Téléphone</span><input name="phone" type="tel" required placeholder="+32" defaultValue={session?.phone ?? ""} /></label>
+              <label className="field"><span>Prénom</span><input name="firstName" required defaultValue={session?.firstName ?? ""} /></label>
+              <label className="field"><span>Nom</span><input name="lastName" required defaultValue={session?.lastName ?? ""} /></label>
             </div>
           </section>
 
