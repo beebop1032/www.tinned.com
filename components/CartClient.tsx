@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus, ShieldCheck, Trash2 } from "lucide-react";
+import { BadgeCheck, Minus, Plus, RotateCcw, ShieldCheck, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { readStoredSession, type TinnedSession } from "@/lib/auth";
 import {
@@ -59,6 +59,10 @@ export function CartClient({ products }: { products: CartProduct[] }) {
   const shippingCents = shippingFor(selectedGroups, subtotalCents);
   const totalCents = subtotalCents + shippingCents;
   const currency = selectedGroups[0]?.currency ?? "EUR";
+
+  const FREE_SHIPPING_CENTS = 9000;
+  const remainingForFree = Math.max(0, FREE_SHIPPING_CENTS - subtotalCents);
+  const freeShippingPct = Math.min(100, Math.round((subtotalCents / FREE_SHIPPING_CENTS) * 100));
 
   const updateItems = (updater: (current: CartItem[]) => CartItem[]) => {
     setItems((current) => {
@@ -171,7 +175,10 @@ export function CartClient({ products }: { products: CartProduct[] }) {
                               <Plus size={14} aria-hidden />
                             </button>
                           </div>
-                          <strong>{money(line.lineTotalCents, line.currency)}</strong>
+                          <div className="cart-line-price">
+                            <strong>{money(line.lineTotalCents, line.currency)}</strong>
+                            {line.quantity > 1 ? <small>{money(line.variant.priceCents, line.currency)} / unité</small> : null}
+                          </div>
                         </div>
                       </article>
                     );
@@ -187,6 +194,20 @@ export function CartClient({ products }: { products: CartProduct[] }) {
             <ShieldCheck size={18} aria-hidden />
             Panier conservé et commande suivie
           </div>
+          {subtotalCents > 0 ? (
+            <div className={`ship-progress ${remainingForFree === 0 ? "is-complete" : ""}`}>
+              <p>
+                {remainingForFree === 0 ? (
+                  <>🎉 Vous bénéficiez de la <strong>livraison offerte</strong>&nbsp;!</>
+                ) : (
+                  <>Plus que <strong>{money(remainingForFree, currency)}</strong> pour la livraison offerte</>
+                )}
+              </p>
+              <div className="ship-progress-track">
+                <span style={{ width: `${freeShippingPct}%` }} />
+              </div>
+            </div>
+          ) : null}
           <h2>Résumé</h2>
           <div className="summary-row"><span>Paniers sélectionnés</span><strong>{selectedGroups.length}</strong></div>
           <div className="summary-row"><span>Sous-total</span><strong>{money(subtotalCents, currency)}</strong></div>
@@ -196,8 +217,23 @@ export function CartClient({ products }: { products: CartProduct[] }) {
             {session ? "Commander les paniers sélectionnés" : "Se connecter pour commander"}
           </button>
           {!session ? <p className="summary-note">Connexion obligatoire pour garder les adresses, choisir la livraison et suivre la commande.</p> : null}
+          <ul className="summary-reassurance">
+            <li><ShieldCheck size={15} aria-hidden /> Paiement sécurisé</li>
+            <li><RotateCcw size={15} aria-hidden /> Retours sous 14 jours</li>
+            <li><BadgeCheck size={15} aria-hidden /> Boutiques vérifiées</li>
+          </ul>
           <Link className="summary-link" href="/store-box">Continuer mes achats</Link>
         </aside>
+      </div>
+
+      <div className="cart-mobile-bar">
+        <div>
+          <span>Total</span>
+          <strong>{money(totalCents, currency)}</strong>
+        </div>
+        <button className="button" type="button" disabled={!selectedGroups.length} onClick={goToCheckout}>
+          {session ? "Commander" : "Se connecter"}
+        </button>
       </div>
     </section>
   );
