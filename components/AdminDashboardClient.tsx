@@ -25,7 +25,6 @@ import { AUTH_STORAGE_KEY, normalizeSession, sessionHasRole, type TinnedSession 
 import type { Box, BoxType, Product } from "@/lib/types";
 import { VendorPageCmsClient } from "@/components/VendorPageCmsClient";
 import { NewsletterBlockCmsClient } from "@/components/NewsletterBlockCmsClient";
-import { TravelTripsPanel } from "@/components/admin/TravelTripsPanel";
 
 type AdminData = {
   businessBoxes: Box[];
@@ -111,7 +110,6 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
   const [boxSlugTouched, setBoxSlugTouched] = useState(false);
   const [boxLogoFile, setBoxLogoFile] = useState<File | null>(null);
   const [boxLogoPreview, setBoxLogoPreview] = useState("");
-  const [selectedTravelId, setSelectedTravelId] = useState<number | null>(null);
 
   const totalVariants = data.products.reduce((total, product) => total + product.variants.length, 0);
   const totalTrips = data.travelBoxes.reduce((total, box) => total + (box.trips?.length ?? 0), 0);
@@ -127,7 +125,6 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
         : section === "travel"
           ? data.travelBoxes
           : [];
-  const selectedTravel = data.travelBoxes.find((box) => box.id === selectedTravelId) ?? null;
 
   const loadData = async (mode: "initial" | "refresh" = "refresh") => {
     if (mode === "refresh") setBusy("refresh");
@@ -156,7 +153,6 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
   useEffect(() => {
     setBoxForm(boxFormForSection(section));
     setBoxFormOpen(false);
-    setSelectedTravelId(null);
   }, [section]);
 
   useEffect(() => {
@@ -328,7 +324,7 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
           </div>
         </>
       ) : (
-      <div className={`admin-catalog-layout ${section === "travel" && selectedTravel ? "" : "is-single"}`}>
+      <div className="admin-catalog-layout is-single">
         <section className="admin-panel admin-box-catalog">
           <header className="admin-panel-header">
             <div>
@@ -405,22 +401,14 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
                     Gérer
                   </Link>
                 ) : section === "travel" ? (
-                  <button className={`admin-manage-button ${selectedTravelId === box.id ? "is-active" : ""}`} type="button" onClick={() => setSelectedTravelId(box.id)}>
+                  <Link className="admin-manage-button" href={`/admin/travel-box/${box.id}`}>
                     Gérer
-                  </button>
+                  </Link>
                 ) : null}
               </article>
             )) : <p className="admin-empty-inline">Aucune {sectionLabel(boxSection)} pour le moment.</p>}
           </div>
         </section>
-
-        {section === "travel" && selectedTravel && session?.token ? (
-          <TravelTripsPanel
-            travelBox={selectedTravel}
-            token={session.token}
-            onChange={() => void loadData("initial")}
-          />
-        ) : null}
       </div>
       )}
     </section>
