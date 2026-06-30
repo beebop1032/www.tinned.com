@@ -246,36 +246,36 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
       </div>
 
       <div className="admin-kpis" aria-label="Indicateurs catalogue">
-        <article className="tone-business">
+        <Link className="admin-kpi tone-business" href="/admin/business-box">
           <Building2 size={21} aria-hidden />
           <span>Business Box</span>
           <strong>{data.businessBoxes.length}</strong>
-        </article>
-        <article className="tone-store">
+        </Link>
+        <Link className="admin-kpi tone-store" href="/admin/store-box">
           <Store size={21} aria-hidden />
           <span>Store Box</span>
           <strong>{data.storeBoxes.length}</strong>
-        </article>
-        <article className="tone-blog">
+        </Link>
+        <Link className="admin-kpi tone-blog" href="/admin/blog-box">
           <Boxes size={21} aria-hidden />
           <span>Blog Box</span>
           <strong>{data.blogBoxes.length}</strong>
-        </article>
-        <article className="tone-travel">
+        </Link>
+        <Link className="admin-kpi tone-travel" href="/admin/travel-box">
           <Plane size={21} aria-hidden />
           <span>Travel Box</span>
           <strong>{data.travelBoxes.length}</strong>
-        </article>
-        <article>
+        </Link>
+        <Link className="admin-kpi tone-store" href="/admin/store-box">
           <Tags size={21} aria-hidden />
           <span>Variantes</span>
           <strong>{totalVariants}</strong>
-        </article>
-        <article className="tone-travel">
+        </Link>
+        <Link className="admin-kpi tone-travel" href="/admin/travel-box">
           <MapPin size={21} aria-hidden />
           <span>Voyages</span>
           <strong>{totalTrips}</strong>
-        </article>
+        </Link>
       </div>
 
       {status || error ? (
