@@ -16,6 +16,8 @@ import { AUTH_STORAGE_KEY, normalizeSession, sessionHasRole, type TinnedSession 
 import { money } from "@/lib/format";
 import type { Box, Product } from "@/lib/types";
 
+type ProductAvailability = "available" | "coming_soon" | "preorder";
+
 type ProductFormState = {
   name: string;
   slug: string;
@@ -23,6 +25,8 @@ type ProductFormState = {
   basePrice: string;
   currency: string;
   imagePath: string;
+  availability: ProductAvailability;
+  releaseDate: string;
 };
 
 type VariantDraft = {
@@ -42,7 +46,9 @@ const initialProductForm: ProductFormState = {
   description: "",
   basePrice: "29,00",
   currency: "EUR",
-  imagePath: ""
+  imagePath: "",
+  availability: "available",
+  releaseDate: ""
 };
 
 function initialVariant(sku = "", price = initialProductForm.basePrice, id?: number): VariantDraft {
@@ -193,7 +199,9 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
       description: product.description ?? "",
       basePrice: (product.basePriceCents / 100).toFixed(2).replace(".", ","),
       currency: product.currency,
-      imagePath: product.images[0] ?? ""
+      imagePath: product.images[0] ?? "",
+      availability: product.availability ?? "available",
+      releaseDate: product.releaseAt ? product.releaseAt.slice(0, 10) : ""
     });
     setProductSlugTouched(true);
     setProductImageFile(null);
@@ -231,6 +239,8 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
           : centsFromPrice(productForm.basePrice),
         currency: productForm.currency || "EUR",
         imagePath,
+        availability: productForm.availability,
+        releaseAt: productForm.availability !== "available" && productForm.releaseDate ? productForm.releaseDate : null,
         variants: cleanVariants
       };
 
@@ -339,6 +349,16 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
               <label className="field"><span>Slug</span><input value={productForm.slug} onChange={(event) => { setProductSlugTouched(true); setProductForm((current) => ({ ...current, slug: slugify(event.target.value) })); }} required /></label>
               <label className="field"><span>Prix</span><input value={productForm.basePrice} onChange={(event) => updateProductPrice(event.target.value)} required inputMode="decimal" /></label>
               <label className="field"><span>Devise</span><input value={productForm.currency} onChange={(event) => setProductForm((current) => ({ ...current, currency: event.target.value.toUpperCase().slice(0, 3) }))} required /></label>
+              <label className="field"><span>Disponibilité</span>
+                <select value={productForm.availability} onChange={(event) => setProductForm((current) => ({ ...current, availability: event.target.value as ProductAvailability }))}>
+                  <option value="available">Disponible</option>
+                  <option value="coming_soon">Bientôt disponible</option>
+                  <option value="preorder">Pré-vente</option>
+                </select>
+              </label>
+              {productForm.availability !== "available" ? (
+                <label className="field"><span>Date de sortie</span><input type="date" value={productForm.releaseDate} onChange={(event) => setProductForm((current) => ({ ...current, releaseDate: event.target.value }))} /></label>
+              ) : null}
               <label className="field field-full"><span>Description</span><textarea value={productForm.description} onChange={(event) => setProductForm((current) => ({ ...current, description: event.target.value }))} rows={3} /></label>
             </div>
             <div className="admin-media-row">

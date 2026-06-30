@@ -45,6 +45,8 @@ export type ProductVariant = {
   attributeValues: ProductAttributeValue[];
 };
 
+export type ProductAvailability = "available" | "coming_soon" | "preorder";
+
 export type Product = {
   id: number;
   name: string;
@@ -53,6 +55,8 @@ export type Product = {
   basePriceCents: number;
   currency: string;
   images: string[];
+  availability?: ProductAvailability;
+  releaseAt?: string | null;
   storeBox?: Box | null;
   variants: ProductVariant[];
 };

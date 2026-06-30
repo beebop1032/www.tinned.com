@@ -75,6 +75,8 @@ export type AdminProductInput = {
   basePriceCents: number;
   currency: string;
   imagePath?: string;
+  availability: "available" | "coming_soon" | "preorder";
+  releaseAt?: string | null;
   variants: AdminVariantInput[];
 };
 
@@ -494,6 +496,8 @@ export async function createAdminProduct(input: AdminProductInput, token: string
     basePriceCents: input.basePriceCents,
     currency: input.currency,
     active: true,
+    availability: input.availability,
+    releaseAt: input.releaseAt || null,
     images: input.imagePath ? [input.imagePath] : []
   }));
 
@@ -522,6 +526,8 @@ export async function updateAdminProduct(input: AdminProductInput, product: Prod
     description: input.description || null,
     basePriceCents: input.basePriceCents,
     currency: input.currency,
+    availability: input.availability,
+    releaseAt: input.releaseAt || null,
     images: input.imagePath ? [input.imagePath] : []
   }));
 

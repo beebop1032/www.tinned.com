@@ -32,7 +32,7 @@ function readStoredCart() {
   }
 }
 
-export function VariantSelector({ product, initialSku }: { product: CartProduct; initialSku?: string }) {
+export function VariantSelector({ product, initialSku, preorder = false }: { product: CartProduct; initialSku?: string; preorder?: boolean }) {
   const initial = product.variants.find((variant) => variant.sku.toLowerCase() === initialSku?.toLowerCase())
     ?? product.variants.find((variant) => variant.stock > 0)
     ?? product.variants[0];
@@ -45,8 +45,9 @@ export function VariantSelector({ product, initialSku }: { product: CartProduct;
   const selected = product.variants.find((variant) => variantMatches(variant, color, size))
     ?? product.variants.find((variant) => variantMatches(variant, color) && variant.stock > 0)
     ?? initial;
-  const maxQuantity = Math.max(1, Math.min(99, selected.stock));
+  const maxQuantity = preorder ? 99 : Math.max(1, Math.min(99, selected.stock));
   const hasOptions = product.variants.length > 1;
+  const canBuy = preorder || selected.stock > 0;
 
   useEffect(() => {
     setQuantity((current) => Math.min(Math.max(1, current), maxQuantity));
@@ -93,7 +94,7 @@ export function VariantSelector({ product, initialSku }: { product: CartProduct;
         <strong>Couleur</strong>
         <div className="swatches">
           {colors.map((item) => {
-            const disabled = !product.variants.some((variant) => variantMatches(variant, item.value) && variant.stock > 0);
+            const disabled = !preorder && !product.variants.some((variant) => variantMatches(variant, item.value) && variant.stock > 0);
             return (
               <button
                 key={item.value}
@@ -114,7 +115,7 @@ export function VariantSelector({ product, initialSku }: { product: CartProduct;
         <strong>Taille</strong>
         <div className="sizes">
           {sizes.map((item) => {
-            const disabled = !product.variants.some((variant) => variantMatches(variant, color, item.value) && variant.stock > 0);
+            const disabled = !preorder && !product.variants.some((variant) => variantMatches(variant, color, item.value) && variant.stock > 0);
             return (
               <button
                 key={item.value}
@@ -131,20 +132,20 @@ export function VariantSelector({ product, initialSku }: { product: CartProduct;
       </div> : null}
 
       <p className="price">{money(selected.priceCents, product.currency)}</p>
-      <p className="muted variant-stock">{selected.stock > 0 ? `${selected.stock} pièce${selected.stock > 1 ? "s" : ""} disponible${selected.stock > 1 ? "s" : ""}` : hasOptions ? "Indisponible pour cette option" : "Indisponible"} / Réf. {selected.sku}</p>
+      <p className="muted variant-stock">{preorder ? "Pré-vente" : selected.stock > 0 ? `${selected.stock} pièce${selected.stock > 1 ? "s" : ""} disponible${selected.stock > 1 ? "s" : ""}` : hasOptions ? "Indisponible pour cette option" : "Indisponible"} / Réf. {selected.sku}</p>
       <div className="purchase-row">
         <div className="quantity-stepper product-quantity" aria-label={`Quantité ${product.name}`}>
           <button type="button" onClick={() => setQuantity((current) => Math.max(1, current - 1))} aria-label="Retirer une unité">
             <Minus size={14} aria-hidden />
           </button>
           <span>{quantity}</span>
-          <button type="button" onClick={() => setQuantity((current) => Math.min(maxQuantity, current + 1))} aria-label="Ajouter une unité" disabled={selected.stock < 1}>
+          <button type="button" onClick={() => setQuantity((current) => Math.min(maxQuantity, current + 1))} aria-label="Ajouter une unité" disabled={!canBuy}>
             <Plus size={14} aria-hidden />
           </button>
         </div>
-        <button className="button" type="button" disabled={selected.stock < 1} onClick={addToCart}>
+        <button className="button" type="button" disabled={!canBuy} onClick={addToCart}>
           <ShoppingCart size={18} aria-hidden />
-          Ajouter au panier
+          {preorder ? "Pré-commander" : "Ajouter au panier"}
         </button>
       </div>
       {added ? (

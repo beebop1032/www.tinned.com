@@ -69,6 +69,8 @@ export function toCartProduct(product: Product): CartProduct {
     basePriceCents: product.basePriceCents,
     currency: product.currency,
     images: product.images,
+    availability: product.availability,
+    releaseAt: product.releaseAt,
     variants: product.variants,
     storeBox: product.storeBox
       ? {

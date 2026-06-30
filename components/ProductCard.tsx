@@ -23,6 +23,8 @@ export function ProductCard({ product }: { product: Product }) {
   const directPurchase = Boolean(soleVariant);
   const available = Boolean(soleVariant && soleVariant.stock > 0);
   const priceCents = productPriceCents(product);
+  const availabilityBadge =
+    product.availability === "coming_soon" ? "Bientôt" : product.availability === "preorder" ? "Pré-vente" : null;
 
   const addDirectlyToCart = () => {
     if (!soleVariant || soleVariant.stock < 1) return;
@@ -40,7 +42,7 @@ export function ProductCard({ product }: { product: Product }) {
     <article className="card product-card">
       <Link className="product-card-main" href={productHref(product)}>
         <div className="card-media">
-          <span className="product-card-tag">{productStockLabel(product)}</span>
+          <span className="product-card-tag">{availabilityBadge ?? productStockLabel(product)}</span>
           <Image src={product.images[0] ?? "/tinned-assets/box-store.svg"} alt={product.name} width={112} height={112} />
         </div>
         <div className="product-card-body">
