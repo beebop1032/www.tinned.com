@@ -2782,6 +2782,12 @@ a.admin-kpi {
 .tone-blog     { --tone: #B07E1E; --tone-soft: rgba(212, 151, 42, 0.16); --tone-border: rgba(212, 151, 42, 0.28); }
 .tone-travel   { --tone: #017E7A; --tone-soft: rgba(1, 126, 122, 0.12);  --tone-border: rgba(1, 126, 122, 0.2); }
 
+/* Fond de page teinté selon le type de box (repère visuel) */
+.admin-main:has(.admin-shell.tone-store)    { background: #f1f8f7; }
+.admin-main:has(.admin-shell.tone-business) { background: #fbf5f0; }
+.admin-main:has(.admin-shell.tone-blog)     { background: #faf6ec; }
+.admin-main:has(.admin-shell.tone-travel)   { background: #f0f7f6; }
+
 .admin-kpis svg {
   width: 34px;
   height: 34px;

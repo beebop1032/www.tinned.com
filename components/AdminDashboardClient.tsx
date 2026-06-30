@@ -215,8 +215,11 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
     );
   }
 
+  const pageTone =
+    section === "overview" || section === "vendor-page" || section === "newsletter" ? "" : `tone-${section}`;
+
   return (
-    <section className="admin-shell">
+    <section className={`admin-shell ${pageTone}`}>
       <div className="admin-header">
         <div>
           <p className="eyebrow">Back-office</p>

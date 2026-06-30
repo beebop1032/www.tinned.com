@@ -98,7 +98,7 @@ export function BusinessBoxDetailClient({ businessBoxId }: { businessBoxId: numb
   }
 
   return (
-    <section className="admin-shell">
+    <section className="admin-shell tone-business">
       <div className="admin-header">
         <div>
           <p className="eyebrow">Back-office / Business Box</p>

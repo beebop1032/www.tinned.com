@@ -77,7 +77,7 @@ export function BlogBoxDetailClient({ blogBoxId }: { blogBoxId: number }) {
   }
 
   return (
-    <section className="admin-shell">
+    <section className="admin-shell tone-blog">
       <div className="admin-header">
         <div>
           <p className="eyebrow">Back-office / Blog Box</p>

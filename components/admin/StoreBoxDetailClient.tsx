@@ -270,7 +270,7 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
 
   if (!storeBox) {
     return (
-      <section className="admin-shell">
+      <section className="admin-shell tone-store">
         <div className="admin-header">
           <div>
             <p className="eyebrow">Back-office</p>
@@ -287,7 +287,7 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
   }
 
   return (
-    <section className="admin-shell">
+    <section className="admin-shell tone-store">
       <div className="admin-header">
         <div>
           <p className="eyebrow">Back-office / Store Box</p>

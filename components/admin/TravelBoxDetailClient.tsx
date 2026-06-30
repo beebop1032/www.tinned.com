@@ -77,7 +77,7 @@ export function TravelBoxDetailClient({ travelBoxId }: { travelBoxId: number }) 
   }
 
   return (
-    <section className="admin-shell">
+    <section className="admin-shell tone-travel">
       <div className="admin-header">
         <div>
           <p className="eyebrow">Back-office / Travel Box</p>
