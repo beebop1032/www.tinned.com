@@ -19,7 +19,7 @@ import {
   type CartProduct,
   type StoredOrder
 } from "@/lib/cart";
-import { createCheckoutOrder, fetchDeliveryMethods } from "@/lib/customer-api";
+import { createCheckoutOrder, fetchDeliveryMethods, validateCoupon } from "@/lib/customer-api";
 import {
   ADDRESS_SUGGESTIONS,
   CARRIER_OPTIONS,
@@ -67,6 +67,10 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountCents: number } | null>(null);
+  const [couponMessage, setCouponMessage] = useState<string | null>(null);
+  const [couponBusy, setCouponBusy] = useState(false);
 
   useEffect(() => {
     const cart = readCart();
@@ -81,7 +85,8 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
   const subtotalCents = cartSubtotal(selectedGroups);
   const effectiveCarrierSelections = carrierSelections.length ? carrierSelections : defaultCarrierSelections(selectedGroups, carrierOptions);
   const shippingCents = shippingForCarrierSelections(selectedGroups, effectiveCarrierSelections, carrierOptions);
-  const totalCents = subtotalCents + shippingCents;
+  const discountCents = appliedCoupon ? Math.min(appliedCoupon.discountCents, subtotalCents) : 0;
+  const totalCents = Math.max(0, subtotalCents - discountCents) + shippingCents;
   const currency = selectedGroups[0]?.currency ?? "EUR";
   const addressMatches = addressSearch.trim().length < 2 || addressSearch === address.label
     ? []
@@ -125,6 +130,34 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
     setAddressSearch(suggestion.label);
   };
 
+  const applyCoupon = async () => {
+    const code = couponInput.trim().toUpperCase();
+    if (!code) return;
+    setCouponBusy(true);
+    setCouponMessage(null);
+    try {
+      const result = await validateCoupon(code, subtotalCents);
+      if (result.valid) {
+        setAppliedCoupon({ code, discountCents: result.discountCents });
+        setCouponMessage(result.message);
+      } else {
+        setAppliedCoupon(null);
+        setCouponMessage(result.message);
+      }
+    } catch (caught) {
+      setAppliedCoupon(null);
+      setCouponMessage(caught instanceof Error ? caught.message : "Code promo invalide.");
+    } finally {
+      setCouponBusy(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+    setCouponMessage(null);
+  };
+
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!items || !selectedGroups.length || !session?.token) return;
@@ -157,7 +190,8 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
         items: orderItems,
         selectedStoreSlugs: selectedGroups.map((group) => group.storeSlug),
         carrierSelections: effectiveCarrierSelections,
-        paymentMethod
+        paymentMethod,
+        couponCode: appliedCoupon?.code
       }, session.token);
 
       window.localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(order));
@@ -351,7 +385,29 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
               </section>
             ))}
           </div>
+          <div className="checkout-coupon">
+            {appliedCoupon ? (
+              <div className="summary-row">
+                <span>Code « {appliedCoupon.code} »</span>
+                <button type="button" className="text-button" onClick={removeCoupon}>Retirer</button>
+              </div>
+            ) : (
+              <div className="coupon-input-row">
+                <input
+                  value={couponInput}
+                  onChange={(event) => setCouponInput(event.target.value.toUpperCase())}
+                  placeholder="Code promo"
+                  aria-label="Code promo"
+                />
+                <button type="button" className="button secondary" onClick={() => void applyCoupon()} disabled={couponBusy || !couponInput.trim()}>
+                  {couponBusy ? "…" : "Appliquer"}
+                </button>
+              </div>
+            )}
+            {couponMessage ? <small className="field-help">{couponMessage}</small> : null}
+          </div>
           <div className="summary-row"><span>Sous-total</span><strong>{money(subtotalCents, currency)}</strong></div>
+          {discountCents ? <div className="summary-row"><span>Remise</span><strong>−{money(discountCents, currency)}</strong></div> : null}
           <div className="summary-row"><span>Livraison estimée</span><strong>{shippingCents ? money(shippingCents, currency) : "Offerte"}</strong></div>
           <div className="summary-row summary-total"><span>Total</span><strong>{money(totalCents, currency)}</strong></div>
         </aside>

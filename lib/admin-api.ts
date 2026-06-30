@@ -661,3 +661,64 @@ export async function fetchUserAddresses(email: string, token: string) {
   );
   return collection(payload);
 }
+
+export type AdminCoupon = {
+  "@id"?: string;
+  id: number;
+  code: string;
+  type: "percent" | "fixed";
+  value: number;
+  active: boolean;
+  validFrom?: string | null;
+  validUntil?: string | null;
+  maxUses?: number | null;
+  usedCount: number;
+  minSubtotalCents: number;
+  createdAt: string;
+};
+
+export type AdminCouponInput = {
+  code: string;
+  type: "percent" | "fixed";
+  value: number;
+  active: boolean;
+  validFrom?: string | null;
+  validUntil?: string | null;
+  maxUses?: number | null;
+  minSubtotalCents: number;
+};
+
+export async function fetchCoupons(token: string) {
+  const payload = await adminFetch<HydraCollection<AdminCoupon>>("/coupons?order[createdAt]=desc", token);
+  return collection(payload);
+}
+
+export async function createCoupon(input: AdminCouponInput, token: string) {
+  return adminFetch<AdminCoupon>("/coupons", token, jsonInit({
+    code: input.code,
+    type: input.type,
+    value: input.value,
+    active: input.active,
+    validFrom: input.validFrom || null,
+    validUntil: input.validUntil || null,
+    maxUses: input.maxUses ?? null,
+    minSubtotalCents: input.minSubtotalCents
+  }));
+}
+
+export async function updateCoupon(id: number, input: AdminCouponInput, token: string) {
+  return adminFetch<AdminCoupon>(`/coupons/${id}`, token, patchInit({
+    code: input.code,
+    type: input.type,
+    value: input.value,
+    active: input.active,
+    validFrom: input.validFrom || null,
+    validUntil: input.validUntil || null,
+    maxUses: input.maxUses ?? null,
+    minSubtotalCents: input.minSubtotalCents
+  }));
+}
+
+export async function deleteCoupon(id: number, token: string) {
+  await adminFetch<undefined>(`/coupons/${id}`, token, { method: "DELETE" });
+}

@@ -76,6 +76,15 @@ export type CheckoutPayload = {
     carrierCode: string;
   }>;
   paymentMethod: string;
+  couponCode?: string;
+};
+
+export type CouponValidation = {
+  valid: boolean;
+  discountCents: number;
+  type: "percent" | "fixed" | null;
+  value: number | null;
+  message: string;
 };
 
 function endpoint(path: string) {
@@ -184,6 +193,14 @@ export async function createCheckoutOrder(payload: CheckoutPayload, token: strin
       authorization: `Bearer ${token}`
     },
     body: JSON.stringify(payload)
+  });
+}
+
+export async function validateCoupon(code: string, subtotalCents: number): Promise<CouponValidation> {
+  return apiFetch<CouponValidation>("/coupons/validate", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ code: code.trim().toUpperCase(), subtotalCents })
   });
 }
 
