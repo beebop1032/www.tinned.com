@@ -15,7 +15,8 @@ import {
   Mail,
   Plane,
   Printer,
-  Store
+  Store,
+  Users
 } from "lucide-react";
 import { AUTH_STORAGE_KEY, normalizeSession, sessionHasRole, type TinnedSession } from "@/lib/auth";
 import { AdminLogin } from "@/components/admin/AdminLogin";
@@ -36,6 +37,10 @@ const NAV: NavGroup[] = [
       { href: "/admin/blog-box", label: "Blog Box", icon: <Boxes size={18} aria-hidden />, tone: "tone-blog" },
       { href: "/admin/travel-box", label: "Travel Box", icon: <Plane size={18} aria-hidden />, tone: "tone-travel" }
     ]
+  },
+  {
+    title: "Clients",
+    items: [{ href: "/admin/accounts", label: "Comptes", icon: <Users size={18} aria-hidden /> }]
   },
   {
     title: "Ventes",

@@ -600,3 +600,64 @@ export async function updateAdminArticle(id: number, input: AdminArticleInput, t
 export async function deleteAdminArticle(id: number, token: string) {
   await adminFetch<undefined>(`/articles/${id}`, token, { method: "DELETE" });
 }
+
+export type AdminUser = {
+  "@id"?: string;
+  id: number;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
+  roles: string[];
+  active: boolean;
+  marketingConsent: boolean;
+};
+
+export type AdminAddress = {
+  "@id"?: string;
+  id: number;
+  firstName: string;
+  lastName: string;
+  street: string;
+  postalCode: string;
+  city: string;
+  countryCode: string;
+  phone?: string | null;
+};
+
+export type AdminUserInput = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  roles: string[];
+  active: boolean;
+  marketingConsent: boolean;
+};
+
+export async function fetchAdminUsers(token: string) {
+  const payload = await adminFetch<HydraCollection<AdminUser>>("/users?order[id]=desc", token);
+  return collection(payload);
+}
+
+export async function fetchAdminUser(id: number, token: string) {
+  return adminFetch<AdminUser>(`/users/${id}`, token);
+}
+
+export async function updateAdminUser(id: number, input: AdminUserInput, token: string) {
+  return adminFetch<AdminUser>(`/users/${id}`, token, patchInit({
+    firstName: input.firstName || null,
+    lastName: input.lastName || null,
+    phone: input.phone || null,
+    roles: input.roles,
+    active: input.active,
+    marketingConsent: input.marketingConsent
+  }));
+}
+
+export async function fetchUserAddresses(email: string, token: string) {
+  const payload = await adminFetch<HydraCollection<AdminAddress>>(
+    `/addresses?user.email=${encodeURIComponent(email)}`,
+    token
+  );
+  return collection(payload);
+}
