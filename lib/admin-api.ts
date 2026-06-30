@@ -239,6 +239,51 @@ export async function fetchProducts() {
   return collection(payload);
 }
 
+export type StockReason = "sale" | "restock" | "adjustment" | "return" | "initial";
+
+export type StockMovement = {
+  "@id"?: string;
+  id: number;
+  variant?: string | { "@id"?: string; id?: number; sku?: string };
+  delta: number;
+  reason: StockReason;
+  note?: string | null;
+  resultingStock: number;
+  createdAt: string;
+};
+
+export type AdminVariantStockRow = {
+  variantId: number;
+  sku: string;
+  stock: number;
+  productId: number;
+  productName: string;
+};
+
+export type StockMovementInput = {
+  variantId: number;
+  delta: number;
+  reason: StockReason;
+  note?: string;
+};
+
+export async function fetchStockMovements(variantId: number, token: string) {
+  const payload = await adminFetch<HydraCollection<StockMovement>>(
+    `/stock_movements?variant.id=${variantId}&order[createdAt]=desc`,
+    token
+  );
+  return collection(payload);
+}
+
+export async function createStockMovement(input: StockMovementInput, token: string) {
+  return adminFetch<StockMovement>("/stock_movements", token, jsonInit({
+    variant: `/api/product_variants/${input.variantId}`,
+    delta: input.delta,
+    reason: input.reason,
+    note: input.note?.trim() ? input.note.trim() : null
+  }));
+}
+
 export async function fetchAdminShipping(token: string) {
   const [ordersPayload, labelsPayload] = await Promise.all([
     adminFetch<HydraCollection<AdminStoreOrder>>("/store_orders", token),
