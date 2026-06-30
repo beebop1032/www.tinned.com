@@ -52,6 +52,7 @@ export type CustomerAddress = {
   city: string;
   countryCode: string;
   phone?: string | null;
+  isDefault?: boolean;
 };
 
 export type CheckoutPayload = {
@@ -320,7 +321,8 @@ function editableAddress(address: CustomerAddress) {
     postalCode: address.postalCode,
     city: address.city,
     countryCode: address.countryCode,
-    phone: address.phone ?? null
+    phone: address.phone ?? null,
+    isDefault: address.isDefault ?? false
   };
 }
 

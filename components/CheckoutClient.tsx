@@ -19,7 +19,7 @@ import {
   type CartProduct,
   type StoredOrder
 } from "@/lib/cart";
-import { createCheckoutOrder, fetchDeliveryMethods, validateCoupon } from "@/lib/customer-api";
+import { createCheckoutOrder, createMyAddress, fetchDeliveryMethods, fetchMyAddresses, validateCoupon, type CustomerAddress } from "@/lib/customer-api";
 import {
   ADDRESS_SUGGESTIONS,
   CARRIER_OPTIONS,
@@ -64,6 +64,9 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
     city: "",
     country: "BE"
   });
+  const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
+  const [selectedSavedId, setSelectedSavedId] = useState<number | "new">("new");
+  const [saveAddress, setSaveAddress] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -153,6 +156,42 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
     setAddressSearch(suggestion.label);
   };
 
+  const applySavedAddress = (entry: CustomerAddress) => {
+    setSelectedSavedId(entry.id);
+    setAddress({
+      id: String(entry.id),
+      street: entry.street,
+      postalCode: entry.postalCode,
+      city: entry.city,
+      country: entry.countryCode,
+      label: `${entry.street}, ${entry.postalCode} ${entry.city}`,
+    });
+    setAddressSearch(`${entry.street}, ${entry.postalCode} ${entry.city}`);
+  };
+
+  const useNewAddress = () => {
+    setSelectedSavedId("new");
+    setAddress({ id: "", street: "", postalCode: "", city: "", country: "BE", label: "" });
+    setAddressSearch("");
+  };
+
+  // Load the buyer's saved addresses and pre-select the default (or first) one.
+  useEffect(() => {
+    if (!session?.token) return;
+    let active = true;
+    fetchMyAddresses(session.token)
+      .then((list) => {
+        if (!active || !list.length) return;
+        setSavedAddresses(list);
+        applySavedAddress(list.find((entry) => entry.isDefault) ?? list[0]);
+      })
+      .catch(() => {
+        // Saved addresses are a convenience: manual entry stays fully available.
+      });
+    return () => { active = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.token]);
+
   const applyCoupon = async () => {
     const code = couponInput.trim().toUpperCase();
     if (!code) return;
@@ -216,6 +255,21 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
         paymentMethod,
         couponCode: appliedCoupon?.code
       }, session.token);
+
+      if (saveAddress && selectedSavedId === "new") {
+        void createMyAddress(session.token, {
+          firstName: String(formData.get("firstName") ?? ""),
+          lastName: String(formData.get("lastName") ?? ""),
+          street: checkoutAddress.street,
+          postalCode: checkoutAddress.postalCode,
+          city: checkoutAddress.city,
+          countryCode: checkoutAddress.country,
+          phone: String(formData.get("phone") ?? ""),
+          isDefault: savedAddresses.length === 0,
+        } as CustomerAddress).catch(() => {
+          // Saving the address is best-effort and must never block the order.
+        });
+      }
 
       window.localStorage.setItem(ORDER_STORAGE_KEY, JSON.stringify(order));
       window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(remainingItems));
@@ -300,6 +354,28 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
               <MapPin size={19} aria-hidden />
               <h2>Adresse de livraison</h2>
             </header>
+            {savedAddresses.length ? (
+              <div className="saved-addresses">
+                {savedAddresses.map((entry) => (
+                  <label key={entry.id} className={`saved-address ${selectedSavedId === entry.id ? "is-selected" : ""}`}>
+                    <input
+                      type="radio"
+                      name="savedAddress"
+                      checked={selectedSavedId === entry.id}
+                      onChange={() => applySavedAddress(entry)}
+                    />
+                    <span>
+                      <strong>{entry.firstName} {entry.lastName}</strong>
+                      {entry.street}, {entry.postalCode} {entry.city}
+                    </span>
+                  </label>
+                ))}
+                <label className={`saved-address ${selectedSavedId === "new" ? "is-selected" : ""}`}>
+                  <input type="radio" name="savedAddress" checked={selectedSavedId === "new"} onChange={useNewAddress} />
+                  <span><strong>Nouvelle adresse</strong>Saisir une autre adresse de livraison</span>
+                </label>
+              </div>
+            ) : null}
             <label className="field address-search">
               <span>Rechercher une adresse</span>
               <input
@@ -325,6 +401,12 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
               <label className="field"><span>Ville</span><input name="city" required value={address.city} onChange={(event) => setAddress({ ...address, city: event.target.value })} /></label>
               <label className="field"><span>Pays</span><select name="country" value={address.country} onChange={(event) => setAddress({ ...address, country: event.target.value })}><option value="BE">Belgique</option><option value="FR">France</option></select></label>
             </div>
+            {selectedSavedId === "new" ? (
+              <label className="checkbox-field">
+                <input type="checkbox" checked={saveAddress} onChange={(event) => setSaveAddress(event.target.checked)} />
+                <span>Enregistrer cette adresse pour mes prochaines commandes</span>
+              </label>
+            ) : null}
           </section>
 
           <section className="checkout-panel">

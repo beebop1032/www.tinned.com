@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { CART_STORAGE_KEY, normalizeCartItems, upsertCartItem } from "@/lib/cart";
-import { productHref, productPriceCents, productStockLabel, productVariantLabel } from "@/lib/commerce";
+import { discountPct, productCompareAtCents, productHref, productPriceCents, productStockLabel, productVariantLabel } from "@/lib/commerce";
 import { money } from "@/lib/format";
 import type { Product } from "@/lib/types";
 
@@ -23,6 +23,8 @@ export function ProductCard({ product }: { product: Product }) {
   const directPurchase = Boolean(soleVariant);
   const available = Boolean(soleVariant && soleVariant.stock > 0);
   const priceCents = productPriceCents(product);
+  const compareAtCents = productCompareAtCents(product);
+  const discount = discountPct(priceCents, compareAtCents);
   const availabilityBadge =
     product.availability === "coming_soon" ? "Bientôt" : product.availability === "preorder" ? "Pré-vente" : null;
 
@@ -44,6 +46,7 @@ export function ProductCard({ product }: { product: Product }) {
       <Link className="product-card-main" href={productHref(product)}>
         <div className="card-media">
           <span className="product-card-tag">{availabilityBadge ?? productStockLabel(product)}</span>
+          {discount ? <span className="product-card-discount">-{discount}%</span> : null}
           <Image src={product.images[0] ?? "/tinned-assets/box-store.svg"} alt={product.name} width={112} height={112} />
         </div>
         <div className="product-card-body">
@@ -63,6 +66,7 @@ export function ProductCard({ product }: { product: Product }) {
         <strong>
           {product.variants.length > 1 ? <small>Prix à partir de</small> : null}
           {money(priceCents, product.currency)}
+          {compareAtCents ? <s className="product-card-compare">{money(compareAtCents, product.currency)}</s> : null}
         </strong>
         {directPurchase ? (
           <button className="button product-card-add" type="button" onClick={addDirectlyToCart} disabled={!available}>

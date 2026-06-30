@@ -40,6 +40,7 @@ export type ProductVariant = {
   id: number;
   sku: string;
   priceCents: number;
+  compareAtPriceCents?: number | null;
   stock: number;
   images?: string[];
   attributeValues: ProductAttributeValue[];

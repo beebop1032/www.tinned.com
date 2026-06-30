@@ -706,6 +706,28 @@ a.card:active,
   box-shadow: 0 5px 14px rgba(5, 46, 45, 0.08);
 }
 
+.product-card-discount {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--coral, #e4572e);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 5px 14px rgba(228, 87, 46, 0.25);
+}
+
+.product-card-compare {
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+
 .product-card-body {
   display: grid;
   gap: 12px;
@@ -1295,6 +1317,28 @@ button.button:disabled {
   color: var(--forest);
   font-family: var(--font-brand), sans-serif;
   font-size: 36px;
+  font-weight: 700;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.price-compare {
+  color: var(--muted);
+  font-family: var(--font-body), sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+
+.price-discount {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--coral, #e4572e);
+  color: #fff;
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
   font-weight: 700;
 }
 
@@ -2255,6 +2299,59 @@ button.button:disabled {
   background: rgba(1, 126, 122, 0.05);
 }
 
+.saved-addresses {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.saved-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--stone);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.saved-address.is-selected {
+  border-color: var(--forest);
+  background: rgba(1, 126, 122, 0.04);
+}
+
+.saved-address input {
+  margin-top: 3px;
+}
+
+.saved-address span {
+  display: grid;
+  gap: 2px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.saved-address span strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.checkbox-field input {
+  width: 16px;
+  height: 16px;
+}
+
 .carrier-groups {
   display: grid;
   gap: 18px;
@@ -2453,9 +2550,16 @@ button.button:disabled {
   color: var(--muted);
 }
 
+.order-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0 20px 20px;
+}
+
 .order-card-action {
   width: fit-content;
-  margin: 0 20px 20px;
+  margin: 0;
 }
 
 .segmented-control {

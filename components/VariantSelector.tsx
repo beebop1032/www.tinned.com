@@ -132,7 +132,15 @@ export function VariantSelector({ product, initialSku, preorder = false }: { pro
         </div>
       </div> : null}
 
-      <p className="price">{money(selected.priceCents, product.currency)}</p>
+      <p className="price">
+        {money(selected.priceCents, product.currency)}
+        {selected.compareAtPriceCents && selected.compareAtPriceCents > selected.priceCents ? (
+          <>
+            <s className="price-compare">{money(selected.compareAtPriceCents, product.currency)}</s>
+            <span className="price-discount">-{Math.round((1 - selected.priceCents / selected.compareAtPriceCents) * 100)}%</span>
+          </>
+        ) : null}
+      </p>
       <p className="muted variant-stock">{preorder ? "Pré-vente" : selected.stock > 0 ? `${selected.stock} pièce${selected.stock > 1 ? "s" : ""} disponible${selected.stock > 1 ? "s" : ""}` : hasOptions ? "Indisponible pour cette option" : "Indisponible"} / Réf. {selected.sku}</p>
       <div className="purchase-row">
         <div className="quantity-stepper product-quantity" aria-label={`Quantité ${product.name}`}>

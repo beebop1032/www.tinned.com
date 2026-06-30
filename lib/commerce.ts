@@ -23,3 +23,21 @@ export function productPriceCents(product: Product) {
     ? Math.min(...product.variants.map((variant) => variant.priceCents))
     : product.basePriceCents;
 }
+
+/**
+ * Reference ("was") price of the cheapest variant, returned only when it is a
+ * genuine markdown (strictly higher than the price actually charged). Used to
+ * render a struck-through price; never affects what the buyer pays.
+ */
+export function productCompareAtCents(product: Product): number | null {
+  if (!product.variants.length) return null;
+  const cheapest = product.variants.reduce((a, b) => (b.priceCents < a.priceCents ? b : a));
+  const compareAt = cheapest.compareAtPriceCents ?? null;
+  return compareAt && compareAt > cheapest.priceCents ? compareAt : null;
+}
+
+/** Discount percentage (rounded) between a charged price and its reference price. */
+export function discountPct(priceCents: number, compareAtCents: number | null): number | null {
+  if (!compareAtCents || compareAtCents <= priceCents) return null;
+  return Math.round((1 - priceCents / compareAtCents) * 100);
+}

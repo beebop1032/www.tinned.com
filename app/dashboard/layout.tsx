@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { LayoutDashboard, ShoppingBag, Box, LogOut } from "lucide-react";
 import { readStoredSession, sessionHasRole } from "@/lib/auth";
+import { fetchMyBoxes } from "@/lib/vendor-api";
 
 const navItems = [
   { href: "/dashboard", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
@@ -18,11 +19,32 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const session = readStoredSession();
+    // No session → send to login, then back here.
+    if (!session?.token) {
+      router.replace("/auth?redirect=/dashboard");
+      return;
+    }
+    // Admins always have access; any box owner gets in via their own boxes.
     if (sessionHasRole(session, "ROLE_ADMIN")) {
       setAuthorized(true);
-    } else {
-      router.replace("/admin");
+      return;
     }
+    let active = true;
+    fetchMyBoxes(session.token, session.id)
+      .then((boxes) => {
+        if (!active) return;
+        if (boxes.length > 0) {
+          setAuthorized(true);
+        } else {
+          router.replace("/");
+        }
+      })
+      .catch(() => {
+        if (active) router.replace("/");
+      });
+    return () => {
+      active = false;
+    };
   }, [router]);
 
   if (!authorized) return null;
