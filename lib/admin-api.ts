@@ -1,6 +1,15 @@
 import type { Box, BoxType, Product, Trip } from "./types";
+import { AUTH_STORAGE_KEY } from "./auth";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+/** Session expirée / non autorisée : on purge la session et on prévient l'app
+ *  (AdminShell écoute `tinned-auth-updated` et rebascule alors sur le login). */
+function handleUnauthorized() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.dispatchEvent(new Event("tinned-auth-updated"));
+}
 
 type HydraCollection<T> = {
   member?: T[];
@@ -140,6 +149,10 @@ async function adminFetch<T>(path: string, token: string, init: RequestInit = {}
   headers.set("authorization", `Bearer ${token}`);
 
   const response = await fetch(endpoint(path), { ...init, headers });
+  if (response.status === 401) {
+    handleUnauthorized();
+    throw new Error("Session expirée. Reconnecte-toi pour continuer.");
+  }
   if (!response.ok) {
     throw new Error(await parseApiError(response));
   }

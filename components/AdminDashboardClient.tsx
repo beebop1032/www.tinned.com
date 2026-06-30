@@ -7,6 +7,7 @@ import {
   Building2,
   ImagePlus,
   LayoutDashboard,
+  LayoutTemplate,
   Loader2,
   MapPin,
   Plane,
@@ -395,7 +396,10 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
                   <strong>{box.name}</strong>
                   <span>{box.type === "store" ? "Store Box" : box.type === "business" ? "Business Box" : box.type === "travel" ? "Travel Box" : "Blog Box"} / {box.slug}</span>
                 </div>
-                <a href={`/admin/landing/${box.id}`} style={{ fontSize: "0.8rem", marginLeft: "0.5rem" }}>Landing</a>
+                <Link className="admin-ghost-button" href={`/admin/landing/${box.id}`}>
+                  <LayoutTemplate size={14} aria-hidden />
+                  Landing
+                </Link>
                 {section === "store" ? (
                   <Link className="admin-manage-button" href={`/admin/store-box/${box.id}`}>
                     Gérer

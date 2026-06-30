@@ -3067,10 +3067,10 @@ button.button:disabled {
 
 .admin-shell .field span,
 .admin-login .field span {
-  color: var(--text-soft);
-  font-size: 12.5px;
+  color: var(--muted);
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.005em;
 }
 
 .admin-shell .field input,
@@ -3081,11 +3081,21 @@ button.button:disabled {
 .admin-login .field textarea {
   min-height: 44px;
   padding: 11px 13px;
-  border: 1px solid rgba(26, 18, 8, 0.14);
+  border: 1px solid rgba(26, 18, 8, 0.12);
   border-radius: 10px;
   background: #fff;
+  box-shadow: 0 1px 2px rgba(26, 18, 8, 0.04);
+  color: var(--ink);
   font-size: 14px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-shell .field input:hover:not(:focus),
+.admin-shell .field select:hover:not(:focus),
+.admin-shell .field textarea:hover:not(:focus),
+.admin-login .field input:hover:not(:focus),
+.admin-login .field textarea:hover:not(:focus) {
+  border-color: rgba(26, 18, 8, 0.24);
 }
 
 .admin-shell .field textarea,
@@ -3107,11 +3117,11 @@ button.button:disabled {
 .admin-login .field select:focus,
 .admin-login .field textarea:focus {
   border-color: var(--forest);
-  box-shadow: 0 0 0 3px rgba(1, 126, 122, 0.14);
+  box-shadow: 0 0 0 3px rgba(1, 126, 122, 0.13);
 }
 
 .admin-shell .admin-form-grid {
-  gap: 14px;
+  gap: 16px;
 }
 
 .admin-shell .button,
@@ -3416,6 +3426,33 @@ button.button:disabled {
 .admin-manage-button.is-active {
   border-color: rgba(1, 126, 122, 0.3);
   background: rgba(1, 126, 122, 0.07);
+}
+
+.admin-ghost-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: var(--text-soft);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-ghost-button:hover {
+  background: rgba(26, 18, 8, 0.05);
+  color: var(--ink);
+}
+
+.admin-ghost-button svg {
+  color: var(--text-faint);
+}
+
+.admin-ghost-button:hover svg {
+  color: var(--forest);
 }
 
 .admin-badge {

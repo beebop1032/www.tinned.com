@@ -1,5 +1,6 @@
 import type { Block } from "./blocks";
 import type { LandingPage } from "./types";
+import { AUTH_STORAGE_KEY } from "./auth";
 
 function apiBase(): string {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -48,6 +49,13 @@ export async function saveLanding(input: LandingInput, token: string): Promise<L
     },
     body: JSON.stringify(body),
   });
+  if (r.status === 401) {
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+      window.dispatchEvent(new Event("tinned-auth-updated"));
+    }
+    throw new Error("Session expirée. Reconnecte-toi pour continuer.");
+  }
   if (!r.ok) {
     const err = await r.json().catch(() => ({} as Record<string, unknown>));
     const violations = (err.violations as { propertyPath: string; message: string }[] | undefined) ?? [];
