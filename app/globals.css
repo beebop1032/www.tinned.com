@@ -3105,9 +3105,9 @@ button.button:disabled {
   grid-template-columns: minmax(150px, 1fr) minmax(130px, 0.75fr) minmax(180px, 1fr);
   gap: 12px;
   align-items: end;
-  padding: 12px;
-  border: 1px solid var(--stone);
-  border-radius: 4px;
+  padding: 14px;
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius-sm);
   background: var(--cream);
 }
 
@@ -3124,9 +3124,9 @@ button.button:disabled {
   gap: 10px;
   align-items: end;
   margin-bottom: 10px;
-  padding: 12px;
-  border: 1px solid var(--stone);
-  border-radius: 4px;
+  padding: 14px;
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius-sm);
   background: var(--cream);
 }
 
@@ -3373,8 +3373,8 @@ button.button:disabled {
 .shipping-pickup-fields {
   margin: 0;
   padding: 14px;
-  border: 1px solid var(--stone);
-  border-radius: 4px;
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius-sm);
 }
 
 .shipping-pickup-fields legend {
@@ -3394,10 +3394,10 @@ button.button:disabled {
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-  padding: 12px;
-  border: 1px solid var(--stone);
-  border-radius: 4px;
-  background: var(--cream);
+  padding: 13px 14px;
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius-sm);
+  background: var(--surface);
 }
 
 .shipping-label-row > div {
@@ -3473,9 +3473,9 @@ button.button:disabled {
   display: grid;
   width: min(440px, 100%);
   gap: 14px;
-  padding: 24px;
-  border: 1px solid var(--stone);
-  border-radius: 4px;
+  padding: 28px;
+  border: 1px solid rgba(26, 18, 8, 0.09);
+  border-radius: 16px;
   background: #fff;
   box-shadow: var(--shadow);
 }
