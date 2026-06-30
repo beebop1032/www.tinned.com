@@ -1,4 +1,4 @@
-import type { Box, BoxType, Product, Trip } from "./types";
+import type { Article, Box, BoxType, Product, Trip } from "./types";
 import { AUTH_STORAGE_KEY } from "./auth";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -334,6 +334,46 @@ export async function createAdminBox(input: AdminBoxInput, token: string) {
   }));
 }
 
+export async function updateAdminBox(type: BoxType, id: number, input: AdminBoxInput, token: string) {
+  const basePayload = {
+    name: input.name,
+    slug: input.slug,
+    tagline: input.tagline || null,
+    description: input.description || null,
+    logoPath: input.logoPath || null,
+    coverPath: input.coverPath || null,
+    active: input.active
+  };
+
+  if (type === "business") {
+    return adminFetch<Box>(`/business_boxes/${id}`, token, patchInit({
+      ...basePayload,
+      companyName: input.companyName || input.name,
+      website: input.website || null
+    }));
+  }
+
+  if (type === "store") {
+    return adminFetch<Box>(`/store_boxes/${id}`, token, patchInit({
+      ...basePayload,
+      businessBox: input.businessBoxId ? `/api/business_boxes/${input.businessBoxId}` : null
+    }));
+  }
+
+  if (type === "travel") {
+    return adminFetch<Box>(`/travel_boxes/${id}`, token, patchInit({
+      ...basePayload,
+      businessBox: input.businessBoxId ? `/api/business_boxes/${input.businessBoxId}` : null
+    }));
+  }
+
+  return adminFetch<Box>(`/blog_boxes/${id}`, token, patchInit({
+    ...basePayload,
+    businessBox: input.businessBoxId ? `/api/business_boxes/${input.businessBoxId}` : null,
+    storeBox: input.storeBoxId ? `/api/store_boxes/${input.storeBoxId}` : null
+  }));
+}
+
 async function findAttribute(code: string) {
   const payload = await publicFetch<HydraCollection<ProductAttribute>>(`/product_attributes?code=${encodeURIComponent(code)}`);
   return collection(payload)[0] ?? null;
@@ -511,4 +551,52 @@ export async function updateAdminTrip(id: number, input: AdminTripInput, token: 
 
 export async function deleteAdminTrip(id: number, token: string) {
   await adminFetch<undefined>(`/trips/${id}`, token, { method: "DELETE" });
+}
+
+export type AdminArticleInput = {
+  blogBoxId: number;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  body: string;
+  imagePath?: string;
+  published: boolean;
+  publishedAt?: string;
+};
+
+export async function fetchAdminArticles(blogBoxId: number, token: string) {
+  const payload = await adminFetch<HydraCollection<Article>>(
+    `/articles?blogBox.id=${blogBoxId}&order[publishedAt]=desc`,
+    token
+  );
+  return collection(payload);
+}
+
+export async function createAdminArticle(input: AdminArticleInput, token: string) {
+  return adminFetch<Article>("/articles", token, jsonInit({
+    blogBox: `/api/blog_boxes/${input.blogBoxId}`,
+    title: input.title,
+    slug: input.slug,
+    excerpt: input.excerpt || null,
+    body: input.body,
+    imagePath: input.imagePath || null,
+    published: input.published,
+    publishedAt: input.publishedAt || null
+  }));
+}
+
+export async function updateAdminArticle(id: number, input: AdminArticleInput, token: string) {
+  return adminFetch<Article>(`/articles/${id}`, token, patchInit({
+    title: input.title,
+    slug: input.slug,
+    excerpt: input.excerpt || null,
+    body: input.body,
+    imagePath: input.imagePath || null,
+    published: input.published,
+    publishedAt: input.publishedAt || null
+  }));
+}
+
+export async function deleteAdminArticle(id: number, token: string) {
+  await adminFetch<undefined>(`/articles/${id}`, token, { method: "DELETE" });
 }

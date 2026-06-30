@@ -404,6 +404,14 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
                   <Link className="admin-manage-button" href={`/admin/store-box/${box.id}`}>
                     Gérer
                   </Link>
+                ) : section === "business" ? (
+                  <Link className="admin-manage-button" href={`/admin/business-box/${box.id}`}>
+                    Gérer
+                  </Link>
+                ) : section === "blog" ? (
+                  <Link className="admin-manage-button" href={`/admin/blog-box/${box.id}`}>
+                    Gérer
+                  </Link>
                 ) : section === "travel" ? (
                   <Link className="admin-manage-button" href={`/admin/travel-box/${box.id}`}>
                     Gérer

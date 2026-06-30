@@ -64,6 +64,7 @@ export type Article = {
   excerpt?: string | null;
   body?: string | null;
   imagePath?: string | null;
+  published?: boolean;
   publishedAt?: string | null;
   blogBox?: Box | null;
 };
