@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DashboardOverview } from "@/components/dashboard/DashboardOverview";
 
 export const metadata: Metadata = { robots: { index: false } };
 
@@ -23,6 +24,9 @@ export default function DashboardPage() {
           Gérez vos Boxes, produits et commandes.
         </p>
       </div>
+
+      {/* Real selling stats (best-effort; renders nothing until loaded) */}
+      <DashboardOverview />
 
       {/* Quick actions */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>

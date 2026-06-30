@@ -54,6 +54,20 @@ export type BoxInput = {
   storeBoxId?: number;
 };
 
+export type DashboardStats = {
+  revenueCents: number;
+  paidOrderCount: number;
+  averageOrderValueCents: number;
+  toPrepareCount: number;
+  topProducts: { name: string; quantity: number; revenueCents: number }[];
+  lowStock: { sku: string; productName: string; stock: number }[];
+  revenueByDay: { date: string; revenueCents: number }[];
+};
+
+export async function fetchDashboardStats(token: string): Promise<DashboardStats> {
+  return vendorFetch<DashboardStats>("/dashboard/stats", token);
+}
+
 export async function fetchMyBoxes(token: string, userId?: number): Promise<Box[]> {
   const [biz, store, blog, travel] = await Promise.all([
     vendorFetch<HydraCollection<Box>>("/business_boxes?order[createdAt]=desc", token).then(collection).then(b => b.map(x => ({ ...x, type: "business" as BoxType }))),
