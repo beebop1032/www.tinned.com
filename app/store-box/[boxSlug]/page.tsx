@@ -31,7 +31,14 @@ export default async function StoreBoxDetailPage({ params }: { params: Promise<{
 
   const landing = await getLanding(boxSlug);
   if (landing) {
-    return <LandingBlocks landing={landing} box={box} />;
+    return (
+      <>
+        <LandingBlocks landing={landing} box={box} />
+        <section className="container section">
+          <NotifyMeForm targetType="box" boxIri={`/api/store_boxes/${box.id}`} boxName={box.name} />
+        </section>
+      </>
+    );
   }
 
   return (

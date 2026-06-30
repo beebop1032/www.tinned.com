@@ -28,6 +28,7 @@ function consentLabel({ targetType }: Props) {
 export function NotifyMeForm(props: Props) {
   const { targetType, boxIri, productIri } = props;
   const [token, setToken] = useState<string | null>(null);
+  const [sessionEmail, setSessionEmail] = useState("");
   const [ready, setReady] = useState(false);
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(true);
@@ -36,7 +37,9 @@ export function NotifyMeForm(props: Props) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setToken(readStoredSession()?.token ?? null);
+    const session = readStoredSession();
+    setToken(session?.token ?? null);
+    setSessionEmail(session?.email ?? "");
     setReady(true);
   }, []);
 
@@ -50,7 +53,7 @@ export function NotifyMeForm(props: Props) {
     try {
       const result = await subscribe(
         {
-          email: loggedIn ? "placeholder@tinned.com" : email,
+          email: loggedIn ? sessionEmail : email,
           targetType,
           boxIri,
           productIri,
