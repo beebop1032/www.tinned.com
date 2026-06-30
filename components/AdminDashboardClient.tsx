@@ -13,7 +13,6 @@ import {
   Pencil,
   Plane,
   Plus,
-  Printer,
   RefreshCcw,
   Store,
   Tags,
@@ -522,32 +521,9 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
         <VendorPageCmsClient />
       ) : section === "overview" ? (
         <>
-          <div className="admin-entry-grid">
-            <Link className="admin-entry-card" href="/admin/store-box">
-              <Store size={23} aria-hidden />
-              <strong>Store Box</strong>
-              <span>Gérer les boutiques, leurs produits, stocks et références.</span>
-            </Link>
-            <Link className="admin-entry-card" href="/admin/business-box">
-              <Building2 size={23} aria-hidden />
-              <strong>Business Box</strong>
-              <span>Administrer les marques et leurs informations de présentation.</span>
-            </Link>
-            <Link className="admin-entry-card" href="/admin/blog-box">
-              <Boxes size={23} aria-hidden />
-              <strong>Blog Box</strong>
-              <span>Organiser les espaces éditoriaux reliés aux boutiques.</span>
-            </Link>
-            <Link className="admin-entry-card" href="/admin/travel-box">
-              <Plane size={23} aria-hidden />
-              <strong>Travel Box</strong>
-              <span>Gérer les carnets de voyage et leurs étapes.</span>
-            </Link>
-            <Link className="admin-entry-card" href="/admin/shipping-labels">
-              <Printer size={23} aria-hidden />
-              <strong>Étiquettes</strong>
-              <span>Préparer et suivre les impressions des expéditions boutiques.</span>
-            </Link>
+          <div className="admin-section-head">
+            <p className="admin-section-eyebrow">Catalogue</p>
+            <h2>Vos espaces</h2>
           </div>
           <div className="admin-overview-lists">
             {([

@@ -2674,10 +2674,10 @@ button.button:disabled {
 }
 
 .admin-shell {
-  --ad-radius: 16px;
+  --ad-radius: 14px;
   --ad-radius-sm: 10px;
-  --ad-line: rgba(26, 18, 8, 0.09);
-  --ad-shadow: 0 1px 2px rgba(26, 18, 8, 0.04), 0 12px 28px -10px rgba(26, 18, 8, 0.12);
+  --ad-line: rgba(26, 18, 8, 0.08);
+  --ad-shadow: 0 1px 2px rgba(26, 18, 8, 0.05), 0 4px 14px -6px rgba(26, 18, 8, 0.09);
   --ad-chip: rgba(1, 126, 122, 0.10);
   width: min(1280px, calc(100% - 40px));
   margin: 0 auto;
@@ -2742,53 +2742,56 @@ button.button:disabled {
 
 .admin-kpis {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
-  gap: 14px;
-  margin-bottom: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(164px, 1fr));
+  gap: 12px;
+  margin-bottom: 30px;
 }
 
 .admin-kpis article {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-height: 124px;
-  padding: 18px 20px;
+  gap: 3px;
+  padding: 16px 18px;
   border: 1px solid var(--ad-line);
   border-radius: var(--ad-radius);
   background: var(--surface);
   box-shadow: var(--ad-shadow);
-  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .admin-kpis article:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(26, 18, 8, 0.05), 0 18px 34px -12px rgba(26, 18, 8, 0.18);
+  border-color: rgba(1, 126, 122, 0.22);
+  box-shadow: 0 1px 2px rgba(26, 18, 8, 0.05), 0 8px 20px -8px rgba(26, 18, 8, 0.14);
 }
 
 .admin-kpis svg {
-  width: 42px;
-  height: 42px;
-  margin-bottom: auto;
-  padding: 10px;
-  border-radius: 13px;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 10px;
   background: var(--ad-chip);
   color: var(--forest);
 }
 
-.admin-kpis span {
-  color: var(--text-soft);
-  font-size: 13px;
+.admin-kpis strong {
+  order: 2;
+  color: var(--ink);
+  font-family: var(--font-brand), sans-serif;
+  font-size: 30px;
   font-weight: 700;
-  letter-spacing: 0.01em;
+  line-height: 1;
+  letter-spacing: -0.03em;
 }
 
-.admin-kpis strong {
-  color: var(--ink);
-  font-family: var(--font-mono), monospace;
-  font-size: 36px;
-  font-weight: 500;
-  line-height: 1;
-  letter-spacing: -0.02em;
+.admin-kpis span {
+  order: 3;
+  margin-top: 5px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 }
 
 .admin-alert {
@@ -2829,59 +2832,34 @@ button.button:disabled {
   grid-template-columns: minmax(0, 700px);
 }
 
-.admin-entry-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+
+.admin-section-head {
+  margin: 4px 0 14px;
 }
 
-.admin-entry-card {
-  display: grid;
-  min-height: 190px;
-  align-content: start;
-  gap: 13px;
-  padding: 24px;
-  border: 1px solid var(--ad-line);
-  border-radius: var(--ad-radius);
-  background: var(--surface);
-  box-shadow: var(--ad-shadow);
-  transition: box-shadow 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+.admin-section-eyebrow {
+  margin: 0 0 5px;
+  color: var(--text-faint);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.admin-entry-card svg {
-  width: 46px;
-  height: 46px;
-  padding: 11px;
-  border-radius: 14px;
-  background: var(--ad-chip);
-  color: var(--forest);
-}
-
-.admin-entry-card strong {
-  margin-top: 2px;
+.admin-section-head h2 {
+  margin: 0;
   color: var(--ink);
   font-family: var(--font-brand), sans-serif;
-  font-size: 22px;
-  letter-spacing: -0.02em;
-}
-
-.admin-entry-card span {
-  color: var(--text-soft);
-  font-weight: 500;
-  line-height: 1.55;
-}
-
-.admin-entry-card:hover {
-  border-color: rgba(1, 126, 122, 0.28);
-  transform: translateY(-3px);
-  box-shadow: 0 2px 4px rgba(26, 18, 8, 0.05), 0 20px 38px -12px rgba(26, 18, 8, 0.2);
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
 }
 
 .admin-overview-lists {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(264px, 1fr));
+  gap: 14px;
+  margin-top: 0;
 }
 
 .admin-overview-panel .admin-panel-header {
@@ -3194,7 +3172,7 @@ button.button:disabled {
 }
 
 .admin-box-catalog .admin-list-item {
-  grid-template-columns: 44px minmax(0, 1fr) auto;
+  grid-template-columns: 44px minmax(0, 1fr) auto auto;
 }
 
 .admin-manage-button {
@@ -3214,7 +3192,7 @@ button.button:disabled {
 }
 
 .admin-product-list .admin-list-item {
-  grid-template-columns: 44px minmax(0, 1fr) auto;
+  grid-template-columns: 44px minmax(0, 1fr) auto auto;
 }
 
 .admin-manage-button:hover,
