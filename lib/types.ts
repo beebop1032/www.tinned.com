@@ -94,6 +94,7 @@ export type LandingPage = {
   id: number;
   locale: string;
   box: string;                 // IRI de la box
+  slug?: string | null;        // slug pour les landings autonomes (sans box)
   title: string;
   metaDescription?: string | null;
   blocks: Block[];

@@ -6,7 +6,8 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { TripCard } from "@/components/TripCard";
 import { BoxCard } from "@/components/BoxCard";
 
-export async function CollectionBlock({ block, box }: { block: Extract<Block, { type: "collection" }>; box: Box }) {
+export async function CollectionBlock({ block, box }: { block: Extract<Block, { type: "collection" }>; box?: Box | null }) {
+  if (!box) return null;
   const limit = block.limit ?? 6;
   const slug = box.slug;
   let body: React.ReactNode = null;

@@ -11,7 +11,7 @@ import { FaqBlock } from "./blocks/FaqBlock";
 import { VideoBlock } from "./blocks/VideoBlock";
 import { NewsletterBlock } from "./blocks/NewsletterBlock";
 
-export async function LandingBlocks({ landing, box }: { landing: LandingPage; box: Box }) {
+export async function LandingBlocks({ landing, box }: { landing: LandingPage; box?: Box | null }) {
   return (
     <>
       {landing.blocks.map((block) => {
@@ -20,7 +20,7 @@ export async function LandingBlocks({ landing, box }: { landing: LandingPage; bo
           case "richText": return <RichTextBlock key={block.id} block={block} />;
           case "gallery": return <GalleryBlock key={block.id} block={block} />;
           case "cta": return <CtaBlock key={block.id} block={block} />;
-          case "collection": return <CollectionBlock key={block.id} block={block} box={box} />;
+          case "collection": return box ? <CollectionBlock key={block.id} block={block} box={box} /> : null;
           case "features": return <FeaturesBlock key={block.id} block={block} />;
           case "stats": return <StatsBlock key={block.id} block={block} />;
           case "testimonial": return <TestimonialBlock key={block.id} block={block} />;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import type { Block, BlockCatalog, BlockType } from "../../lib/blocks";
 import { BLOCK_LABELS, fetchBlockCatalog } from "../../lib/blocks";
-import { loadLanding, saveLanding } from "../../lib/landing-api";
+import { loadLanding, loadStandaloneLanding, saveLanding } from "../../lib/landing-api";
 import { readStoredSession } from "../../lib/auth";
 import { BlockForm } from "./BlockForm";
 
@@ -31,7 +31,14 @@ function makeBlock(type: BlockType): Block {
   }
 }
 
-export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: string }) {
+type LandingEditorProps =
+  | { boxIri: string; boxSlug: string; standaloneSlug?: undefined }
+  | { standaloneSlug: string; boxIri?: undefined; boxSlug?: undefined };
+
+export function LandingEditor(props: LandingEditorProps) {
+  const standaloneSlug = props.standaloneSlug;
+  const boxIri = props.boxIri;
+  const boxSlug = props.boxSlug;
   const [locale, setLocale] = useState("fr");
   const [id, setId] = useState<number | undefined>(undefined);
   const [title, setTitle] = useState("");
@@ -56,7 +63,10 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
   useEffect(() => {
     let cancelled = false;
     setLoaded(false);
-    loadLanding(boxSlug, locale)
+    const request = standaloneSlug
+      ? loadStandaloneLanding(standaloneSlug, locale)
+      : loadLanding(boxSlug!, locale);
+    request
       .then((landing) => {
         if (cancelled) return;
         if (landing) {
@@ -84,7 +94,7 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
     return () => {
       cancelled = true;
     };
-  }, [boxSlug, locale]);
+  }, [boxSlug, standaloneSlug, locale]);
 
   function updateBlockAt(i: number, next: Block) {
     setBlocks((prev) => prev.map((b, idx) => (idx === i ? next : b)));
@@ -113,7 +123,9 @@ export function LandingEditor({ boxIri, boxSlug }: { boxIri: string; boxSlug: st
     setError(null);
     try {
       const result = await saveLanding(
-        { id, boxIri, locale, title, metaDescription: metaDescription || undefined, blocks },
+        standaloneSlug
+          ? { id, slug: standaloneSlug, locale, title, metaDescription: metaDescription || undefined, blocks }
+          : { id, boxIri, locale, title, metaDescription: metaDescription || undefined, blocks },
         session.token,
       );
       setId(result.id);

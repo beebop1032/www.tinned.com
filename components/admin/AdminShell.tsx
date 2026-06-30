@@ -9,6 +9,7 @@ import {
   ClipboardList,
   Handshake,
   LayoutDashboard,
+  LayoutTemplate,
   Loader2,
   LogOut,
   Mail,
@@ -47,6 +48,7 @@ const NAV: NavGroup[] = [
     title: "Contenu",
     items: [
       { href: "/admin/vendor-page", label: "Page Fournisseurs", icon: <Handshake size={18} aria-hidden /> },
+      { href: "/admin/landing-pages", label: "Landing pages", icon: <LayoutTemplate size={18} aria-hidden /> },
       { href: "/admin/newsletter", label: "Newsletter", icon: <Mail size={18} aria-hidden /> }
     ]
   }
