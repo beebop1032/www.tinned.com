@@ -94,7 +94,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <div className="admin-layout">
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
-          <span className="admin-sidebar-mark">T</span>
+          <img className="admin-sidebar-logo" src="/tinned-assets/logo-tinned-color.svg" alt="" width={26} height={30} aria-hidden />
           <div>
             <strong>Tinned</strong>
             <span>Back-office</span>
@@ -124,8 +124,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
           <div className="admin-sidebar-user">
             <span className="admin-sidebar-avatar">{(session?.email ?? "A").charAt(0).toUpperCase()}</span>
             <div>
-              <strong>{session?.email ?? "Administrateur"}</strong>
-              <span>ROLE_ADMIN</span>
+              <strong>Administrateur</strong>
+              <span>{session?.email ?? ""}</span>
             </div>
           </div>
           <button type="button" className="admin-sidebar-logout" onClick={logout}>

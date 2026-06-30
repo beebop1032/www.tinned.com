@@ -3808,15 +3808,11 @@ button.button:disabled {
   border-bottom: 1px solid rgba(26, 18, 8, 0.08);
 }
 
-.admin-sidebar-mark {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: var(--forest);
-  color: #fff;
-  font: 700 20px/1 var(--font-brand), sans-serif;
+.admin-sidebar-logo {
+  width: 26px;
+  height: 30px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .admin-sidebar-brand strong {
@@ -3849,9 +3845,9 @@ button.button:disabled {
   padding: 0 10px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--text-faint);
+  color: var(--muted);
 }
 
 .admin-side-link {
@@ -3860,7 +3856,7 @@ button.button:disabled {
   gap: 11px;
   padding: 9px 10px;
   border-radius: 9px;
-  color: var(--text-soft);
+  color: var(--text);
   font-weight: 500;
   font-size: 14px;
   text-decoration: none;
@@ -3869,21 +3865,21 @@ button.button:disabled {
 
 .admin-side-link svg {
   flex-shrink: 0;
-  color: var(--text-faint);
+  color: var(--muted);
 }
 
 .admin-side-link:hover {
-  background: rgba(26, 18, 8, 0.045);
+  background: rgba(26, 18, 8, 0.05);
   color: var(--ink);
 }
 
 .admin-side-link:hover svg {
-  color: var(--muted);
+  color: var(--ink);
 }
 
 .admin-side-link.is-active {
-  background: rgba(1, 126, 122, 0.1);
-  color: var(--forest);
+  background: rgba(1, 126, 122, 0.12);
+  color: var(--forest-dark);
   font-weight: 600;
   box-shadow: inset 3px 0 0 var(--forest);
 }
@@ -3903,18 +3899,22 @@ button.button:disabled {
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
-  padding: 0 4px;
+  padding: 8px 10px;
+  border-radius: 11px;
+  background: rgba(26, 18, 8, 0.035);
 }
 
 .admin-sidebar-avatar {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: rgba(1, 126, 122, 0.12);
-  color: var(--forest);
+  background: var(--forest);
+  color: #fff;
+  font-family: var(--font-brand), sans-serif;
+  font-size: 15px;
   font-weight: 700;
 }
 
@@ -3925,6 +3925,7 @@ button.button:disabled {
 .admin-sidebar-user strong {
   display: block;
   font-size: 13px;
+  font-weight: 700;
   color: var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3932,8 +3933,13 @@ button.button:disabled {
 }
 
 .admin-sidebar-user span {
-  font: 400 11px/1 var(--font-mono), monospace;
+  display: block;
+  font-size: 11.5px;
+  font-weight: 500;
   color: var(--text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-sidebar-logout {
@@ -3943,19 +3949,19 @@ button.button:disabled {
   gap: 8px;
   width: 100%;
   min-height: 40px;
-  border: 1px solid rgba(26, 18, 8, 0.12);
+  border: 1px solid rgba(200, 54, 44, 0.28);
   border-radius: 9px;
   background: transparent;
-  color: var(--text-soft);
+  color: #c8362c;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .admin-sidebar-logout:hover {
-  background: rgba(232, 104, 42, 0.1);
-  border-color: rgba(232, 104, 42, 0.4);
-  color: var(--coral);
+  background: rgba(200, 54, 44, 0.09);
+  border-color: rgba(200, 54, 44, 0.55);
+  color: #a82a22;
 }
 
 .admin-main {
