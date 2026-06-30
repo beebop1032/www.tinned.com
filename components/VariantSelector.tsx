@@ -85,6 +85,7 @@ export function VariantSelector({ product, initialSku, preorder = false }: { pro
     });
     window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(next));
     window.dispatchEvent(new Event("tinned-cart-updated"));
+    window.dispatchEvent(new CustomEvent("tinned-cart-toast", { detail: { name: product.name } }));
     setAdded(true);
   };
 

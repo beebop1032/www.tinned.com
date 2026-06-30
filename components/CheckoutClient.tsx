@@ -71,11 +71,17 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discountCents: number } | null>(null);
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
   const [couponBusy, setCouponBusy] = useState(false);
+  const [pendingCoupon, setPendingCoupon] = useState<string | null>(null);
 
   useEffect(() => {
     const cart = readCart();
     setItems(cart);
-    setSelectedStores(readSelection()?.selectedStoreSlugs ?? []);
+    const selection = readSelection();
+    setSelectedStores(selection?.selectedStoreSlugs ?? []);
+    if (selection?.couponCode) {
+      setCouponInput(selection.couponCode);
+      setPendingCoupon(selection.couponCode);
+    }
     setSession(readStoredSession());
   }, []);
 
@@ -117,6 +123,23 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
       return JSON.stringify(next) === JSON.stringify(current) ? current : next;
     });
   }, [selectedGroups.map((group) => group.storeSlug).join("|"), carrierOptions.map((carrier) => carrier.code).join("|")]);
+
+  useEffect(() => {
+    if (!pendingCoupon || subtotalCents <= 0) return;
+    const code = pendingCoupon;
+    setPendingCoupon(null);
+    void (async () => {
+      try {
+        const result = await validateCoupon(code, subtotalCents);
+        if (result.valid) {
+          setAppliedCoupon({ code, discountCents: result.discountCents });
+          setCouponMessage(result.message);
+        }
+      } catch {
+        // Silently ignore: the buyer can still re-apply the code manually.
+      }
+    })();
+  }, [pendingCoupon, subtotalCents]);
 
   const updateCarrier = (storeSlug: string, carrierCode: string) => {
     setCarrierSelections((current) => {

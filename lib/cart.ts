@@ -4,6 +4,7 @@ import type { AddressSuggestion, CarrierSelection } from "./delivery";
 export const CART_STORAGE_KEY = "tinned_cart_v1";
 export const CHECKOUT_STORAGE_KEY = "tinned_checkout_v1";
 export const ORDER_STORAGE_KEY = "tinned_last_order_v1";
+export const SAVED_STORAGE_KEY = "tinned_saved_v1";
 
 type CartStoreBox = Pick<Box, "id" | "name" | "slug" | "type" | "logoPath">;
 
@@ -38,7 +39,13 @@ export type StoreCartGroup = {
 
 export type CheckoutSelection = {
   selectedStoreSlugs: string[];
+  couponCode?: string;
 };
+
+// Saved-for-later items share the CartItem shape; reuse normalizeCartItems to read/persist them.
+export function normalizeSavedItems(value: unknown): CartItem[] {
+  return normalizeCartItems(value);
+}
 
 export type StoredOrder = {
   orderId?: number;
@@ -109,7 +116,8 @@ export function normalizeCheckoutSelection(value: unknown): CheckoutSelection | 
   const candidate = value as Partial<CheckoutSelection>;
   if (!Array.isArray(candidate.selectedStoreSlugs)) return null;
   return {
-    selectedStoreSlugs: candidate.selectedStoreSlugs.filter((slug): slug is string => typeof slug === "string")
+    selectedStoreSlugs: candidate.selectedStoreSlugs.filter((slug): slug is string => typeof slug === "string"),
+    couponCode: typeof candidate.couponCode === "string" ? candidate.couponCode : undefined
   };
 }
 

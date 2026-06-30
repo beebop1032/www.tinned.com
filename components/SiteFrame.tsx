@@ -6,6 +6,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { UserRound, ShoppingBag, Search } from "lucide-react";
 import { NavPrimary } from "@/components/NavPrimary";
+import { CartCountBadge } from "@/components/CartCountBadge";
+import { CartToast } from "@/components/CartToast";
 
 export function SiteFrame({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -45,6 +47,7 @@ export function SiteFrame({ children }: { children: ReactNode }) {
             <Link className="nav-cart" href="/cart" aria-label="Panier">
               <ShoppingBag size={15} aria-hidden />
               <span>Panier</span>
+              <CartCountBadge />
             </Link>
           </nav>
         </div>
@@ -80,6 +83,7 @@ export function SiteFrame({ children }: { children: ReactNode }) {
           <span>Boutiques indépendantes · Livraison soignée · Paiement sécurisé</span>
         </div>
       </footer>
+      <CartToast />
     </div>
   );
 }
