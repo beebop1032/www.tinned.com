@@ -19,7 +19,7 @@ import {
 import { AUTH_STORAGE_KEY, normalizeSession, sessionHasRole, type TinnedSession } from "@/lib/auth";
 import { AdminLogin } from "@/components/admin/AdminLogin";
 
-type NavItem = { href: string; label: string; icon: ReactNode; exact?: boolean };
+type NavItem = { href: string; label: string; icon: ReactNode; exact?: boolean; tone?: string };
 type NavGroup = { title: string; items: NavItem[] };
 
 const NAV: NavGroup[] = [
@@ -30,10 +30,10 @@ const NAV: NavGroup[] = [
   {
     title: "Catalogue",
     items: [
-      { href: "/admin/store-box", label: "Store Box", icon: <Store size={18} aria-hidden /> },
-      { href: "/admin/business-box", label: "Business Box", icon: <Building2 size={18} aria-hidden /> },
-      { href: "/admin/blog-box", label: "Blog Box", icon: <Boxes size={18} aria-hidden /> },
-      { href: "/admin/travel-box", label: "Travel Box", icon: <Plane size={18} aria-hidden /> }
+      { href: "/admin/store-box", label: "Store Box", icon: <Store size={18} aria-hidden />, tone: "tone-store" },
+      { href: "/admin/business-box", label: "Business Box", icon: <Building2 size={18} aria-hidden />, tone: "tone-business" },
+      { href: "/admin/blog-box", label: "Blog Box", icon: <Boxes size={18} aria-hidden />, tone: "tone-blog" },
+      { href: "/admin/travel-box", label: "Travel Box", icon: <Plane size={18} aria-hidden />, tone: "tone-travel" }
     ]
   },
   {
@@ -109,7 +109,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`admin-side-link ${isActive(pathname, item) ? "is-active" : ""}`}
+                  className={`admin-side-link ${item.tone ?? ""} ${isActive(pathname, item) ? "is-active" : ""}`}
                   aria-current={isActive(pathname, item) ? "page" : undefined}
                 >
                   {item.icon}

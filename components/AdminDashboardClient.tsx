@@ -477,22 +477,22 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
       </div>
 
       <div className="admin-kpis" aria-label="Indicateurs catalogue">
-        <article>
+        <article className="tone-business">
           <Building2 size={21} aria-hidden />
           <span>Business Box</span>
           <strong>{data.businessBoxes.length}</strong>
         </article>
-        <article>
+        <article className="tone-store">
           <Store size={21} aria-hidden />
           <span>Store Box</span>
           <strong>{data.storeBoxes.length}</strong>
         </article>
-        <article>
+        <article className="tone-blog">
           <Boxes size={21} aria-hidden />
           <span>Blog Box</span>
           <strong>{data.blogBoxes.length}</strong>
         </article>
-        <article>
+        <article className="tone-travel">
           <Plane size={21} aria-hidden />
           <span>Travel Box</span>
           <strong>{data.travelBoxes.length}</strong>
@@ -502,7 +502,7 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
           <span>Variantes</span>
           <strong>{totalVariants}</strong>
         </article>
-        <article>
+        <article className="tone-travel">
           <MapPin size={21} aria-hidden />
           <span>Voyages</span>
           <strong>{totalTrips}</strong>
@@ -527,12 +527,12 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
           </div>
           <div className="admin-overview-lists">
             {([
-              { title: "Store Box", boxes: data.storeBoxes, href: "/admin/store-box", icon: <Store size={18} aria-hidden /> },
-              { title: "Business Box", boxes: data.businessBoxes, href: "/admin/business-box", icon: <Building2 size={18} aria-hidden /> },
-              { title: "Blog Box", boxes: data.blogBoxes, href: "/admin/blog-box", icon: <Boxes size={18} aria-hidden /> },
-              { title: "Travel Box", boxes: data.travelBoxes, href: "/admin/travel-box", icon: <Plane size={18} aria-hidden /> }
+              { title: "Store Box", boxes: data.storeBoxes, href: "/admin/store-box", icon: <Store size={18} aria-hidden />, tone: "tone-store" },
+              { title: "Business Box", boxes: data.businessBoxes, href: "/admin/business-box", icon: <Building2 size={18} aria-hidden />, tone: "tone-business" },
+              { title: "Blog Box", boxes: data.blogBoxes, href: "/admin/blog-box", icon: <Boxes size={18} aria-hidden />, tone: "tone-blog" },
+              { title: "Travel Box", boxes: data.travelBoxes, href: "/admin/travel-box", icon: <Plane size={18} aria-hidden />, tone: "tone-travel" }
             ] as const).map((group) => (
-              <section className="admin-panel admin-overview-panel" key={group.title}>
+              <section className={`admin-panel admin-overview-panel ${group.tone}`} key={group.title}>
                 <header className="admin-panel-header">
                   <div>
                     <span className="admin-panel-icon">{group.icon}</span>
