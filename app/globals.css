@@ -2940,10 +2940,10 @@ button.button:disabled {
 
 .admin-inline-form {
   margin-bottom: 18px;
-  padding: 18px;
-  border: 1px solid rgba(1, 126, 122, 0.18);
-  border-radius: var(--ad-radius-sm);
-  background: var(--cream);
+  padding: 20px;
+  border: 1px solid var(--ad-line);
+  border-radius: var(--ad-radius);
+  background: var(--bg);
 }
 
 .admin-inline-form-header {
@@ -2951,7 +2951,9 @@ button.button:disabled {
   justify-content: space-between;
   gap: 12px;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ad-line);
 }
 
 .admin-inline-form-header h3 {
@@ -3048,13 +3050,112 @@ button.button:disabled {
 
 .admin-submit {
   width: 100%;
-  margin-top: 16px;
+  margin-top: 18px;
+}
+
+/* --- Form & button skin: admin editorial only (scoped, does not touch the public site) --- */
+.admin-shell .field,
+.admin-login .field {
+  gap: 6px;
+}
+
+.admin-shell .field span,
+.admin-login .field span {
+  color: var(--text-soft);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.admin-shell .field input,
+.admin-shell .field select,
+.admin-shell .field textarea,
+.admin-login .field input,
+.admin-login .field select,
+.admin-login .field textarea {
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 1px solid rgba(26, 18, 8, 0.14);
+  border-radius: 10px;
+  background: #fff;
+  font-size: 14px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-shell .field textarea,
+.admin-login .field textarea {
+  min-height: 104px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.admin-shell .field input::placeholder,
+.admin-shell .field textarea::placeholder {
+  color: var(--text-faint);
+}
+
+.admin-shell .field input:focus,
+.admin-shell .field select:focus,
+.admin-shell .field textarea:focus,
+.admin-login .field input:focus,
+.admin-login .field select:focus,
+.admin-login .field textarea:focus {
+  border-color: var(--forest);
+  box-shadow: 0 0 0 3px rgba(1, 126, 122, 0.14);
+}
+
+.admin-shell .admin-form-grid {
+  gap: 14px;
+}
+
+.admin-shell .button,
+.admin-shell button.button,
+.admin-login .button,
+.admin-login button.button {
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 10px;
+  box-shadow: none;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-shell .button:hover,
+.admin-shell button.button:hover,
+.admin-login .button:hover,
+.admin-login button.button:hover {
+  background: var(--forest-dark);
+  border-color: var(--forest-dark);
+  box-shadow: 0 1px 2px rgba(26, 18, 8, 0.1);
+  transform: none;
+}
+
+.admin-shell .button:active,
+.admin-shell button.button:active,
+.admin-login .button:active {
+  transform: none;
+  box-shadow: none;
+}
+
+.admin-shell .button.secondary,
+.admin-shell .button.secondary-on-light {
+  border-color: rgba(26, 18, 8, 0.14);
+  background: #fff;
+  color: var(--forest);
+  box-shadow: none;
+}
+
+.admin-shell .button.secondary:hover,
+.admin-shell .button.secondary-on-light:hover {
+  background: rgba(1, 126, 122, 0.06);
+  border-color: rgba(1, 126, 122, 0.32);
+  box-shadow: none;
 }
 
 .admin-variants {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--stone);
+  border-top: 1px solid var(--ad-line);
 }
 
 .admin-variants-head {
