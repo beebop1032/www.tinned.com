@@ -1,9 +1,18 @@
 import type { Box, BoxType, Product, Article } from "./types";
 import type { Trip } from "./types";
+import { AUTH_STORAGE_KEY } from "./auth";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 type HydraCollection<T> = { member?: T[]; "hydra:member"?: T[] };
+
+/** Session expirée / invalide : purge la session et prévient l'app (les shells
+ *  écoutent `tinned-auth-updated` et rebasculent sur le login). */
+function handleUnauthorized() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.dispatchEvent(new Event("tinned-auth-updated"));
+}
 
 function endpoint(path: string) {
   if (!apiUrl) throw new Error("NEXT_PUBLIC_API_URL is not set.");
@@ -20,6 +29,11 @@ async function vendorFetch<T>(path: string, token: string, init: RequestInit = {
   headers.set("authorization", `Bearer ${token}`);
   if (!headers.has("accept")) headers.set("accept", "application/ld+json, application/json");
   const res = await fetch(endpoint(path), { ...init, headers });
+  // Expired/invalid JWT: clear the session so the dashboard returns to login.
+  if (res.status === 401) {
+    handleUnauthorized();
+    throw new Error("Session expirée. Reconnecte-toi pour continuer.");
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({})) as { detail?: string; violations?: { message?: string }[] };
     throw new Error(err.violations?.[0]?.message ?? err.detail ?? "Erreur API");

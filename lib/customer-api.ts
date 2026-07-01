@@ -1,8 +1,16 @@
 import type { StoredOrder } from "./cart";
-import type { TinnedSession } from "./auth";
+import { AUTH_STORAGE_KEY, type TinnedSession } from "./auth";
 import type { CarrierOption } from "./delivery";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+/** Session expirée / invalide : purge la session et prévient l'app (les shells
+ *  écoutent `tinned-auth-updated` et rebasculent sur le login). */
+function handleUnauthorized() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.dispatchEvent(new Event("tinned-auth-updated"));
+}
 
 type ApiErrorPayload = {
   detail?: string;
@@ -117,6 +125,14 @@ async function apiFetch<T>(path: string, init: RequestInit = {}) {
     ...init,
     headers
   });
+
+  // A 401 on an authenticated request means the JWT expired/was revoked: clear the
+  // session so the app returns to login instead of surfacing "Expired JWT Token".
+  // A 401 without a token (e.g. wrong credentials on login) is a normal error.
+  if (response.status === 401 && headers.has("authorization")) {
+    handleUnauthorized();
+    throw new Error("Session expirée. Reconnecte-toi pour continuer.");
+  }
 
   if (!response.ok) {
     throw new Error(await parseApiError(response));

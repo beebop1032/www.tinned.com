@@ -48,6 +48,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     };
   }, [router]);
 
+  // If a request clears the session mid-session (expired JWT), leave the dashboard.
+  useEffect(() => {
+    const onAuthChange = () => {
+      if (!readStoredSession()?.token) {
+        setAuthorized(false);
+        router.replace("/auth?redirect=/dashboard");
+      }
+    };
+    window.addEventListener("tinned-auth-updated", onAuthChange);
+    return () => window.removeEventListener("tinned-auth-updated", onAuthChange);
+  }, [router]);
+
   if (!authorized) return null;
 
   return (
