@@ -1,5 +1,5 @@
 import { cache } from "react";
-import type { Article, Box, BoxType, LandingPage, Product, StaticPage, Trip } from "./types";
+import type { Article, Box, BoxType, LandingPage, Product, ProductBundle, StaticPage, Trip } from "./types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -71,6 +71,17 @@ export async function getProducts(storeSlug?: string): Promise<Product[]> {
 
 export const getProduct = cache(async function getProduct(slug: string): Promise<Product | null> {
   const remote = await fetchApi<HydraCollection<Product>>(`/products?slug=${slug}&active=true`);
+  return remote ? (collection(remote)[0] ?? null) : null;
+});
+
+export async function getBundles(storeSlug?: string): Promise<ProductBundle[]> {
+  const query = storeSlug ? `?storeBox.slug=${storeSlug}&active=true` : "?active=true";
+  const remote = await fetchApi<HydraCollection<ProductBundle>>(`/product_bundles${query}`);
+  return remote ? collection(remote) : [];
+}
+
+export const getBundle = cache(async function getBundle(slug: string): Promise<ProductBundle | null> {
+  const remote = await fetchApi<HydraCollection<ProductBundle>>(`/product_bundles?slug=${slug}&active=true`);
   return remote ? (collection(remote)[0] ?? null) : null;
 });
 

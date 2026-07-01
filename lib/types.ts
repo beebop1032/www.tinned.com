@@ -48,6 +48,27 @@ export type ProductVariant = {
 
 export type ProductAvailability = "available" | "coming_soon" | "preorder";
 
+export type BundleItem = {
+  id: number;
+  variant: ProductVariant & { product?: { name?: string; slug?: string } };
+  quantity: number;
+};
+
+export type ProductBundle = {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  images: string[];
+  pricingType: "fixed" | "discount";
+  fixedPriceCents: number;
+  discountPercent: number;
+  priceCents: number;
+  componentsTotalCents: number;
+  storeBox?: Box | null;
+  items: BundleItem[];
+};
+
 export type Product = {
   id: number;
   name: string;
