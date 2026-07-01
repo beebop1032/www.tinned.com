@@ -266,6 +266,23 @@ export async function fetchMyVendorOrders(token: string): Promise<VendorStoreOrd
   return collection(r);
 }
 
+export type PayoutEntry = {
+  id: number;
+  storeReference: string;
+  grossCents: number;
+  commissionCents: number;
+  netCents: number;
+  commissionRatePercent: number;
+  status: "pending" | "paid";
+  createdAt: string;
+  paidAt?: string | null;
+};
+
+export async function fetchMyPayouts(token: string): Promise<PayoutEntry[]> {
+  const r = await vendorFetch<HydraCollection<PayoutEntry>>("/my_payouts", token);
+  return collection(r);
+}
+
 export async function updateStoreOrder(
   id: number,
   patch: { status?: string; trackingNumber?: string; trackingUrl?: string },

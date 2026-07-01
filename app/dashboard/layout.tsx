@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
-import { LayoutDashboard, ShoppingBag, Box, LogOut } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Box, LogOut, Wallet } from "lucide-react";
 import { readStoredSession, sessionHasRole } from "@/lib/auth";
 import { fetchMyBoxes } from "@/lib/vendor-api";
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/dashboard", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
   { href: "/dashboard/boxes", label: "Mes Boxes", icon: Box },
   { href: "/dashboard/orders", label: "Commandes", icon: ShoppingBag },
+  { href: "/dashboard/payouts", label: "Revenus", icon: Wallet },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
