@@ -18,6 +18,17 @@ export function productVariantLabel(product: Product) {
   return count > 1 ? `${count} options` : "Disponible directement";
 }
 
+/**
+ * Returns the product's name/description for a locale, falling back to the base
+ * (French) fields when no translation exists. Ready for [locale] routing activation.
+ */
+export function localizedProduct(product: Product, locale: string): { name: string; description?: string | null } {
+  const translation = product.translations?.find((entry) => entry.locale === locale);
+  return translation
+    ? { name: translation.name || product.name, description: translation.description ?? product.description }
+    : { name: product.name, description: product.description };
+}
+
 export function productPriceCents(product: Product) {
   return product.variants.length
     ? Math.min(...product.variants.map((variant) => variant.priceCents))

@@ -82,6 +82,7 @@ export type Product = {
   releaseAt?: string | null;
   storeBox?: Box | null;
   variants: ProductVariant[];
+  translations?: { locale: string; name: string; description?: string | null }[];
 };
 
 export type Article = {
