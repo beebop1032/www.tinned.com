@@ -1696,6 +1696,7 @@ button.button:disabled {
   position: sticky;
   top: 94px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
   padding: 22px;
   min-width: 0;
@@ -4734,6 +4735,7 @@ a.admin-kpi {
 .cart-coupon,
 .checkout-coupon {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
 
