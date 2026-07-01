@@ -4,6 +4,7 @@ export type TinnedSession = {
   id?: number;
   email: string;
   token: string;
+  refreshToken?: string;
   firstName?: string;
   lastName?: string;
   phone?: string;
@@ -19,6 +20,7 @@ export function normalizeSession(value: unknown): TinnedSession | null {
     id: typeof candidate.id === "number" ? candidate.id : undefined,
     email: candidate.email,
     token: candidate.token,
+    refreshToken: typeof candidate.refreshToken === "string" ? candidate.refreshToken : undefined,
     firstName: typeof candidate.firstName === "string" ? candidate.firstName : undefined,
     lastName: typeof candidate.lastName === "string" ? candidate.lastName : undefined,
     phone: typeof candidate.phone === "string" ? candidate.phone : undefined,
@@ -69,6 +71,53 @@ export function clearStoredSession() {
   window.localStorage.removeItem(AUTH_STORAGE_KEY);
   window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
   window.dispatchEvent(new Event("tinned-auth-updated"));
+}
+
+// One shared in-flight refresh so concurrent 401s trigger a single /token/refresh.
+let refreshInFlight: Promise<TinnedSession | null> | null = null;
+
+/**
+ * Exchanges the stored refresh token for a fresh access token (and a rotated refresh
+ * token), updating the stored session in place. Returns the new session, or null when
+ * there is no refresh token or the server rejects it (in which case the session is
+ * cleared). A network error returns null WITHOUT clearing, so a transient blip doesn't
+ * log the user out.
+ */
+export function refreshAccessToken(): Promise<TinnedSession | null> {
+  if (typeof window === "undefined") return Promise.resolve(null);
+  if (refreshInFlight) return refreshInFlight;
+
+  const current = readStoredSession();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (!current?.refreshToken || !apiUrl) return Promise.resolve(null);
+
+  refreshInFlight = (async () => {
+    try {
+      const res = await fetch(`${apiUrl.replace(/\/$/, "")}/api/token/refresh`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ refresh_token: current.refreshToken }),
+      });
+      if (!res.ok) {
+        clearStoredSession();
+        return null;
+      }
+      const data = (await res.json()) as { token?: string; refresh_token?: string };
+      if (!data.token) {
+        clearStoredSession();
+        return null;
+      }
+      const next: TinnedSession = { ...current, token: data.token, refreshToken: data.refresh_token ?? current.refreshToken };
+      updateStoredSession(next);
+      return next;
+    } catch {
+      return null;
+    } finally {
+      refreshInFlight = null;
+    }
+  })();
+
+  return refreshInFlight;
 }
 
 export function sessionHasRole(session: TinnedSession | null, role: string) {

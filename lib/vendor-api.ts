@@ -1,6 +1,6 @@
 import type { Box, BoxType, Product, Article } from "./types";
 import type { Trip } from "./types";
-import { AUTH_STORAGE_KEY } from "./auth";
+import { AUTH_STORAGE_KEY, refreshAccessToken } from "./auth";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,13 +25,17 @@ function collection<T>(payload: T[] | HydraCollection<T>): T[] {
   return payload.member ?? payload["hydra:member"] ?? [];
 }
 
-async function vendorFetch<T>(path: string, token: string, init: RequestInit = {}): Promise<T> {
+async function vendorFetch<T>(path: string, token: string, init: RequestInit = {}, retried = false): Promise<T> {
   const headers = new Headers(init.headers);
   headers.set("authorization", `Bearer ${token}`);
   if (!headers.has("accept")) headers.set("accept", "application/ld+json, application/json");
   const res = await fetch(endpoint(path), { ...init, headers });
-  // Expired/invalid JWT: clear the session so the dashboard returns to login.
+  // Expired access token: refresh once and replay; only then fall back to logout.
   if (res.status === 401) {
+    if (!retried) {
+      const refreshed = await refreshAccessToken();
+      if (refreshed?.token) return vendorFetch<T>(path, refreshed.token, init, true);
+    }
     handleUnauthorized();
     throw new Error("Session expirée. Reconnecte-toi pour continuer.");
   }

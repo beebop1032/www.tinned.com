@@ -1,5 +1,5 @@
 import type { StoredOrder } from "./cart";
-import { AUTH_STORAGE_KEY, type TinnedSession } from "./auth";
+import { AUTH_STORAGE_KEY, refreshAccessToken, type TinnedSession } from "./auth";
 import type { CarrierOption } from "./delivery";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -31,6 +31,7 @@ type AuthResponse = {
 
 type LoginResponse = {
   token: string;
+  refresh_token?: string;
 };
 
 type ActionResponse = {
@@ -116,7 +117,7 @@ async function parseApiError(response: Response) {
   return violation ?? payload?.detail ?? payload?.message ?? payload?.title ?? "La requête a échoué.";
 }
 
-async function apiFetch<T>(path: string, init: RequestInit = {}) {
+async function apiFetch<T>(path: string, init: RequestInit = {}, retried = false): Promise<T> {
   const headers = new Headers(init.headers);
   if (!headers.has("accept")) {
     headers.set("accept", "application/ld+json, application/json");
@@ -127,10 +128,19 @@ async function apiFetch<T>(path: string, init: RequestInit = {}) {
     headers
   });
 
-  // A 401 on an authenticated request means the JWT expired/was revoked: clear the
-  // session so the app returns to login instead of surfacing "Expired JWT Token".
-  // A 401 without a token (e.g. wrong credentials on login) is a normal error.
+  // A 401 on an authenticated request means the access token expired: try once to mint
+  // a fresh one from the refresh token and replay the request. If that fails, clear the
+  // session (returns to login) instead of surfacing "Expired JWT Token". A 401 without a
+  // token (e.g. wrong credentials on login) is a normal error left untouched.
   if (response.status === 401 && headers.has("authorization")) {
+    if (!retried) {
+      const refreshed = await refreshAccessToken();
+      if (refreshed?.token) {
+        const retryHeaders = new Headers(init.headers);
+        retryHeaders.set("authorization", `Bearer ${refreshed.token}`);
+        return apiFetch<T>(path, { ...init, headers: retryHeaders }, true);
+      }
+    }
     handleUnauthorized();
     throw new Error("Session expirée. Reconnecte-toi pour continuer.");
   }
@@ -156,20 +166,15 @@ export async function registerCustomer(input: {
   acceptedTerms: boolean;
   marketingConsent: boolean;
 }): Promise<TinnedSession> {
-  const payload = await apiFetch<AuthResponse>("/register", {
+  await apiFetch<AuthResponse>("/register", {
     method: "POST",
     headers: { "content-type": "application/ld+json" },
     body: JSON.stringify(input)
   });
 
-  return {
-    id: payload.id,
-    email: payload.email ?? input.email,
-    token: payload.token,
-    firstName: payload.firstName ?? input.firstName,
-    lastName: payload.lastName ?? input.lastName,
-    phone: payload.phone ?? input.phone
-  };
+  // Register doesn't issue a refresh token (only the json_login firewall does), so log
+  // in right away to obtain a session with both an access and a refresh token.
+  return loginCustomer({ email: input.email, password: input.password });
 }
 
 export async function loginCustomer(input: {
@@ -184,7 +189,7 @@ export async function loginCustomer(input: {
   });
 
   const profile = await fetchCustomerProfile(payload.token);
-  return { ...profile, token: payload.token };
+  return { ...profile, token: payload.token, refreshToken: payload.refresh_token };
 }
 
 export async function requestPasswordReset(email: string): Promise<ActionResponse> {
