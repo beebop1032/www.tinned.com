@@ -11,6 +11,7 @@ type HydraCollection<T> = { member?: T[]; "hydra:member"?: T[] };
 function handleUnauthorized() {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
   window.dispatchEvent(new Event("tinned-auth-updated"));
 }
 

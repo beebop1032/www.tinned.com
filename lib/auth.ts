@@ -29,10 +29,46 @@ export function normalizeSession(value: unknown): TinnedSession | null {
 export function readStoredSession(): TinnedSession | null {
   if (typeof window === "undefined") return null;
   try {
-    return normalizeSession(JSON.parse(window.localStorage.getItem(AUTH_STORAGE_KEY) ?? "null"));
+    // sessionStorage (this-browser-session only) takes precedence over localStorage
+    // (persistent). Reading both means "Rester connecté" unchecked still works.
+    const raw = window.sessionStorage.getItem(AUTH_STORAGE_KEY) ?? window.localStorage.getItem(AUTH_STORAGE_KEY);
+    return normalizeSession(JSON.parse(raw ?? "null"));
   } catch {
     return null;
   }
+}
+
+/**
+ * Persists the session. When `remember` is true it goes to localStorage (survives
+ * browser restarts); otherwise to sessionStorage (cleared when the browser closes).
+ * Always clears the other store so there is a single source of truth.
+ */
+export function writeStoredSession(session: TinnedSession, remember: boolean) {
+  if (typeof window === "undefined") return;
+  const value = JSON.stringify(session);
+  if (remember) {
+    window.localStorage.setItem(AUTH_STORAGE_KEY, value);
+    window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
+  } else {
+    window.sessionStorage.setItem(AUTH_STORAGE_KEY, value);
+    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  }
+  window.dispatchEvent(new Event("tinned-auth-updated"));
+}
+
+/** Updates the stored session in place, keeping its current persistence (session vs local). */
+export function updateStoredSession(session: TinnedSession) {
+  if (typeof window === "undefined") return;
+  const inSessionStore = window.sessionStorage.getItem(AUTH_STORAGE_KEY) !== null;
+  writeStoredSession(session, !inSessionStore);
+}
+
+/** Clears the session from both stores. */
+export function clearStoredSession() {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
+  window.dispatchEvent(new Event("tinned-auth-updated"));
 }
 
 export function sessionHasRole(session: TinnedSession | null, role: string) {

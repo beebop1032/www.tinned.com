@@ -1975,6 +1975,34 @@ button.button:disabled {
   justify-self: end;
 }
 
+.auth-login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: -4px;
+}
+
+.auth-login-options .auth-forgot-link {
+  margin-top: 0;
+}
+
+.auth-remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.auth-remember input {
+  width: 16px;
+  height: 16px;
+}
+
 .auth-back-link {
   justify-self: center;
 }

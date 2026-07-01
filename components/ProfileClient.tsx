@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { LayoutDashboard, LogOut, MapPin, PackageCheck, Repeat2, UserRound } from "lucide-react";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { AUTH_STORAGE_KEY, readStoredSession, sessionHasRole, type TinnedSession } from "@/lib/auth";
+import { AUTH_STORAGE_KEY, readStoredSession, sessionHasRole, updateStoredSession, type TinnedSession } from "@/lib/auth";
 import { buildStoreCartGroups, type CartProduct, type StoredOrder } from "@/lib/cart";
 import {
   createMyAddress,
@@ -70,7 +70,7 @@ export function ProfileClient({ products }: { products: CartProduct[] }) {
     ])
       .then(([customer, nextOrders, nextAddresses]) => {
         const nextSession = { ...current, ...customer };
-        window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextSession));
+        updateStoredSession(nextSession);
         setSession(nextSession);
         setProfile({
           firstName: customer.firstName ?? "",
@@ -121,7 +121,7 @@ export function ProfileClient({ products }: { products: CartProduct[] }) {
     try {
       const customer = await updateCustomerProfile(session.token, profile);
       const nextSession = { ...session, ...customer };
-      window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextSession));
+      updateStoredSession(nextSession);
       setSession(nextSession);
       setNotice("Vos coordonnées ont été mises à jour.");
     } catch (reason) {
@@ -156,6 +156,7 @@ export function ProfileClient({ products }: { products: CartProduct[] }) {
 
   const signOut = () => {
     window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    window.sessionStorage.removeItem(AUTH_STORAGE_KEY);
     window.location.replace("/auth");
   };
 

@@ -2,7 +2,7 @@
 
 import { CheckCircle2, LockKeyhole, PackageCheck, ShieldCheck, Truck } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { AUTH_STORAGE_KEY, type TinnedSession } from "@/lib/auth";
+import { writeStoredSession, type TinnedSession } from "@/lib/auth";
 import { loginCustomer, registerCustomer, requestPasswordReset, resetPassword } from "@/lib/customer-api";
 
 type AuthMode = "login" | "register" | "forgot" | "reset";
@@ -79,8 +79,9 @@ export function AuthClient() {
       const session: TinnedSession = mode === "register"
         ? await registerCustomer({ email, password, firstName, lastName, phone, acceptedTerms, marketingConsent })
         : await loginCustomer({ email, password });
-      window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-      window.dispatchEvent(new Event("tinned-auth-updated"));
+      // Login: honour the checkbox. Register: keep the session by default.
+      const remember = mode === "login" ? formData.get("remember") === "on" : true;
+      writeStoredSession(session, remember);
       window.location.href = target;
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Connexion impossible pour le moment.");
@@ -149,7 +150,15 @@ export function AuthClient() {
             </div>
           ) : null}
 
-          {mode === "login" ? <button className="auth-forgot-link" type="button" onClick={() => changeMode("forgot")}>Mot de passe oublié ?</button> : null}
+          {mode === "login" ? (
+            <div className="auth-login-options">
+              <label className="auth-remember">
+                <input type="checkbox" name="remember" defaultChecked />
+                <span>Rester connecté</span>
+              </label>
+              <button className="auth-forgot-link" type="button" onClick={() => changeMode("forgot")}>Mot de passe oublié ?</button>
+            </div>
+          ) : null}
           {error ? <p className="summary-note" role="alert">{error}</p> : null}
           {notice ? <p className="auth-notice" role="status">{notice}</p> : null}
           <button className="button checkout-submit" type="submit" disabled={submitting}>
