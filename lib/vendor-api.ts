@@ -120,6 +120,9 @@ export type ProductInput = {
   description?: string;
   basePriceCents: number;
   currency: string;
+  active?: boolean;
+  availability?: "available" | "coming_soon" | "preorder";
+  releaseAt?: string | null;
   imagePath?: string;
 };
 
@@ -127,9 +130,19 @@ export type VariantInput = {
   id?: number;
   sku: string;
   priceCents: number;
+  compareAtPriceCents?: number | null;
   stock: number;
+  active?: boolean;
   imagePath?: string;
 };
+
+export async function updateVariant(
+  id: number,
+  patch: { priceCents?: number; compareAtPriceCents?: number | null; stock?: number; active?: boolean },
+  token: string,
+): Promise<void> {
+  await vendorFetch<void>(`/product_variants/${id}`, token, patchBody(patch));
+}
 
 export async function fetchMyProducts(storeBoxId: number, token: string): Promise<Product[]> {
   const r = await vendorFetch<HydraCollection<Product>>(`/products?storeBox.id=${storeBoxId}&order[createdAt]=desc`, token);

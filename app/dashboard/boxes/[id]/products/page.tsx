@@ -45,6 +45,7 @@ export default function MyProductsPage() {
               <td className="p-2">{eurosFromCents(p.basePriceCents)} €</td>
               <td className="p-2">{p.variants.length}</td>
               <td className="p-2 text-right">
+                <Link href={`/dashboard/boxes/${id}/products/${p.id}/edit`} className="text-blue-600 hover:underline text-xs mr-3">Éditer</Link>
                 <button onClick={() => handleDelete(p.id)} className="text-red-500 hover:underline text-xs">Supprimer</button>
               </td>
             </tr>
