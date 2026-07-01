@@ -1698,6 +1698,7 @@ button.button:disabled {
   display: grid;
   gap: 14px;
   padding: 22px;
+  min-width: 0;
 }
 
 .order-summary h2,
@@ -1719,16 +1720,24 @@ button.button:disabled {
 
 .summary-row {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 18px;
+  gap: 14px;
   padding: 10px 0;
   border-top: 1px solid var(--stone);
   color: var(--muted);
 }
 
+.summary-row > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .summary-row strong {
   color: var(--ink);
+  flex: none;
+  text-align: right;
+  white-space: nowrap;
 }
 
 .summary-total {
@@ -4704,16 +4713,20 @@ a.admin-kpi {
 /* Estimated delivery line in summary */
 .summary-eta {
   display: flex;
-  align-items: center;
-  gap: 7px;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
   margin: 0;
   color: var(--muted);
   font-size: 13px;
   font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .summary-eta svg {
   flex: none;
+  margin-top: 2px;
   color: var(--forest);
 }
 
