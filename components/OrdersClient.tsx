@@ -17,6 +17,37 @@ function readOrder() {
   }
 }
 
+const SHIPMENT_LABELS: Record<string, string> = {
+  open: "En attente de paiement", waiting_store: "En attente de préparation", preparing: "En préparation",
+  shipped: "Expédié", completed: "Livré", cancelled: "Annulé",
+};
+
+const TIMELINE_STEPS = [
+  { key: "pending_payment", label: "Commande" },
+  { key: "paid", label: "Payée" },
+  { key: "processing", label: "Préparation" },
+  { key: "shipped", label: "Expédiée" },
+  { key: "completed", label: "Livrée" },
+];
+
+function OrderTimeline({ status, paymentStatus }: { status?: string; paymentStatus?: string }) {
+  if (status === "cancelled") {
+    return <p className="order-timeline-cancelled">Commande annulée</p>;
+  }
+  const effective = status === "pending_payment" && paymentStatus === "paid" ? "paid" : status ?? "pending_payment";
+  const currentIndex = Math.max(0, TIMELINE_STEPS.findIndex((step) => step.key === effective));
+  return (
+    <ol className="order-timeline">
+      {TIMELINE_STEPS.map((step, index) => (
+        <li key={step.key} className={index <= currentIndex ? "is-done" : ""}>
+          <span className="order-timeline-dot" />
+          {step.label}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export function OrdersClient({ products }: { products: CartProduct[] }) {
   const router = useRouter();
   const [orders, setOrders] = useState<StoredOrder[]>([]);
@@ -116,13 +147,27 @@ export function OrdersClient({ products }: { products: CartProduct[] }) {
               </div>
               <span className="pill">{order.paymentStatus === "paid" ? "Paiement confirmé" : "Paiement en attente"}</span>
             </header>
+            <OrderTimeline status={order.status} paymentStatus={order.paymentStatus} />
             <div className="order-store-status">
-              {groups.map((group) => (
-                <div key={group.storeSlug}>
-                  <strong>{group.storeName}</strong>
-                  <span>{carrierFor(order.carrierSelections?.find((item) => item.storeSlug === group.storeSlug)?.carrierCode).name} / préparation par la boutique</span>
-                </div>
-              ))}
+              {(order.storeOrders?.length
+                ? order.storeOrders.map((shipment) => (
+                    <div key={shipment.id}>
+                      <strong>{shipment.storeNameSnapshot ?? "Boutique"}</strong>
+                      <span>
+                        {SHIPMENT_LABELS[shipment.status] ?? shipment.status}
+                        {shipment.carrierNameSnapshot ? ` / ${shipment.carrierNameSnapshot}` : ""}
+                        {shipment.trackingUrl ? (
+                          <> · <a href={shipment.trackingUrl} target="_blank" rel="noopener noreferrer">Suivre mon colis</a></>
+                        ) : null}
+                      </span>
+                    </div>
+                  ))
+                : groups.map((group) => (
+                    <div key={group.storeSlug}>
+                      <strong>{group.storeName}</strong>
+                      <span>{carrierFor(order.carrierSelections?.find((item) => item.storeSlug === group.storeSlug)?.carrierCode).name} / préparation par la boutique</span>
+                    </div>
+                  )))}
             </div>
             <div className="order-card-actions">
               <Link className="button secondary-on-light order-card-action" href={`/checkout/confirmation?order=${order.id}`}>Voir la confirmation</Link>

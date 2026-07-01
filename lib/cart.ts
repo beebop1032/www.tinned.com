@@ -47,12 +47,23 @@ export function normalizeSavedItems(value: unknown): CartItem[] {
   return normalizeCartItems(value);
 }
 
+export type StoredOrderShipment = {
+  id: number;
+  status: string;
+  storeNameSnapshot?: string;
+  carrierNameSnapshot?: string | null;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
+  shippedAt?: string | null;
+};
+
 export type StoredOrder = {
   orderId?: number;
   id: string;
   reference?: string;
   status?: string;
   paymentStatus?: string;
+  storeOrders?: StoredOrderShipment[];
   checkoutUrl?: string;
   items: CartItem[];
   selectedStoreSlugs: string[];

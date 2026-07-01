@@ -239,6 +239,9 @@ export type VendorStoreOrder = {
   storeNameSnapshot: string;
   status: string;
   carrierCode?: string | null;
+  trackingNumber?: string | null;
+  trackingUrl?: string | null;
+  shippedAt?: string | null;
   totalCents: number;
   currency: string;
   createdAt: string;
@@ -247,6 +250,14 @@ export type VendorStoreOrder = {
 export async function fetchMyVendorOrders(token: string): Promise<VendorStoreOrder[]> {
   const r = await vendorFetch<HydraCollection<VendorStoreOrder>>("/my_store_orders", token);
   return collection(r);
+}
+
+export async function updateStoreOrder(
+  id: number,
+  patch: { status?: string; trackingNumber?: string; trackingUrl?: string },
+  token: string,
+): Promise<VendorStoreOrder> {
+  return vendorFetch<VendorStoreOrder>(`/my_store_orders/${id}`, token, patchBody(patch));
 }
 
 export async function uploadMedia(file: File, token: string): Promise<{ path: string; url: string }> {
