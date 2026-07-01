@@ -55,6 +55,7 @@ export type Product = {
   description?: string | null;
   basePriceCents: number;
   currency: string;
+  vatRatePercent?: number;
   images: string[];
   availability?: ProductAvailability;
   releaseAt?: string | null;

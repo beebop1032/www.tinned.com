@@ -28,6 +28,7 @@ export default function EditProductPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [basePriceEuros, setBasePriceEuros] = useState("");
+  const [vatRate, setVatRate] = useState(21);
   const [active, setActive] = useState(true);
   const [availability, setAvailability] = useState<"available" | "coming_soon" | "preorder">("available");
   const [releaseAt, setReleaseAt] = useState("");
@@ -47,6 +48,7 @@ export default function EditProductPage() {
         setName(found.name);
         setDescription(found.description ?? "");
         setBasePriceEuros(toEuros(found.basePriceCents));
+        setVatRate(found.vatRatePercent ?? 21);
         setActive(found.variants.length ? true : true);
         setAvailability(found.availability ?? "available");
         setReleaseAt(found.releaseAt ? found.releaseAt.slice(0, 10) : "");
@@ -77,6 +79,7 @@ export default function EditProductPage() {
         name,
         description,
         basePriceCents: toCents(basePriceEuros),
+        vatRatePercent: vatRate,
         active,
         availability,
         releaseAt: availability === "available" ? null : (releaseAt ? `${releaseAt}T00:00:00+00:00` : null),
@@ -130,6 +133,15 @@ export default function EditProductPage() {
             </select>
           </label>
         </div>
+        <label className="grid gap-1 text-sm max-w-xs">
+          <span className="font-medium">Taux de TVA</span>
+          <select className="border rounded px-3 py-2" value={vatRate} onChange={(e) => setVatRate(Number(e.target.value))}>
+            <option value={21}>21 % (standard)</option>
+            <option value={12}>12 %</option>
+            <option value={6}>6 % (alimentation, livres…)</option>
+            <option value={0}>0 %</option>
+          </select>
+        </label>
         {availability !== "available" ? (
           <label className="grid gap-1 text-sm">
             <span className="font-medium">Date de sortie</span>

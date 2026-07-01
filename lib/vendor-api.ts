@@ -120,6 +120,7 @@ export type ProductInput = {
   description?: string;
   basePriceCents: number;
   currency: string;
+  vatRatePercent?: number;
   active?: boolean;
   availability?: "available" | "coming_soon" | "preorder";
   releaseAt?: string | null;
