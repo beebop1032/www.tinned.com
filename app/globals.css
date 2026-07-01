@@ -1365,6 +1365,17 @@ button.button:disabled {
   text-underline-offset: 3px;
 }
 
+.subscribe-button {
+  margin-top: 12px;
+  width: 100%;
+  justify-content: center;
+  background: #fff;
+  color: var(--forest);
+  border: 1px solid var(--forest);
+}
+
+.subscribe-button:disabled { opacity: 0.7; }
+
 .bundle-layout {
   display: grid;
   grid-template-columns: 1fr 320px;

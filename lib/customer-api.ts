@@ -253,6 +253,39 @@ export async function fetchDeliveryMethods(countryCode: string): Promise<Carrier
   return collection(payload);
 }
 
+export type BoxSubscription = {
+  id: number;
+  frequency: "monthly" | "quarterly";
+  status: "active" | "paused" | "cancelled";
+  nextRenewalAt?: string | null;
+  createdAt: string;
+  variant?: { sku: string } | null;
+  storeBox?: { name?: string; slug?: string } | null;
+};
+
+export async function createSubscription(variantId: number, frequency: "monthly" | "quarterly", token: string): Promise<BoxSubscription> {
+  return apiFetch<BoxSubscription>("/box_subscriptions", {
+    method: "POST",
+    headers: { "content-type": "application/ld+json", authorization: `Bearer ${token}` },
+    body: JSON.stringify({ variant: `/api/product_variants/${variantId}`, frequency }),
+  });
+}
+
+export async function fetchMySubscriptions(token: string): Promise<BoxSubscription[]> {
+  const payload = await apiFetch<HydraCollection<BoxSubscription> | BoxSubscription[]>("/my_subscriptions", {
+    headers: { authorization: `Bearer ${token}` },
+  });
+  return collection(payload);
+}
+
+export async function updateSubscription(id: number, status: "active" | "paused" | "cancelled", token: string): Promise<BoxSubscription> {
+  return apiFetch<BoxSubscription>(`/my_subscriptions/${id}`, {
+    method: "PATCH",
+    headers: { "content-type": "application/merge-patch+json", authorization: `Bearer ${token}` },
+    body: JSON.stringify({ status }),
+  });
+}
+
 export async function fetchMyOrders(token: string): Promise<StoredOrder[]> {
   const payload = await apiFetch<HydraCollection<StoredOrder> | StoredOrder[]>("/my_orders", {
     headers: { authorization: `Bearer ${token}` }

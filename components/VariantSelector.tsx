@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus, ShoppingCart, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { CART_STORAGE_KEY, normalizeCartItems, upsertCartItem, type CartProduct } from "@/lib/cart";
+import { readStoredSession } from "@/lib/auth";
+import { createSubscription } from "@/lib/customer-api";
 import { money } from "@/lib/format";
 import type { ProductAttributeValue, ProductVariant } from "@/lib/types";
 
@@ -40,6 +43,9 @@ export function VariantSelector({ product, initialSku, preorder = false }: { pro
   const [size, setSize] = useState(valueFor(initial, "size")?.value);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const router = useRouter();
   const colors = useMemo(() => uniqueValues(product, "color"), [product]);
   const sizes = useMemo(() => uniqueValues(product, "size"), [product]);
   const selected = product.variants.find((variant) => variantMatches(variant, color, size))
@@ -158,6 +164,27 @@ export function VariantSelector({ product, initialSku, preorder = false }: { pro
           {preorder ? "Pré-commander" : "Ajouter au panier"}
         </button>
       </div>
+      <button
+        className="button subscribe-button"
+        type="button"
+        disabled={subscribing || subscribed}
+        onClick={async () => {
+          const session = readStoredSession();
+          if (!session?.token) { router.push("/auth?redirect=" + encodeURIComponent(window.location.pathname)); return; }
+          setSubscribing(true);
+          try {
+            await createSubscription(selected.id, "monthly", session.token);
+            setSubscribed(true);
+          } catch {
+            // Silently ignore: one-off purchase remains available.
+          } finally {
+            setSubscribing(false);
+          }
+        }}
+      >
+        <RefreshCw size={16} aria-hidden />
+        {subscribed ? "Abonnement créé ✓" : "S'abonner (livraison mensuelle)"}
+      </button>
       {added ? (
         <div className="cart-feedback" role="status">
           <strong>Produit ajouté au panier.</strong>
