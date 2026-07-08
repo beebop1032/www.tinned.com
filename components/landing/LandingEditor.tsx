@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Loader2, Plus, Save, Trash2 } from "lucide-react";
 import type { Block, BlockCatalog, BlockType } from "../../lib/blocks";
 import { BLOCK_LABELS, fetchBlockCatalog } from "../../lib/blocks";
-import { loadLanding, loadStandaloneLanding, saveLanding } from "../../lib/landing-api";
+import { loadLanding, loadProductLanding, loadStandaloneLanding, saveLanding } from "../../lib/landing-api";
 import { readStoredSession } from "../../lib/auth";
 import { BlockForm } from "./BlockForm";
 
@@ -32,13 +32,16 @@ function makeBlock(type: BlockType): Block {
 }
 
 type LandingEditorProps =
-  | { boxIri: string; boxSlug: string; standaloneSlug?: undefined }
-  | { standaloneSlug: string; boxIri?: undefined; boxSlug?: undefined };
+  | { boxIri: string; boxSlug: string; standaloneSlug?: undefined; productIri?: undefined; productSlug?: undefined }
+  | { standaloneSlug: string; boxIri?: undefined; boxSlug?: undefined; productIri?: undefined; productSlug?: undefined }
+  | { productIri: string; productSlug: string; boxIri?: undefined; boxSlug?: undefined; standaloneSlug?: undefined };
 
 export function LandingEditor(props: LandingEditorProps) {
   const standaloneSlug = props.standaloneSlug;
   const boxIri = props.boxIri;
   const boxSlug = props.boxSlug;
+  const productIri = props.productIri;
+  const productSlug = props.productSlug;
   const [locale, setLocale] = useState("fr");
   const [id, setId] = useState<number | undefined>(undefined);
   const [title, setTitle] = useState("");
@@ -65,6 +68,8 @@ export function LandingEditor(props: LandingEditorProps) {
     setLoaded(false);
     const request = standaloneSlug
       ? loadStandaloneLanding(standaloneSlug, locale)
+      : productSlug
+      ? loadProductLanding(productSlug, locale)
       : loadLanding(boxSlug!, locale);
     request
       .then((landing) => {
@@ -94,7 +99,7 @@ export function LandingEditor(props: LandingEditorProps) {
     return () => {
       cancelled = true;
     };
-  }, [boxSlug, standaloneSlug, locale]);
+  }, [boxSlug, standaloneSlug, productSlug, locale]);
 
   function updateBlockAt(i: number, next: Block) {
     setBlocks((prev) => prev.map((b, idx) => (idx === i ? next : b)));
@@ -125,6 +130,8 @@ export function LandingEditor(props: LandingEditorProps) {
       const result = await saveLanding(
         standaloneSlug
           ? { id, slug: standaloneSlug, locale, title, metaDescription: metaDescription || undefined, blocks }
+          : productIri
+          ? { id, productIri, locale, title, metaDescription: metaDescription || undefined, blocks }
           : { id, boxIri, locale, title, metaDescription: metaDescription || undefined, blocks },
         session.token,
       );

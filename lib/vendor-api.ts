@@ -1,6 +1,7 @@
 import type { Box, BoxType, Product, Article } from "./types";
 import type { Trip } from "./types";
 import { AUTH_STORAGE_KEY, refreshAccessToken } from "./auth";
+import { revalidateCatalog } from "./revalidate";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -121,15 +122,20 @@ export async function createBox(input: BoxInput, token: string): Promise<Box> {
     // travel — no relations needed
     extra = {};
   }
-  return vendorFetch<Box>(`/${path}`, token, jsonBody({ ...base, ...extra }));
+  const box = await vendorFetch<Box>(`/${path}`, token, jsonBody({ ...base, ...extra }));
+  await revalidateCatalog(["catalog"]);
+  return box;
 }
 
 export async function updateBox(id: number, type: BoxType, input: Partial<BoxInput>, token: string): Promise<Box> {
-  return vendorFetch<Box>(`/${resourcePath(type)}/${id}`, token, patchBody(input));
+  const box = await vendorFetch<Box>(`/${resourcePath(type)}/${id}`, token, patchBody(input));
+  await revalidateCatalog(["catalog"]);
+  return box;
 }
 
 export async function deleteBox(id: number, type: BoxType, token: string): Promise<void> {
   await vendorFetch<void>(`/${resourcePath(type)}/${id}`, token, { method: "DELETE" });
+  await revalidateCatalog(["catalog"]);
 }
 
 export type ProductInput = {
@@ -162,6 +168,7 @@ export async function updateVariant(
   token: string,
 ): Promise<void> {
   await vendorFetch<void>(`/product_variants/${id}`, token, patchBody(patch));
+  await revalidateCatalog(["catalog", "products"]);
 }
 
 export async function fetchMyProducts(storeBoxId: number, token: string): Promise<Product[]> {
@@ -185,17 +192,21 @@ export async function createProduct(input: ProductInput, variants: VariantInput[
       images: v.imagePath ? [v.imagePath] : (input.imagePath ? [input.imagePath] : []),
     }));
   }
+  await revalidateCatalog(["catalog", "products"]);
   return product;
 }
 
 export async function updateProduct(id: number, input: Partial<ProductInput>, token: string): Promise<Product> {
   const body: Record<string, unknown> = { ...input };
   if (input.imagePath !== undefined) { body.images = input.imagePath ? [input.imagePath] : []; delete body.imagePath; }
-  return vendorFetch<Product>(`/products/${id}`, token, patchBody(body));
+  const product = await vendorFetch<Product>(`/products/${id}`, token, patchBody(body));
+  await revalidateCatalog(["catalog", "products"]);
+  return product;
 }
 
 export async function deleteProduct(id: number, token: string): Promise<void> {
   await vendorFetch<void>(`/products/${id}`, token, { method: "DELETE" });
+  await revalidateCatalog(["catalog", "products"]);
 }
 
 export type ArticleInput = {

@@ -16,6 +16,7 @@ import {
   Mail,
   Plane,
   Printer,
+  Star,
   Store,
   Ticket,
   Users,
@@ -45,7 +46,8 @@ const NAV: NavGroup[] = [
     title: "Clients",
     items: [
       { href: "/admin/accounts", label: "Comptes", icon: <Users size={18} aria-hidden /> },
-      { href: "/admin/subscriptions", label: "Abonnements", icon: <BellRing size={18} aria-hidden /> }
+      { href: "/admin/subscriptions", label: "Abonnements", icon: <BellRing size={18} aria-hidden /> },
+      { href: "/admin/reviews", label: "Avis", icon: <Star size={18} aria-hidden /> }
     ]
   },
   {

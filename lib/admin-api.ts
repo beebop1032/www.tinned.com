@@ -1,5 +1,6 @@
 import type { Article, Box, BoxType, Product, Trip } from "./types";
 import { AUTH_STORAGE_KEY } from "./auth";
+import { revalidateCatalog } from "./revalidate";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -278,12 +279,14 @@ export async function fetchStockMovements(variantId: number, token: string) {
 }
 
 export async function createStockMovement(input: StockMovementInput, token: string) {
-  return adminFetch<StockMovement>("/stock_movements", token, jsonInit({
+  const movement = await adminFetch<StockMovement>("/stock_movements", token, jsonInit({
     variant: `/api/product_variants/${input.variantId}`,
     delta: input.delta,
     reason: input.reason,
     note: input.note?.trim() ? input.note.trim() : null
   }));
+  await revalidateCatalog(["catalog", "products"]);
+  return movement;
 }
 
 export async function fetchAdminShipping(token: string) {
@@ -515,6 +518,7 @@ export async function createAdminProduct(input: AdminProductInput, token: string
     }));
   }
 
+  await revalidateCatalog(["catalog", "products"]);
   return product;
 }
 
@@ -551,6 +555,8 @@ export async function updateAdminProduct(input: AdminProductInput, product: Prod
       await adminFetch("/product_variants", token, jsonInit(payload));
     }
   }
+
+  await revalidateCatalog(["catalog", "products"]);
 }
 
 export type AdminTripInput = {
@@ -803,4 +809,42 @@ export async function fetchSubscriptions(
     token
   );
   return collection(payload);
+}
+
+export type AdminReview = {
+  "@id"?: string;
+  id: number;
+  authorName: string;
+  rating: number;
+  title?: string | null;
+  body: string;
+  verifiedPurchase: boolean;
+  status: "pending" | "approved" | "rejected";
+  merchantResponse?: string | null;
+  productSlug?: string | null;
+  productName?: string | null;
+  createdAt: string;
+};
+
+export async function fetchReviews(token: string, params?: { status?: string }) {
+  const query = new URLSearchParams();
+  if (params?.status) query.set("status", params.status);
+  query.set("order[createdAt]", "desc");
+  const payload = await adminFetch<HydraCollection<AdminReview>>(`/reviews?${query.toString()}`, token);
+  return collection(payload);
+}
+
+export async function moderateReview(
+  id: number,
+  input: { status?: "pending" | "approved" | "rejected"; merchantResponse?: string | null },
+  token: string
+) {
+  const review = await adminFetch<AdminReview>(`/reviews/${id}`, token, patchInit(input));
+  await revalidateCatalog(["catalog", "reviews", "products"]);
+  return review;
+}
+
+export async function deleteReview(id: number, token: string) {
+  await adminFetch<undefined>(`/reviews/${id}`, token, { method: "DELETE" });
+  await revalidateCatalog(["catalog", "reviews", "products"]);
 }

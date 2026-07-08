@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Loader2, PackagePlus, Pencil, Plus, Store, Trash2, UploadCloud } from "lucide-react";
+import { ArrowLeft, LayoutTemplate, Loader2, PackagePlus, Pencil, Plus, Store, Trash2, UploadCloud } from "lucide-react";
 import {
   centsFromPrice,
   createAdminProduct,
@@ -408,10 +408,16 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
                   <strong>{product.name}</strong>
                   <span>{money(product.basePriceCents, product.currency)} / {product.variants.length} référence{product.variants.length > 1 ? "s" : ""}</span>
                 </div>
-                <button className="admin-manage-button" type="button" onClick={() => editProduct(product)}>
-                  <Pencil size={14} aria-hidden />
-                  Modifier
-                </button>
+                <div className="admin-item-actions">
+                  <button className="admin-manage-button" type="button" onClick={() => editProduct(product)}>
+                    <Pencil size={14} aria-hidden />
+                    Modifier
+                  </button>
+                  <Link className="admin-manage-button" href={`/admin/landing/product/${product.id}`}>
+                    <LayoutTemplate size={14} aria-hidden />
+                    Landing
+                  </Link>
+                </div>
               </article>
             )) : <p className="admin-empty-inline">Aucun produit. Ajoutez le premier produit de cette boutique.</p>}
           </div>

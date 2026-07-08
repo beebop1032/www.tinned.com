@@ -1,5 +1,5 @@
 import { cache } from "react";
-import type { Article, Box, BoxType, LandingPage, Product, ProductBundle, StaticPage, Trip } from "./types";
+import type { Article, Box, BoxType, LandingPage, Product, ProductBundle, Review, StaticPage, Trip } from "./types";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,10 +18,21 @@ function requireApiUrl(): string {
   return apiUrl.replace(/\/$/, "");
 }
 
+/**
+ * Cache tags for a catalog fetch: a shared "catalog" tag plus the resource name
+ * (e.g. "products", "store_boxes"). A vendor/admin write pings /api/revalidate to
+ * invalidate these tags, so edits appear immediately instead of after the TTL.
+ */
+function tagsFor(path: string): string[] {
+  const resource = path.replace(/^\//, "").split(/[?/]/)[0];
+  return resource ? ["catalog", resource] : ["catalog"];
+}
+
 async function fetchApi<T>(path: string): Promise<T | null> {
   try {
     const response = await fetch(`${requireApiUrl()}/api${path}`, {
-      next: { revalidate: 300 },
+      // Long TTL as a safety net; freshness is driven by on-demand tag revalidation.
+      next: { revalidate: 3600, tags: tagsFor(path) },
       headers: { Accept: "application/ld+json, application/json" },
     });
     if (!response.ok) return null;
@@ -114,9 +125,23 @@ export const getFaq = cache(async function getFaq(locale = "fr"): Promise<Static
   return remote ? (collection(remote)[0] ?? null) : null;
 });
 
+export async function getReviews(productSlug: string): Promise<Review[]> {
+  const remote = await fetchApi<HydraCollection<Review>>(
+    `/reviews?product.slug=${encodeURIComponent(productSlug)}&order[createdAt]=desc`
+  );
+  return remote ? collection(remote) : [];
+}
+
 export async function getLanding(boxSlug: string, locale = "fr"): Promise<LandingPage | null> {
   const remote = await fetchApi<HydraCollection<LandingPage>>(
     `/landing_pages?box.slug=${encodeURIComponent(boxSlug)}&locale=${locale}`
+  );
+  return remote ? (collection(remote)[0] ?? null) : null;
+}
+
+export async function getProductLanding(productSlug: string, locale = "fr"): Promise<LandingPage | null> {
+  const remote = await fetchApi<HydraCollection<LandingPage>>(
+    `/landing_pages?product.slug=${encodeURIComponent(productSlug)}&locale=${locale}`
   );
   return remote ? (collection(remote)[0] ?? null) : null;
 }

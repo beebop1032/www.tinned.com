@@ -83,6 +83,22 @@ export type Product = {
   storeBox?: Box | null;
   variants: ProductVariant[];
   translations?: { locale: string; name: string; description?: string | null }[];
+  ratingAverage?: number;
+  ratingCount?: number;
+};
+
+export type Review = {
+  id: number;
+  authorName: string;
+  rating: number;
+  title?: string | null;
+  body: string;
+  verifiedPurchase: boolean;
+  status?: "pending" | "approved" | "rejected";
+  merchantResponse?: string | null;
+  createdAt: string;
+  productSlug?: string | null;
+  productName?: string | null;
 };
 
 export type Article = {
@@ -121,7 +137,9 @@ export type Trip = {
 export type LandingPage = {
   id: number;
   locale: string;
-  box: string;                 // IRI de la box
+  box: string | null;          // IRI de la box
+  product?: string | null;     // IRI du produit (landing teaser rattachée à un produit)
+  productSlug?: string | null;
   slug?: string | null;        // slug pour les landings autonomes (sans box)
   title: string;
   metaDescription?: string | null;

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { CART_STORAGE_KEY, normalizeCartItems, upsertCartItem } from "@/lib/cart";
 import { discountPct, productCompareAtCents, productHref, productPriceCents, productStockLabel, productVariantLabel } from "@/lib/commerce";
 import { money } from "@/lib/format";
+import { StarRating } from "@/components/StarRating";
 import type { Product } from "@/lib/types";
 
 function readStoredCart() {
@@ -20,8 +21,9 @@ function readStoredCart() {
 export function ProductCard({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
   const soleVariant = product.variants.length === 1 ? product.variants[0] : null;
-  const directPurchase = Boolean(soleVariant);
-  const available = Boolean(soleVariant && soleVariant.stock > 0);
+  const purchasable = product.availability !== "coming_soon";
+  const directPurchase = Boolean(soleVariant) && purchasable;
+  const available = Boolean(soleVariant && soleVariant.stock > 0) && purchasable;
   const priceCents = productPriceCents(product);
   const compareAtCents = productCompareAtCents(product);
   const discount = discountPct(priceCents, compareAtCents);
@@ -56,7 +58,13 @@ export function ProductCard({ product }: { product: Product }) {
             {product.storeBox?.name ?? "Boutique"}
           </span>
           <h3>{product.name}</h3>
-          <p>{product.description}</p>
+          {product.ratingCount ? (
+            <span className="product-card-rating">
+              <StarRating value={product.ratingAverage ?? 0} size={14} />
+              <span>({product.ratingCount})</span>
+            </span>
+          ) : null}
+          <p className="product-card-desc">{product.description}</p>
           <div className="product-card-meta">
             <span>{productVariantLabel(product)}</span>
             <span>{productStockLabel(product)}</span>

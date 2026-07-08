@@ -262,6 +262,33 @@ export async function subscribe(input: SubscribeInput, token?: string): Promise<
   });
 }
 
+export type ReviewInput = {
+  productIri: string;
+  rating: number;
+  title?: string;
+  body: string;
+  authorName?: string;
+};
+
+export type ReviewResult = {
+  id: number;
+  status: "pending" | "approved" | "rejected";
+};
+
+export async function submitReview(input: ReviewInput, token: string): Promise<ReviewResult> {
+  return apiFetch<ReviewResult>("/reviews", {
+    method: "POST",
+    headers: { "content-type": "application/ld+json", authorization: `Bearer ${token}` },
+    body: JSON.stringify({
+      product: input.productIri,
+      rating: input.rating,
+      title: input.title?.trim() ? input.title.trim() : null,
+      body: input.body.trim(),
+      authorName: input.authorName?.trim() ?? ""
+    })
+  });
+}
+
 export async function confirmSubscription(token: string): Promise<{ confirmed: boolean }> {
   return apiFetch<{ confirmed: boolean }>(`/subscriptions/confirm/${encodeURIComponent(token)}`, {
     method: "GET"

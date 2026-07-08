@@ -22,6 +22,7 @@ export async function loadLanding(boxSlug: string, locale: string): Promise<Land
 export type LandingInput = {
   id?: number;
   boxIri?: string;
+  productIri?: string;
   slug?: string;
   locale: string;
   title: string;
@@ -36,6 +37,7 @@ export async function saveLanding(input: LandingInput, token: string): Promise<L
     : `${apiBase()}/api/landing_pages`;
   const body = {
     box: input.boxIri ?? null,
+    product: input.productIri ?? null,
     slug: input.slug ?? null,
     locale: input.locale,
     title: input.title,
@@ -67,6 +69,17 @@ export async function saveLanding(input: LandingInput, token: string): Promise<L
     throw new Error(msg);
   }
   return r.json();
+}
+
+export async function loadProductLanding(productSlug: string, locale: string): Promise<LandingPage | null> {
+  const r = await fetch(
+    `${apiBase()}/api/landing_pages?product.slug=${encodeURIComponent(productSlug)}&locale=${locale}`,
+    { headers: { Accept: "application/ld+json, application/json" }, cache: "no-store" }
+  );
+  if (!r.ok) return null;
+  const d = await r.json();
+  const list = Array.isArray(d) ? d : (d.member ?? d["hydra:member"] ?? []);
+  return list[0] ?? null;
 }
 
 export async function loadStandaloneLanding(slug: string, locale: string): Promise<LandingPage | null> {
