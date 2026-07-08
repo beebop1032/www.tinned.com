@@ -57,7 +57,7 @@ function LaunchCountdown({ releaseAt }: { releaseAt: string }) {
   );
 }
 
-function LaunchNotifyForm({ product, kind }: { product: Product; kind: Kind }) {
+function LaunchNotifyForm({ product }: { product: Product }) {
   const [token, setToken] = useState<string | null>(null);
   const [sessionEmail, setSessionEmail] = useState("");
   const [ready, setReady] = useState(false);
@@ -130,7 +130,7 @@ function LaunchNotifyForm({ product, kind }: { product: Product; kind: Kind }) {
         )}
         <button className="launch-form-submit" type="submit" disabled={busy}>
           {busy ? <Loader2 size={16} className="spin" aria-hidden /> : null}
-          {kind === "coming_soon" ? "Me prévenir en premier" : "Me prévenir du retour"}
+          Me prévenir
           {busy ? null : <ArrowRight size={16} aria-hidden />}
         </button>
       </div>
@@ -156,11 +156,11 @@ export function ProductLaunch({
         <>
           <p className="launch-pill launch-pill--soon">
             <BellRing size={13} aria-hidden />
-            Lancement{releaseLabel ? ` — le ${releaseLabel}` : " imminent"}
+            {releaseLabel ? `Lancement le ${releaseLabel}` : "Bientôt disponible"}
           </p>
           {releaseAt ? <LaunchCountdown releaseAt={releaseAt} /> : null}
           <p className="launch-body">
-            Ce produit se prépare. Inscris-toi&nbsp;: les premiers prévenus sont les premiers servis.
+            Laisse ton email&nbsp;: tu seras prévenu·e dès la mise en ligne, avant tout le monde.
           </p>
         </>
       ) : (
@@ -171,13 +171,13 @@ export function ProductLaunch({
           </p>
           <h2 className="launch-title">Victime de son succès</h2>
           <p className="launch-body">
-            Tout est parti. Laisse ton email pour être prévenu·e dès le retour en stock — avant tout le monde.
+            Laisse ton email&nbsp;: tu seras prévenu·e dès le retour en stock.
           </p>
         </>
       )}
-      <LaunchNotifyForm product={product} kind={kind} />
+      <LaunchNotifyForm product={product} />
       <p className="launch-footnote">
-        {kind === "coming_soon" ? "Prix dévoilé au lancement · " : ""}Un seul email, promis. Désinscription en un clic.
+        {kind === "coming_soon" ? "Prix dévoilé au lancement. " : ""}Un seul email, rien d&apos;autre.
       </p>
     </section>
   );

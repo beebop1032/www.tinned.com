@@ -3,7 +3,7 @@ import type { Block } from "@/lib/blocks";
 
 export function HeroBlock({ block }: { block: Extract<Block, { type: "hero" }> }) {
   return (
-    <section className="container hero">
+    <section className={`container hero${block.imagePath ? "" : " hero--plain"}`}>
       <div className="hero-copy">
         <h1>{block.title}</h1>
         {block.subtitle ? <p>{block.subtitle}</p> : null}

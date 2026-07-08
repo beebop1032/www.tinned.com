@@ -74,12 +74,14 @@ export function ProductCard({ product }: { product: Product }) {
           ) : null}
           <p className="product-card-desc">{product.description}</p>
           {comingSoon ? (
-            <div className="product-card-meta">
-              <span className="product-card-meta-soon">
-                <CalendarClock size={13} aria-hidden />
-                {releaseLabel ? `Lancement le ${releaseLabel}` : "Lancement imminent"}
-              </span>
-            </div>
+            releaseLabel ? (
+              <div className="product-card-meta">
+                <span className="product-card-meta-soon">
+                  <CalendarClock size={13} aria-hidden />
+                  Lancement le {releaseLabel}
+                </span>
+              </div>
+            ) : null
           ) : (
             <div className="product-card-meta">
               {!soldOut || product.variants.length > 1 ? <span>{productVariantLabel(product)}</span> : null}
@@ -93,7 +95,7 @@ export function ProductCard({ product }: { product: Product }) {
           <span className="product-card-soon-price">Prix dévoilé au lancement</span>
           <Link className="button product-card-add" href={productHref(product)}>
             <Bell size={16} aria-hidden />
-            Être prévenu·e
+            Me prévenir
           </Link>
         </div>
       ) : (

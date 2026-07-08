@@ -886,6 +886,7 @@ a.card:active,
 .product-card-add {
   min-height: 42px;
   padding: 0 13px;
+  white-space: nowrap;
 }
 
 .product-card-feedback {
@@ -1180,6 +1181,17 @@ button.button:disabled {
   padding: clamp(42px, 7vw, 78px) clamp(22px, 5vw, 58px);
   border-bottom: 1px solid var(--stone);
   background: linear-gradient(135deg, rgba(1, 126, 122, 0.06), rgba(196, 136, 42, 0.04)), var(--cream);
+}
+
+/* Hero de landing sans visuel : une seule colonne, hauteur au contenu. */
+.hero--plain {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  padding: clamp(36px, 5vw, 60px) clamp(22px, 5vw, 58px);
+}
+
+.hero--plain h1 {
+  font-size: clamp(34px, 5vw, 54px);
 }
 
 .hero h1 {
@@ -1624,10 +1636,9 @@ button.button:disabled {
 
 .launch-footnote {
   margin: 0;
-  color: rgba(251, 245, 230, 0.5);
-  font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  letter-spacing: 0.02em;
+  color: rgba(251, 245, 230, 0.55);
+  font-size: 12.5px;
+  line-height: 1.5;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -4843,9 +4854,10 @@ a.admin-kpi {
 /* Landing blocks */
 .prose { max-width: 70ch; }
 .prose h2 { margin-top: 1.4em; }
-.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 22px; }
-.stat { display: grid; gap: 6px; }
-.stat-value { font: 700 32px/1 var(--font-mono); color: var(--forest); }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: clamp(22px, 4vw, 44px); }
+.stat { display: grid; gap: 10px; align-content: start; padding-top: 14px; border-top: 2px solid var(--forest); }
+.stat-value { font: 700 clamp(32px, 4vw, 44px)/1 var(--font-mono); color: var(--forest); letter-spacing: -0.02em; }
+.stat .eyebrow { max-width: 24ch; line-height: 1.5; }
 .faq-item { border-bottom: 1px solid var(--stone); padding: 14px 0; }
 .faq-item summary { cursor: pointer; font-weight: 700; }
 .video-embed { position: relative; aspect-ratio: 16 / 9; }
