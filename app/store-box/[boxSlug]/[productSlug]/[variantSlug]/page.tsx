@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { VariantSelector } from "@/components/VariantSelector";
-import { ProductTeaser } from "@/components/ProductTeaser";
+import { ProductLaunch } from "@/components/ProductLaunch";
 import { ProductReviews } from "@/components/ProductReviews";
 import { StarRating } from "@/components/StarRating";
 import { LandingBlocks } from "@/components/landing/LandingBlocks";
@@ -92,7 +92,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           <p className="lead">{product.description}</p>
           {product.variants.length > 1 && !teaserKind ? <p className="muted">Prix à partir de {money(productPriceCents(product), product.currency)}</p> : null}
           {teaserKind ? (
-            <ProductTeaser product={product} kind={teaserKind} releaseLabel={releaseLabel} />
+            <ProductLaunch product={product} kind={teaserKind} releaseLabel={releaseLabel} />
           ) : (
             <>
               {availability === "preorder" ? (
@@ -103,15 +103,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           )}
         </article>
       </div>
-      <div className="container section">
-        <ProductReviews
-          productId={product.id}
-          productName={product.name}
-          reviews={reviews}
-          ratingAverage={ratingAverage}
-          ratingCount={ratingCount}
-        />
-      </div>
+      {/* Pas d'appel aux avis sur un produit pas encore lancé (personne n'a pu l'acheter). */}
+      {availability === "coming_soon" && ratingCount === 0 ? null : (
+        <div className="container section">
+          <ProductReviews
+            productId={product.id}
+            productName={product.name}
+            reviews={reviews}
+            ratingAverage={ratingAverage}
+            ratingCount={ratingCount}
+          />
+        </div>
+      )}
     </>
   );
 }

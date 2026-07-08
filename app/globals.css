@@ -1442,18 +1442,26 @@ button.button:disabled {
   text-underline-offset: 3px;
 }
 
-.product-teaser {
+/* ---- Scène de lancement (coming soon / épuisé) ---- */
+.launch {
   display: grid;
-  gap: 14px;
-  margin-top: 22px;
+  gap: 18px;
+  max-width: 560px;
+  margin-top: 24px;
+  padding: clamp(26px, 4vw, 40px);
+  border-radius: 2px;
+  background: linear-gradient(155deg, var(--forest-dark) 0%, #013a38 100%);
+  color: #fff;
+  box-shadow: var(--shadow);
 }
 
-.product-teaser-badge {
+.launch-pill {
   display: inline-flex;
   align-items: center;
   gap: 7px;
   justify-self: start;
-  padding: 5px 12px;
+  margin: 0;
+  padding: 6px 13px;
   border-radius: 999px;
   font-family: var(--font-mono), monospace;
   font-size: 11px;
@@ -1462,39 +1470,170 @@ button.button:disabled {
   text-transform: uppercase;
 }
 
-.product-teaser-badge--coming_soon {
-  background: rgba(196, 136, 42, 0.14);
-  color: var(--amber, #c4882a);
+.launch-pill--soon {
+  background: rgba(226, 168, 64, 0.16);
+  color: var(--amber-light);
 }
 
-.product-teaser-badge--sold_out {
-  background: rgba(228, 87, 46, 0.12);
-  color: var(--coral, #e4572e);
+.launch-pill--soldout {
+  background: rgba(232, 104, 42, 0.18);
+  color: #ffa477;
 }
 
-.product-teaser-title {
+.launch-title {
   margin: 0;
-  color: var(--forest);
+  color: #fff;
   font-family: var(--font-brand), sans-serif;
-  font-size: clamp(26px, 4vw, 34px);
+  font-size: clamp(22px, 3vw, 28px);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.12;
 }
 
-.product-teaser-date {
+.launch-countdown {
+  display: flex;
+  align-items: stretch;
+}
+
+.launch-countdown-cell {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+  justify-items: start;
+}
+
+.launch-countdown-cell + .launch-countdown-cell {
+  padding-left: clamp(12px, 2vw, 20px);
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.launch-countdown-value {
+  color: #fff;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(30px, 4.5vw, 44px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.launch-countdown-label {
+  color: rgba(251, 245, 230, 0.55);
+  font-family: var(--font-mono), monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.launch-body {
+  margin: 0;
+  max-width: 44ch;
+  color: rgba(251, 245, 230, 0.82);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.launch-form {
+  display: grid;
+  gap: 8px;
+}
+
+.launch-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.launch-form-input {
+  flex: 1;
+  min-width: 180px;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+}
+
+.launch-form-input::placeholder {
+  color: rgba(251, 245, 230, 0.45);
+}
+
+.launch-form-input:focus-visible {
+  outline: 2px solid var(--amber-light);
+  outline-offset: 2px;
+}
+
+.launch-form-email {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin: 0;
-  color: var(--ink);
+  color: rgba(251, 245, 230, 0.75);
+  font-size: 14px;
   font-weight: 600;
 }
 
-.product-teaser-body {
+.launch-form-submit {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 999px;
+  background: var(--amber-light);
+  color: var(--ink);
+  cursor: pointer;
+  font-family: var(--font-body), sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  transition: transform 240ms cubic-bezier(0.34, 1.56, 0.64, 1), background 200ms ease;
+}
+
+.launch-form-submit:hover {
+  background: var(--gold);
+  transform: translateY(-1px);
+}
+
+.launch-form-submit:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.launch-form-submit:disabled {
+  cursor: default;
+  opacity: 0.7;
+  transform: none;
+}
+
+.launch-form-error {
   margin: 0;
-  max-width: 46ch;
-  color: var(--muted);
-  line-height: 1.55;
+  color: #fca5a5;
+  font-size: 13px;
+}
+
+.launch-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: var(--amber-light);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.launch-footnote {
+  margin: 0;
+  color: rgba(251, 245, 230, 0.5);
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .launch-form-submit {
+    transition: none;
+  }
 }
 
 /* ---- Star rating (read-only display) ---- */
