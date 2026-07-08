@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { Bell, CalendarClock, ShoppingCart, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { CART_STORAGE_KEY, normalizeCartItems, upsertCartItem } from "@/lib/cart";
 import { discountPct, productCompareAtCents, productHref, productPriceCents, productStockLabel, productVariantLabel } from "@/lib/commerce";
-import { money } from "@/lib/format";
+import { formatReleaseDate, money } from "@/lib/format";
 import { StarRating } from "@/components/StarRating";
 import type { Product } from "@/lib/types";
 
@@ -20,15 +20,14 @@ function readStoredCart() {
 
 export function ProductCard({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
+  const comingSoon = product.availability === "coming_soon";
+  const soldOut = !comingSoon && product.variants.length > 0 && product.variants.every((variant) => variant.stock <= 0);
+  const releaseLabel = comingSoon ? formatReleaseDate(product.releaseAt) : null;
   const soleVariant = product.variants.length === 1 ? product.variants[0] : null;
-  const purchasable = product.availability !== "coming_soon";
-  const directPurchase = Boolean(soleVariant) && purchasable;
-  const available = Boolean(soleVariant && soleVariant.stock > 0) && purchasable;
+  const directPurchase = Boolean(soleVariant) && !comingSoon && !soldOut;
   const priceCents = productPriceCents(product);
-  const compareAtCents = productCompareAtCents(product);
+  const compareAtCents = comingSoon ? null : productCompareAtCents(product);
   const discount = discountPct(priceCents, compareAtCents);
-  const availabilityBadge =
-    product.availability === "coming_soon" ? "Bientôt" : product.availability === "preorder" ? "Pré-vente" : null;
 
   const addDirectlyToCart = () => {
     if (!soleVariant || soleVariant.stock < 1) return;
@@ -45,10 +44,19 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <article className="card product-card">
+    <article className={`card product-card${comingSoon ? " product-card--soon" : ""}`}>
       <Link className="product-card-main" href={productHref(product)}>
         <div className="card-media">
-          <span className="product-card-tag">{availabilityBadge ?? productStockLabel(product)}</span>
+          {comingSoon ? (
+            <span className="product-card-tag product-card-tag--soon">
+              <Sparkles size={13} aria-hidden />
+              Bientôt
+            </span>
+          ) : (
+            <span className={`product-card-tag${soldOut ? " product-card-tag--soldout" : ""}`}>
+              {product.availability === "preorder" ? "Pré-vente" : soldOut ? "Épuisé" : productStockLabel(product)}
+            </span>
+          )}
           {discount ? <span className="product-card-discount">-{discount}%</span> : null}
           <Image src={product.images[0] ?? "/tinned-assets/box-store.svg"} alt={product.name} width={112} height={112} />
         </div>
@@ -65,27 +73,51 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           ) : null}
           <p className="product-card-desc">{product.description}</p>
-          <div className="product-card-meta">
-            <span>{productVariantLabel(product)}</span>
-            <span>{productStockLabel(product)}</span>
-          </div>
+          {comingSoon ? (
+            <div className="product-card-meta">
+              <span className="product-card-meta-soon">
+                <CalendarClock size={13} aria-hidden />
+                {releaseLabel ? `Lancement le ${releaseLabel}` : "Lancement imminent"}
+              </span>
+            </div>
+          ) : (
+            <div className="product-card-meta">
+              {!soldOut || product.variants.length > 1 ? <span>{productVariantLabel(product)}</span> : null}
+              <span>{soldOut ? "Épuisé" : productStockLabel(product)}</span>
+            </div>
+          )}
         </div>
       </Link>
-      <div className="product-card-purchase">
-        <strong>
-          {product.variants.length > 1 ? <small>Prix à partir de</small> : null}
-          {money(priceCents, product.currency)}
-          {compareAtCents ? <s className="product-card-compare">{money(compareAtCents, product.currency)}</s> : null}
-        </strong>
-        {directPurchase ? (
-          <button className="button product-card-add" type="button" onClick={addDirectlyToCart} disabled={!available}>
-            <ShoppingCart size={16} aria-hidden />
-            {available ? "Ajouter" : "Indisponible"}
-          </button>
-        ) : (
-          <Link href={productHref(product)}>Voir les options</Link>
-        )}
-      </div>
+      {comingSoon ? (
+        <div className="product-card-purchase product-card-purchase--soon">
+          <span className="product-card-soon-price">Prix dévoilé au lancement</span>
+          <Link className="button product-card-add" href={productHref(product)}>
+            <Bell size={16} aria-hidden />
+            Être prévenu·e
+          </Link>
+        </div>
+      ) : (
+        <div className="product-card-purchase">
+          <strong>
+            {product.variants.length > 1 ? <small>Prix à partir de</small> : null}
+            {money(priceCents, product.currency)}
+            {compareAtCents ? <s className="product-card-compare">{money(compareAtCents, product.currency)}</s> : null}
+          </strong>
+          {directPurchase ? (
+            <button className="button product-card-add" type="button" onClick={addDirectlyToCart} disabled={soleVariant!.stock < 1}>
+              <ShoppingCart size={16} aria-hidden />
+              Ajouter
+            </button>
+          ) : soldOut ? (
+            <Link className="product-card-notify" href={productHref(product)}>
+              <Bell size={15} aria-hidden />
+              Me prévenir
+            </Link>
+          ) : (
+            <Link href={productHref(product)}>Voir les options</Link>
+          )}
+        </div>
+      )}
       {added ? <p className="product-card-feedback" role="status">Ajouté au panier</p> : null}
     </article>
   );

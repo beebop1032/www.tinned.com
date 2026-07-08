@@ -11,14 +11,7 @@ import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { toCartProduct } from "@/lib/cart";
 import { getProduct, getProductLanding, getReviews } from "@/lib/api";
 import { productPriceCents } from "@/lib/commerce";
-import { money } from "@/lib/format";
-
-function formatReleaseDate(value?: string | null) {
-  if (!value) return null;
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return null;
-  return new Intl.DateTimeFormat("fr-BE", { day: "numeric", month: "long", year: "numeric" }).format(date);
-}
+import { formatReleaseDate, money } from "@/lib/format";
 
 type Props = { params: Promise<{ boxSlug: string; productSlug: string; variantSlug: string }> };
 
