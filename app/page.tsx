@@ -6,7 +6,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { ArticleCard } from "@/components/ArticleCard";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { getArticles, getBoxes, getProducts } from "@/lib/api";
-import { productHref } from "@/lib/commerce";
+import { productHref, productPriceCents } from "@/lib/commerce";
 import { money } from "@/lib/format";
 import { NewsletterBlock } from "@/components/NewsletterBlock";
 import { readNewsletterBlock } from "@/lib/newsletter-block";
@@ -28,6 +28,9 @@ export default async function HomePage() {
   ]);
 
   const hasProducts = products.length > 0;
+  // Vitrine du hero : on privilégie un produit avec photo ; badge/prix adaptés au coming-soon.
+  const featured = products.find((p) => p.images[0]) ?? products[0];
+  const featuredSoon = featured?.availability === "coming_soon";
   const hasArticles = articles.length > 0;
   const featuredBoxes = [stores[0], businesses[0], blogs[0]].filter(Boolean);
   const hasBoxes = featuredBoxes.length > 0;
@@ -187,8 +190,8 @@ export default async function HomePage() {
 
           {/* Right: featured product showcase */}
           <div style={{ display: "grid", gap: "12px" }}>
-            {products[0] ? (
-              <Link href={productHref(products[0])} style={{
+            {featured ? (
+              <Link href={productHref(featured)} style={{
                 display: "grid",
                 gap: "0",
                 border: "1px solid var(--stone)",
@@ -219,11 +222,11 @@ export default async function HomePage() {
                     letterSpacing: "0.06em",
                     textTransform: "uppercase"
                   }}>
-                    À découvrir
+                    {featuredSoon ? "Bientôt" : "À découvrir"}
                   </span>
                   <Image
-                    src={products[0].images[0] ?? "/tinned-assets/simple-box.svg"}
-                    alt={products[0].name}
+                    src={featured.images[0] ?? "/tinned-assets/simple-box.svg"}
+                    alt={featured.name}
                     width={360}
                     height={340}
                     priority
@@ -239,19 +242,25 @@ export default async function HomePage() {
                   gap: "12px"
                 }}>
                   <div>
-                    <div style={{ fontWeight: 600, color: "var(--ink)", fontSize: "16px" }}>{products[0].name}</div>
-                    <div style={{ color: "var(--muted)", fontSize: "13px", marginTop: "2px" }}>{products[0].storeBox?.name ?? "Boutique"}</div>
+                    <div style={{ fontWeight: 600, color: "var(--ink)", fontSize: "16px" }}>{featured.name}</div>
+                    <div style={{ color: "var(--muted)", fontSize: "13px", marginTop: "2px" }}>{featured.storeBox?.name ?? "Boutique"}</div>
                   </div>
-                  <div style={{
-                    fontFamily: "var(--font-brand)",
-                    fontWeight: 700,
-                    fontSize: "22px",
-                    letterSpacing: "-0.02em",
-                    color: "var(--teal)",
-                    flexShrink: 0
-                  }}>
-                    {money(products[0].basePriceCents, products[0].currency)}
-                  </div>
+                  {featuredSoon ? (
+                    <div style={{ color: "var(--muted)", fontSize: "12px", fontWeight: 600, textAlign: "right", flexShrink: 0, maxWidth: "110px" }}>
+                      Prix dévoilé au lancement
+                    </div>
+                  ) : (
+                    <div style={{
+                      fontFamily: "var(--font-brand)",
+                      fontWeight: 700,
+                      fontSize: "22px",
+                      letterSpacing: "-0.02em",
+                      color: "var(--teal)",
+                      flexShrink: 0
+                    }}>
+                      {money(productPriceCents(featured), featured.currency)}
+                    </div>
+                  )}
                 </div>
               </Link>
             ) : (
