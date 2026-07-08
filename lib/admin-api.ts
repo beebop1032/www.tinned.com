@@ -227,6 +227,15 @@ export async function fetchAdminData() {
   return { businessBoxes, storeBoxes, blogBoxes, travelBoxes, products };
 }
 
+/** Purge le cache catalogue du front (réservé ROLE_ADMIN côté API). */
+export async function flushCache(token: string, tags: string[] = ["catalog"]) {
+  return adminFetch<{ flushed: boolean; tags: string[] }>("/cache/flush", token, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ tags })
+  });
+}
+
 export async function fetchBoxes(type: BoxType) {
   const resource =
     type === "business" ? "business_boxes"

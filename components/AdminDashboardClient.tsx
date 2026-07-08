@@ -13,9 +13,10 @@ import {
   Plus,
   RefreshCcw,
   Store,
-  Tags
+  Tags,
+  Trash2
 } from "lucide-react";
-import { fetchAdminData } from "@/lib/admin-api";
+import { fetchAdminData, flushCache } from "@/lib/admin-api";
 import { AUTH_STORAGE_KEY, normalizeSession, sessionHasRole, type TinnedSession } from "@/lib/auth";
 import type { Box, BoxType, Product } from "@/lib/types";
 import { VendorPageCmsClient } from "@/components/VendorPageCmsClient";
@@ -57,8 +58,8 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
   const [session, setSession] = useState<TinnedSession | null>(null);
   const [data, setData] = useState<AdminData>(emptyData);
   const [loading, setLoading] = useState(true);
-  const [busy, setBusy] = useState<"refresh" | null>(null);
-  const [status] = useState("");
+  const [busy, setBusy] = useState<"refresh" | "flush" | null>(null);
+  const [status, setStatus] = useState("");
   const [error, setError] = useState("");
 
   const totalVariants = data.products.reduce((total, product) => total + product.variants.length, 0);
@@ -86,6 +87,21 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
       setError(caught instanceof Error ? caught.message : "Impossible de charger le dashboard.");
     } finally {
       setLoading(false);
+      setBusy(null);
+    }
+  };
+
+  const handleFlushCache = async () => {
+    if (!session?.token) return;
+    setBusy("flush");
+    setError("");
+    setStatus("");
+    try {
+      await flushCache(session.token);
+      setStatus("Cache catalogue vidé.");
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Impossible de vider le cache.");
+    } finally {
       setBusy(null);
     }
   };
@@ -136,10 +152,16 @@ export function AdminDashboardClient({ section = "overview" }: { section?: Admin
                   : `Gérez vos ${sectionLabel(section as BoxType)} et leur contenu.`}
           </p>
         </div>
-        <button className="button secondary admin-refresh" type="button" onClick={() => void loadData()} disabled={busy === "refresh"}>
-          {busy === "refresh" ? <Loader2 className="spin" size={17} aria-hidden /> : <RefreshCcw size={17} aria-hidden />}
-          Actualiser
-        </button>
+        <div className="admin-header-actions">
+          <button className="button secondary admin-refresh" type="button" onClick={() => void handleFlushCache()} disabled={busy !== null}>
+            {busy === "flush" ? <Loader2 className="spin" size={17} aria-hidden /> : <Trash2 size={17} aria-hidden />}
+            Vider le cache
+          </button>
+          <button className="button secondary admin-refresh" type="button" onClick={() => void loadData()} disabled={busy !== null}>
+            {busy === "refresh" ? <Loader2 className="spin" size={17} aria-hidden /> : <RefreshCcw size={17} aria-hidden />}
+            Actualiser
+          </button>
+        </div>
       </div>
 
       <div className="admin-kpis" aria-label="Indicateurs catalogue">

@@ -3398,6 +3398,12 @@ button.button:disabled {
   font-weight: 600;
 }
 
+.admin-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .admin-refresh {
   border-color: var(--stone);
 }
