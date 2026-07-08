@@ -1,19 +1,16 @@
-import Image from "next/image";
+import type { Box } from "@/lib/types";
 import type { Block } from "@/lib/blocks";
+import { BoxHero } from "@/components/BoxHero";
 
-export function HeroBlock({ block }: { block: Extract<Block, { type: "hero" }> }) {
+export function HeroBlock({ block, box }: { block: Extract<Block, { type: "hero" }>; box?: Box | null }) {
   return (
-    <section className={`container hero${block.imagePath ? "" : " hero--plain"}`}>
-      <div className="hero-copy">
-        <h1>{block.title}</h1>
-        {block.subtitle ? <p>{block.subtitle}</p> : null}
-        {block.cta ? <a className="button" href={block.cta.href}>{block.cta.label}</a> : null}
-      </div>
-      {block.imagePath ? (
-        <div className="hero-visual">
-          <Image src={block.imagePath} alt={block.title} width={600} height={400} style={{ objectFit: "cover", width: "100%", height: "100%" }} />
-        </div>
-      ) : null}
-    </section>
+    <BoxHero
+      title={block.title}
+      subtitle={block.subtitle}
+      cover={block.imagePath || box?.coverPath}
+      logo={box?.logoPath}
+    >
+      {block.cta ? <a className="button" href={block.cta.href}>{block.cta.label}</a> : null}
+    </BoxHero>
   );
 }

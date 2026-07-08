@@ -10,6 +10,13 @@ import { formatReleaseDate, money } from "@/lib/format";
 import { StarRating } from "@/components/StarRating";
 import type { Product } from "@/lib/types";
 
+/** Coupe au mot (~140 caractères) avec une ellipse propre — pas de mi-phrase hachée. */
+function excerpt(text: string, max = 140) {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  return `${clean.slice(0, max).replace(/\s+\S*$/, "")}…`;
+}
+
 function readStoredCart() {
   try {
     return normalizeCartItems(JSON.parse(window.localStorage.getItem(CART_STORAGE_KEY) ?? "[]"));
@@ -72,7 +79,7 @@ export function ProductCard({ product }: { product: Product }) {
               <span>({product.ratingCount})</span>
             </span>
           ) : null}
-          <p className="product-card-desc">{product.description}</p>
+          {product.description ? <p className="product-card-desc">{excerpt(product.description)}</p> : null}
           {comingSoon ? (
             releaseLabel ? (
               <div className="product-card-meta">

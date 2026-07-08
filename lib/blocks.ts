@@ -3,10 +3,10 @@ export type Cta = { label: string; href: string };
 export type Block =
   | { id: string; type: "hero"; title: string; subtitle?: string; imagePath?: string; cta?: Cta }
   | { id: string; type: "richText"; markdown: string }
-  | { id: string; type: "gallery"; images: { path: string; caption?: string }[] }
+  | { id: string; type: "gallery"; images: { path?: string; url?: string; caption?: string; alt?: string }[] }
   | { id: string; type: "cta"; heading: string; text?: string; button: Cta }
   | { id: string; type: "collection"; source: "products" | "articles" | "trips" | "childBoxes"; title?: string; limit?: number }
-  | { id: string; type: "features"; title?: string; items: { icon?: string; title: string; text: string }[] }
+  | { id: string; type: "features"; title?: string; items: { icon?: string; title: string; text?: string; description?: string }[] }
   | { id: string; type: "stats"; items: { value: string; label: string }[] }
   | { id: string; type: "testimonial"; quote: string; author?: string; role?: string }
   | { id: string; type: "faq"; title?: string; items: { question: string; answer: string }[] }

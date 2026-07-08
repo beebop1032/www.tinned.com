@@ -13,10 +13,10 @@ import { NewsletterBlock } from "./blocks/NewsletterBlock";
 
 export async function LandingBlocks({ landing, box }: { landing: LandingPage; box?: Box | null }) {
   return (
-    <>
+    <div className="landing">
       {landing.blocks.map((block) => {
         switch (block.type) {
-          case "hero": return <HeroBlock key={block.id} block={block} />;
+          case "hero": return <HeroBlock key={block.id} block={block} box={box} />;
           case "richText": return <RichTextBlock key={block.id} block={block} />;
           case "gallery": return <GalleryBlock key={block.id} block={block} />;
           case "cta": return <CtaBlock key={block.id} block={block} />;
@@ -30,6 +30,6 @@ export async function LandingBlocks({ landing, box }: { landing: LandingPage; bo
           default: return null;
         }
       })}
-    </>
+    </div>
   );
 }

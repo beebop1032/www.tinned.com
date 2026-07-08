@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BoxCard } from "@/components/BoxCard";
+import { BoxHero } from "@/components/BoxHero";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { getBox, getBoxes, getBoxesForBusiness, getLanding } from "@/lib/api";
 import { LandingBlocks } from "@/components/landing/LandingBlocks";
@@ -39,15 +39,15 @@ export default async function BusinessBoxDetailPage({ params }: { params: Promis
   return (
     <>
       <SchemaJsonLd data={{ "@context": "https://schema.org", "@type": "Organization", name: box.companyName ?? box.name, url: box.website }} />
-      <section className="container hero">
-        <div>
-          <span className="eyebrow">Business Box de {box.name}</span>
-          <h1>{box.name}</h1>
-          <p>{box.description ?? box.tagline}</p>
-          {box.website ? <a className="button secondary" href={box.website}>Site web</a> : null}
-        </div>
-        <div className="hero-visual"><Image src={box.logoPath ?? "/tinned-assets/box-business-new.svg"} alt="" width={280} height={280} style={{ objectFit: "contain" }} /></div>
-      </section>
+      <BoxHero
+        eyebrow={`Business Box de ${box.name}`}
+        title={box.name}
+        subtitle={box.description ?? box.tagline}
+        cover={box.coverPath}
+        logo={box.logoPath}
+      >
+        {box.website ? <a className="button secondary" href={box.website}>Site web</a> : null}
+      </BoxHero>
       {stores.length || blogs.length ? (
         <section className="container section interbox-section">
           <div className="section-header"><div><span className="eyebrow">Immersion inter-boxes</span><h2>Explorer l'univers {box.name}</h2><p>Passez de la marque à ses boutiques et à ses contenus associés.</p></div></div>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/ProductCard";
 import { BoxCard } from "@/components/BoxCard";
+import { BoxHero } from "@/components/BoxHero";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { getBlogsForStore, getBox, getBoxes, getLanding, getProducts } from "@/lib/api";
 import { LandingBlocks } from "@/components/landing/LandingBlocks";
@@ -44,18 +44,18 @@ export default async function StoreBoxDetailPage({ params }: { params: Promise<{
   return (
     <>
       <SchemaJsonLd data={{ "@context": "https://schema.org", "@type": "Store", name: box.name, description: box.description }} />
-      <section className="container hero">
-        <div>
-          <span className="eyebrow">Store Box de {box.name}</span>
-          <h1>{box.name}</h1>
-          <p>{box.description ?? box.tagline}</p>
-          <span className="pill">Produits disponibles</span>
-        </div>
-        <div className="hero-visual"><Image src={box.logoPath ?? "/tinned-assets/box-store.svg"} alt="" width={280} height={280} style={{ objectFit: "contain" }} /></div>
-      </section>
+      <BoxHero
+        eyebrow={`Store Box de ${box.name}`}
+        title={box.name}
+        subtitle={box.description ?? box.tagline}
+        cover={box.coverPath}
+        logo={box.logoPath}
+      >
+        <span className="pill">Produits disponibles</span>
+      </BoxHero>
       <section className="container section">
         <div className="section-header"><div><h2>Produits de la boutique</h2><p>Prix, options et disponibilité sont visibles avant l'ajout au panier.</p></div></div>
-        <div className="grid">{products.map((product) => <ProductCard key={product.slug} product={{ ...product, storeBox: box }} />)}</div>
+        <div className="grid grid--3">{products.map((product) => <ProductCard key={product.slug} product={{ ...product, storeBox: box }} />)}</div>
       </section>
       <section className="container section">
         <NotifyMeForm targetType="box" boxIri={`/api/store_boxes/${box.id}`} boxName={box.name} />

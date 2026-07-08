@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BoxCard } from "@/components/BoxCard";
+import { BoxHero } from "@/components/BoxHero";
 import { TripCard } from "@/components/TripCard";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { getBox, getBoxes, getBoxesForTravel, getLanding, getTrips } from "@/lib/api";
@@ -50,16 +50,13 @@ export default async function TravelBoxDetailPage({ params }: Props) {
           description: box.description ?? box.tagline,
         }}
       />
-      <section className="container hero">
-        <div>
-          <span className="eyebrow">Travel Box · {box.name}</span>
-          <h1>{box.name}</h1>
-          {(box.description ?? box.tagline) && <p>{box.description ?? box.tagline}</p>}
-        </div>
-        <div className="hero-visual">
-          <Image src={box.coverPath ?? "/tinned-assets/simple-box.svg"} alt="" width={280} height={280} style={{ objectFit: "contain" }} />
-        </div>
-      </section>
+      <BoxHero
+        eyebrow={`Travel Box · ${box.name}`}
+        title={box.name}
+        subtitle={box.description ?? box.tagline}
+        cover={box.coverPath}
+        logo={box.logoPath}
+      />
 
       {linkedBoxes.length > 0 && (
         <section className="container section interbox-section">

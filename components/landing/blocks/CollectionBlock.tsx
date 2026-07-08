@@ -15,7 +15,7 @@ export async function CollectionBlock({ block, box }: { block: Extract<Block, { 
   if (block.source === "products") {
     const items = (await getProducts(slug)).slice(0, limit);
     body = (
-      <div className="grid">
+      <div className="grid grid--3">
         {items.map((p) => <ProductCard key={p.id} product={p} />)}
       </div>
     );

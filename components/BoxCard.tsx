@@ -48,7 +48,7 @@ export function BoxCard({ box, type }: { box: Box; type: BoxType }) {
         <div className="box-img__user">
           <Image className="box-img-container box-shell" src="/tinned-assets/simple-box.svg" alt="" width={230} height={230} />
           <picture className="box-img__user-img">
-            <Image src={box.logoPath ?? iconByType[type]} alt="" width={72} height={72} />
+            <Image src={box.logoPath || iconByType[type]} alt="" width={72} height={72} />
           </picture>
         </div>
       </div>
@@ -60,7 +60,7 @@ export function BoxCard({ box, type }: { box: Box; type: BoxType }) {
             <span>{box.name}</span>
           </li>
         </ul>
-        <p>{box.tagline ?? box.description ?? fallbackByType[type]}</p>
+        <p>{box.tagline || box.description || fallbackByType[type]}</p>
         <span className="box-link">{actionByType[type]}</span>
       </div>
     </a>

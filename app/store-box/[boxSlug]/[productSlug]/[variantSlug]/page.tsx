@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { VariantSelector } from "@/components/VariantSelector";
+import { ProductGallery } from "@/components/ProductGallery";
 import { ProductLaunch } from "@/components/ProductLaunch";
 import { ProductReviews } from "@/components/ProductReviews";
 import { StarRating } from "@/components/StarRating";
@@ -77,9 +77,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       />
       {landing ? <LandingBlocks landing={landing} box={product.storeBox} /> : null}
       <div className="container product-layout">
-        <div className="product-image">
-          <Image src={product.images[0] ?? "/tinned-assets/box-store.svg"} alt={product.name} width={250} height={250} priority />
-        </div>
+        <ProductGallery images={product.images} alt={product.name} />
         <article>
           <span className="eyebrow">{product.storeBox?.name ?? "Boutique"}</span>
           <h1 className="page-title">{product.name}</h1>
@@ -89,7 +87,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <span>{ratingAverage.toFixed(1)} · {ratingCount} avis</span>
             </Link>
           ) : null}
-          <p className="lead">{product.description}</p>
+          {product.description
+            ?.split(/\n{2,}/)
+            .filter((paragraph) => paragraph.trim())
+            .map((paragraph, index) => (
+              <p className="lead product-desc" key={index}>{paragraph}</p>
+            ))}
           {product.variants.length > 1 && !teaserKind ? <p className="muted">Prix à partir de {money(productPriceCents(product), product.currency)}</p> : null}
           {teaserKind ? (
             <ProductLaunch product={product} kind={teaserKind} releaseLabel={releaseLabel} />

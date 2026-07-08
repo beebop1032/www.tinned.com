@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArticleCard } from "@/components/ArticleCard";
 import { BoxCard } from "@/components/BoxCard";
+import { BoxHero } from "@/components/BoxHero";
 import { getArticles, getBox, getBoxes, getLanding } from "@/lib/api";
 import { LandingBlocks } from "@/components/landing/LandingBlocks";
 
@@ -34,14 +34,13 @@ export default async function BlogBoxDetailPage({ params }: { params: Promise<{ 
 
   return (
     <>
-      <section className="container hero">
-        <div>
-          <span className="eyebrow">Blog Box de {box.name}</span>
-          <h1>{box.name}</h1>
-          <p>{box.description ?? box.tagline}</p>
-        </div>
-        <div className="hero-visual"><Image src={box.logoPath ?? "/tinned-assets/box-blog-new.svg"} alt="" width={280} height={280} style={{ objectFit: "contain" }} /></div>
-      </section>
+      <BoxHero
+        eyebrow={`Blog Box de ${box.name}`}
+        title={box.name}
+        subtitle={box.description ?? box.tagline}
+        cover={box.coverPath}
+        logo={box.logoPath}
+      />
       <section className="container section">
         <div className="section-header"><h2>Articles</h2></div>
         <div className="grid">{articles.map((article) => <ArticleCard key={article.slug} article={{ ...article, blogBox: box }} />)}</div>

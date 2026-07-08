@@ -2,16 +2,19 @@ import Image from "next/image";
 import type { Block } from "@/lib/blocks";
 
 export function GalleryBlock({ block }: { block: Extract<Block, { type: "gallery" }> }) {
-  // Jamais d'<img src=""> : une image sans fichier n'est pas rendue.
-  const images = block.images.filter((img) => img.path?.trim());
+  // Les deux schémas d'auteur coexistent : {path, caption} et {url, alt}.
+  const images = block.images
+    .map((img) => ({ src: (img.path ?? img.url ?? "").trim(), caption: img.caption ?? img.alt ?? "" }))
+    .filter((img) => img.src);
   if (!images.length) return null;
+
   return (
     <section className="container section">
-      <div className="grid">
+      <div className="gallery-grid">
         {images.map((img, i) => (
-          <figure key={i} className="card">
-            <Image src={img.path} alt={img.caption ?? ""} width={400} height={300} style={{ objectFit: "cover", width: "100%" }} />
-            {img.caption ? <figcaption className="eyebrow">{img.caption}</figcaption> : null}
+          <figure key={i} className="gallery-item">
+            <Image src={img.src} alt={img.caption} width={720} height={540} />
+            {img.caption ? <figcaption>{img.caption}</figcaption> : null}
           </figure>
         ))}
       </div>
