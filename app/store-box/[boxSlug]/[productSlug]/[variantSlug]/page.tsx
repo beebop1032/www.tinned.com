@@ -10,7 +10,7 @@ import { LandingBlocks } from "@/components/landing/LandingBlocks";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { toCartProduct } from "@/lib/cart";
 import { getProduct, getProductLanding, getReviews } from "@/lib/api";
-import { isPreorderable, productPriceCents } from "@/lib/commerce";
+import { isPreorderable, productHref, productPriceCents } from "@/lib/commerce";
 import { formatReleaseDate, money } from "@/lib/format";
 
 type Props = { params: Promise<{ boxSlug: string; productSlug: string; variantSlug: string }> };
@@ -18,10 +18,12 @@ type Props = { params: Promise<{ boxSlug: string; productSlug: string; variantSl
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { productSlug } = await params;
   const product = await getProduct(productSlug);
+  const store = product?.storeBox?.name;
   return {
-    title: product ? product.name : "Not found",
+    title: product ? (store ? `${product.name} — ${store}` : product.name) : "Not found",
     description: product?.description?.slice(0, 155) ?? undefined,
-    openGraph: product?.images[0] ? { images: [product.images[0]] } : undefined,
+    alternates: product ? { canonical: productHref(product) } : undefined,
+    openGraph: product?.images[0] ? { images: [product.images[0]], type: "website" } : undefined,
   };
 }
 
@@ -74,6 +76,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             name: review.title ?? undefined,
             reviewBody: review.body,
           })),
+        }}
+      />
+      <SchemaJsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Accueil", item: "https://tinned.com" },
+            { "@type": "ListItem", position: 2, name: "Store Box", item: "https://tinned.com/store-box" },
+            ...(product.storeBox
+              ? [{ "@type": "ListItem", position: 3, name: product.storeBox.name, item: `https://tinned.com/store-box/${product.storeBox.slug}` }]
+              : []),
+            { "@type": "ListItem", position: product.storeBox ? 4 : 3, name: product.name, item: `https://tinned.com${productHref(product)}` },
+          ],
         }}
       />
       {landing ? <LandingBlocks landing={landing} box={product.storeBox} /> : null}

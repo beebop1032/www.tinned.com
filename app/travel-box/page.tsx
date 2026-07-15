@@ -4,8 +4,9 @@ import { BoxCard } from "@/components/BoxCard";
 import { getBoxes } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Travel Box",
-  description: "Destinations, carnets et inspirations de voyage — sélectionnés à la main."
+  title: "Travel Box — carnets de voyage et adresses coups de cœur",
+  description: "Carnets de voyage, destinations et adresses coups de cœur, sélectionnés à la main sur Tinned, la marketplace belge des créateurs.",
+  alternates: { canonical: "/travel-box" },
 };
 
 export default async function TravelBoxPage() {

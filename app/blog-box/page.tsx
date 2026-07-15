@@ -5,8 +5,9 @@ import { BoxCard } from "@/components/BoxCard";
 import { getArticles, getBoxes } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Blog Box",
-  description: "Guides, coulisses et récits des boutiques Tinned."
+  title: "Blog Box — guides, coulisses et récits des créateurs",
+  description: "Guides, coulisses et récits des boutiques et créateurs de Tinned. Découvrez chaque univers autrement, article après article.",
+  alternates: { canonical: "/blog-box" },
 };
 
 export default async function BlogBoxPage() {

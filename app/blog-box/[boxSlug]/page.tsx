@@ -19,6 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: box ? `${box.name} — Blog Box` : "Not found",
     description: box?.description ?? box?.tagline ?? undefined,
+    alternates: box ? { canonical: `/blog-box/${boxSlug}` } : undefined,
   };
 }
 

@@ -5,8 +5,9 @@ import { BoxCard } from "@/components/BoxCard";
 import { getBoxes } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Store Box",
-  description: "Boutiques indépendantes, produits disponibles et paniers boutique."
+  title: "Store Box — boutiques et créateurs belges à découvrir",
+  description: "Parcourez les Store Box de Tinned : boutiques et créateurs indépendants de Belgique, leurs coffrets et coups de cœur, réunis en un seul endroit.",
+  alternates: { canonical: "/store-box" },
 };
 
 export default async function StoreBoxPage() {

@@ -10,10 +10,13 @@ import { productHref, productPriceCents } from "@/lib/commerce";
 import { money } from "@/lib/format";
 import { NewsletterBlock } from "@/components/NewsletterBlock";
 import { readNewsletterBlock } from "@/lib/newsletter-block";
+import { FaqSection } from "@/components/FaqSection";
+import { buyerFaq } from "@/lib/faq-content";
 
 export const metadata: Metadata = {
   title: "Boutiques artisanales, créateurs et carnets de voyage",
-  description: "Marketplace belge de boutiques indépendantes. Découvrez, comparez et commandez auprès de créateurs sélectionnés à la main.",
+  description: "Tinned, la marketplace belge des boutiques et créateurs indépendants, organisée en boîtes thématiques. Explorez, découvrez et commandez des pépites sélectionnées à la main.",
+  alternates: { canonical: "/" },
 };
 
 export default async function HomePage() {
@@ -44,6 +47,17 @@ export default async function HomePage() {
           name: "Tinned",
           url: "https://tinned.com",
           potentialAction: { "@type": "SearchAction", target: "/search?q={search_term_string}", "query-input": "required name=search_term_string" }
+        }}
+      />
+      <SchemaJsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Tinned",
+          url: "https://tinned.com",
+          logo: "https://tinned.com/tinned-assets/logo-tinned-color.svg",
+          description: "Marketplace belge de boutiques et créateurs indépendants, organisée en boîtes thématiques.",
+          areaServed: "BE"
         }}
       />
 
@@ -568,6 +582,8 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      <FaqSection items={buyerFaq} eyebrow="Aide" title="Questions fréquentes" />
 
       {newsletterBlock?.published && (
         <section className="container" style={{ paddingBottom: "clamp(54px, 7vw, 86px)" }}>

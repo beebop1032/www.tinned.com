@@ -1,49 +1,28 @@
 import type { Metadata } from "next";
 import { getFaq } from "@/lib/api";
-import { SchemaJsonLd } from "@/components/SchemaJsonLd";
+import { FaqSection } from "@/components/FaqSection";
+import { generalFaq, type FaqItem } from "@/lib/faq-content";
 
 export const metadata: Metadata = {
-  title: "FAQ",
-  description: "Réponses aux questions fréquentes sur Tinned — commandes, livraisons, paiements et boutiques.",
+  title: "FAQ — commandes, livraison, paiement et boutiques",
+  description: "Toutes les réponses sur Tinned : commander, pré-commander, moyens de paiement, livraison en Belgique et vendre sur la marketplace.",
+  alternates: { canonical: "/faq" },
 };
 
 export default async function FaqPage() {
   const faq = await getFaq();
 
-  if (!faq) {
-    return (
-      <section className="container section">
-        <p className="text-gray-500">La FAQ n&apos;est pas disponible pour le moment.</p>
-      </section>
-    );
-  }
-
-  const questions = faq.sections.filter((s) => (s.question ?? s.title) && (s.answer ?? s.body));
+  // Contenu du back s'il existe, sinon la FAQ éditoriale de secours (toujours du contenu + schema).
+  const remote: FaqItem[] = (faq?.sections ?? [])
+    .map((s) => ({ q: (s.question ?? s.title) ?? "", a: (s.answer ?? s.body) ?? "" }))
+    .filter((item) => item.q && item.a);
+  const items = remote.length > 0 ? remote : generalFaq;
 
   return (
-    <>
-      {questions.length > 0 && (
-        <SchemaJsonLd data={{
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: questions.map((s) => ({
-            "@type": "Question",
-            name: s.question ?? s.title,
-            acceptedAnswer: { "@type": "Answer", text: s.answer ?? s.body },
-          })),
-        }} />
-      )}
-      <section className="container section">
-        <h1 className="page-title">{faq.title}</h1>
-        <div className="grid">
-          {faq.sections.map((section, index) => (
-            <article className="card" key={`${section.question}-${index}`}>
-              <h3>{section.question ?? section.title}</h3>
-              <p>{section.answer ?? section.body}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    </>
+    <FaqSection
+      items={items}
+      eyebrow="Aide"
+      title={faq?.title || "Questions fréquentes"}
+    />
   );
 }

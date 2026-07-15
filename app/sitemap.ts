@@ -1,16 +1,18 @@
 import type { MetadataRoute } from "next";
-import { getBoxes, getArticles, getTrips } from "@/lib/api";
+import { getBoxes, getArticles, getTrips, getProducts } from "@/lib/api";
+import { productHref } from "@/lib/commerce";
 
 const BASE = "https://tinned.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [stores, businesses, blogs, travels, articles, trips] = await Promise.all([
+  const [stores, businesses, blogs, travels, articles, trips, products] = await Promise.all([
     getBoxes("store"),
     getBoxes("business"),
     getBoxes("blog"),
     getBoxes("travel"),
     getArticles(),
     getTrips(),
+    getProducts(),
   ]);
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -65,12 +67,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
+  // Product pages — the primary commercial URLs, previously absent from the sitemap.
+  const productPages: MetadataRoute.Sitemap = products
+    .filter((p) => p.storeBox?.slug && p.variants.length > 0)
+    .map((product) => ({
+      url: `${BASE}${productHref(product)}`,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
+
   return [
     ...staticPages,
     ...storePages,
     ...businessPages,
     ...blogPages,
     ...travelPages,
+    ...productPages,
     ...articlePages,
     ...tripPages,
   ];

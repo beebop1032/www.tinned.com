@@ -4,8 +4,9 @@ import { BoxCard } from "@/components/BoxCard";
 import { getBoxes } from "@/lib/api";
 
 export const metadata: Metadata = {
-  title: "Business Box",
-  description: "Marques et créateurs à découvrir sur Tinned."
+  title: "Business Box — marques et savoir-faire à découvrir",
+  description: "Découvrez les Business Box de Tinned : l'univers, l'histoire et le savoir-faire des marques et créateurs indépendants belges.",
+  alternates: { canonical: "/business-box" },
 };
 
 export default async function BusinessBoxPage() {
