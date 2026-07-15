@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { CART_STORAGE_KEY, normalizeCartItems, upsertCartItem, type CartProduct } from "@/lib/cart";
+import { PREORDER_DISCOUNT_PCT } from "@/lib/commerce";
 import { money } from "@/lib/format";
 import type { ProductAttributeValue, ProductVariant } from "@/lib/types";
 
@@ -134,13 +135,23 @@ export function VariantSelector({ product, initialSku, preorder = false }: { pro
       </div> : null}
 
       <p className="price">
-        {money(selected.priceCents, product.currency)}
-        {selected.compareAtPriceCents && selected.compareAtPriceCents > selected.priceCents ? (
+        {preorder ? (
           <>
-            <s className="price-compare">{money(selected.compareAtPriceCents, product.currency)}</s>
-            <span className="price-discount">-{Math.round((1 - selected.priceCents / selected.compareAtPriceCents) * 100)}%</span>
+            {money(Math.round((selected.priceCents * (100 - PREORDER_DISCOUNT_PCT)) / 100), product.currency)}
+            <s className="price-compare">{money(selected.priceCents, product.currency)}</s>
+            <span className="price-discount">-{PREORDER_DISCOUNT_PCT}%</span>
           </>
-        ) : null}
+        ) : (
+          <>
+            {money(selected.priceCents, product.currency)}
+            {selected.compareAtPriceCents && selected.compareAtPriceCents > selected.priceCents ? (
+              <>
+                <s className="price-compare">{money(selected.compareAtPriceCents, product.currency)}</s>
+                <span className="price-discount">-{Math.round((1 - selected.priceCents / selected.compareAtPriceCents) * 100)}%</span>
+              </>
+            ) : null}
+          </>
+        )}
       </p>
       <p className="muted variant-stock">{preorder ? "Pré-vente" : selected.stock > 0 ? `${selected.stock} pièce${selected.stock > 1 ? "s" : ""} disponible${selected.stock > 1 ? "s" : ""}` : hasOptions ? "Indisponible pour cette option" : "Indisponible"} / Réf. {selected.sku}</p>
       <div className="purchase-row">

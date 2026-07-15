@@ -922,6 +922,23 @@ a.card:active,
   font-weight: 700;
 }
 
+/* Bloc pré-commande d'un produit « Bientôt » : prix −15 % à gauche, actions à droite
+   (« Pré-commander » + « Me prévenir »). */
+.product-card-purchase--preorder {
+  align-items: center;
+}
+
+.product-card-preorder-actions {
+  display: grid;
+  gap: 7px;
+  justify-items: stretch;
+}
+
+.product-card-preorder-actions .product-card-notify {
+  justify-content: center;
+  font-size: 13px;
+}
+
 .storefront-band {
   padding: clamp(58px, 7vw, 90px) 0;
   background: var(--cream);

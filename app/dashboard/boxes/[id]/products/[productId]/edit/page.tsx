@@ -32,6 +32,7 @@ export default function EditProductPage() {
   const [active, setActive] = useState(true);
   const [availability, setAvailability] = useState<"available" | "coming_soon" | "preorder">("available");
   const [releaseAt, setReleaseAt] = useState("");
+  const [hidePriceWhenUnavailable, setHidePriceWhenUnavailable] = useState(false);
   const [variants, setVariants] = useState<VariantDraft[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -52,6 +53,7 @@ export default function EditProductPage() {
         setActive(found.variants.length ? true : true);
         setAvailability(found.availability ?? "available");
         setReleaseAt(found.releaseAt ? found.releaseAt.slice(0, 10) : "");
+        setHidePriceWhenUnavailable(found.hidePriceWhenUnavailable ?? false);
         setVariants(found.variants.map((v: ProductVariant) => ({
           id: v.id,
           sku: v.sku,
@@ -83,6 +85,7 @@ export default function EditProductPage() {
         active,
         availability,
         releaseAt: availability === "available" ? null : (releaseAt ? `${releaseAt}T00:00:00+00:00` : null),
+        hidePriceWhenUnavailable: availability === "available" ? false : hidePriceWhenUnavailable,
       }, session.token);
 
       for (const v of variants) {
@@ -143,10 +146,21 @@ export default function EditProductPage() {
           </select>
         </label>
         {availability !== "available" ? (
-          <label className="grid gap-1 text-sm">
-            <span className="font-medium">Date de sortie</span>
-            <input type="date" className="border rounded px-3 py-2" value={releaseAt} onChange={(e) => setReleaseAt(e.target.value)} />
-          </label>
+          <>
+            <label className="grid gap-1 text-sm">
+              <span className="font-medium">Date de sortie</span>
+              <input type="date" className="border rounded px-3 py-2" value={releaseAt} onChange={(e) => setReleaseAt(e.target.value)} />
+            </label>
+            <label className="flex items-start gap-2 text-sm">
+              <input type="checkbox" className="mt-1" checked={hidePriceWhenUnavailable} onChange={(e) => setHidePriceWhenUnavailable(e.target.checked)} />
+              <span>
+                Ne pas afficher le prix tant que le produit n&apos;est pas disponible
+                <span className="block text-gray-500">
+                  Coché : seulement « Me prévenir ». Décoché : le prix s&apos;affiche et le produit est pré-commandable (−15 %, payé tout de suite).
+                </span>
+              </span>
+            </label>
+          </>
         ) : null}
         <label className="flex items-center gap-2 text-sm">
           <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />

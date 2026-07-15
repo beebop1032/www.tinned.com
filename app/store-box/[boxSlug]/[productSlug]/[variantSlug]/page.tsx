@@ -10,7 +10,7 @@ import { LandingBlocks } from "@/components/landing/LandingBlocks";
 import { SchemaJsonLd } from "@/components/SchemaJsonLd";
 import { toCartProduct } from "@/lib/cart";
 import { getProduct, getProductLanding, getReviews } from "@/lib/api";
-import { productPriceCents } from "@/lib/commerce";
+import { isPreorderable, productPriceCents } from "@/lib/commerce";
 import { formatReleaseDate, money } from "@/lib/format";
 
 type Props = { params: Promise<{ boxSlug: string; productSlug: string; variantSlug: string }> };
@@ -39,6 +39,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const hasVariants = product.variants.length > 0;
   const soldOut = availability === "available" && hasVariants && product.variants.every((variant) => variant.stock <= 0);
   const teaserKind = availability === "coming_soon" ? "coming_soon" : soldOut ? "sold_out" : null;
+  const preorderable = isPreorderable(product);
 
   return (
     <>
@@ -94,7 +95,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <p className="lead product-desc" key={index}>{paragraph}</p>
             ))}
           {product.variants.length > 1 && !teaserKind ? <p className="muted">Prix à partir de {money(productPriceCents(product), product.currency)}</p> : null}
-          {teaserKind ? (
+          {teaserKind === "coming_soon" && preorderable ? (
+            <>
+              <p className="muted">Pré-commande{releaseLabel ? ` — livrée à la sortie, le ${releaseLabel}` : " — livrée à la sortie"}</p>
+              <VariantSelector product={toCartProduct(product)} initialSku={variantSlug} preorder />
+              <ProductLaunch product={product} kind="coming_soon" releaseLabel={releaseLabel} />
+            </>
+          ) : teaserKind ? (
             <ProductLaunch product={product} kind={teaserKind} releaseLabel={releaseLabel} />
           ) : (
             <>

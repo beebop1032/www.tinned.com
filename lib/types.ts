@@ -80,6 +80,7 @@ export type Product = {
   images: string[];
   availability?: ProductAvailability;
   releaseAt?: string | null;
+  hidePriceWhenUnavailable?: boolean;
   storeBox?: Box | null;
   variants: ProductVariant[];
   translations?: { locale: string; name: string; description?: string | null }[];

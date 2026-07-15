@@ -4,6 +4,7 @@ import { ArrowRight, BellRing, Check, Loader2, PackageX } from "lucide-react";
 import { type FormEvent, useEffect, useState } from "react";
 import { subscribe } from "@/lib/customer-api";
 import { readStoredSession } from "@/lib/auth";
+import { isPreorderable } from "@/lib/commerce";
 import type { Product } from "@/lib/types";
 
 type Kind = "coming_soon" | "sold_out";
@@ -149,6 +150,8 @@ export function ProductLaunch({
   releaseLabel?: string | null;
 }) {
   const releaseAt = kind === "coming_soon" ? product.releaseAt : null;
+  // Quand le produit est pré-commandable, le prix est déjà affiché : on ne prétend pas qu'il est caché.
+  const priceRevealed = kind === "coming_soon" && isPreorderable(product);
 
   return (
     <section className={`launch launch--${kind}`} aria-label={kind === "coming_soon" ? "Lancement à venir" : "Produit épuisé"}>
@@ -177,7 +180,7 @@ export function ProductLaunch({
       )}
       <LaunchNotifyForm product={product} />
       <p className="launch-footnote">
-        {kind === "coming_soon" ? "Prix dévoilé au lancement. " : ""}Un seul email, rien d&apos;autre.
+        {kind === "coming_soon" && !priceRevealed ? "Prix dévoilé au lancement. " : ""}Un seul email, rien d&apos;autre.
       </p>
     </section>
   );

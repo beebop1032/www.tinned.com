@@ -52,3 +52,28 @@ export function discountPct(priceCents: number, compareAtCents: number | null): 
   if (!compareAtCents || compareAtCents <= priceCents) return null;
   return Math.round((1 - priceCents / compareAtCents) * 100);
 }
+
+/**
+ * Réduction accordée pour une pré-commande d'un produit pas encore sorti.
+ * Doit rester alignée avec CheckoutProcessor::PREORDER_DISCOUNT_PERCENT (api).
+ */
+export const PREORDER_DISCOUNT_PCT = 15;
+
+/**
+ * Un produit « à venir » (coming_soon/preorder) est pré-commandable quand son prix
+ * est connu, non masqué par le vendeur, et qu'il a au moins une variante à commander.
+ */
+export function isPreorderable(product: Product): boolean {
+  const preLaunch = product.availability === "coming_soon" || product.availability === "preorder";
+  return preLaunch && !product.hidePriceWhenUnavailable && productPriceCents(product) > 0 && product.variants.length > 0;
+}
+
+/** Prix pré-commande (−15 %) réellement facturé via Mollie. */
+export function preorderPriceCents(product: Product): number {
+  return Math.round((productPriceCents(product) * (100 - PREORDER_DISCOUNT_PCT)) / 100);
+}
+
+/** Variante utilisée pour une pré-commande : la première disponible (le stock est ignoré). */
+export function preorderVariant(product: Product) {
+  return product.variants[0] ?? null;
+}

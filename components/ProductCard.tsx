@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bell, CalendarClock, ShoppingCart, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { CART_STORAGE_KEY, normalizeCartItems, upsertCartItem } from "@/lib/cart";
-import { discountPct, productCompareAtCents, productHref, productPriceCents, productStockLabel, productVariantLabel } from "@/lib/commerce";
+import { discountPct, isPreorderable, preorderPriceCents, preorderVariant, productCompareAtCents, productHref, productPriceCents, productStockLabel, productVariantLabel, PREORDER_DISCOUNT_PCT } from "@/lib/commerce";
 import { formatReleaseDate, money } from "@/lib/format";
 import { StarRating } from "@/components/StarRating";
 import type { Product } from "@/lib/types";
@@ -28,26 +28,33 @@ function readStoredCart() {
 export function ProductCard({ product }: { product: Product }) {
   const [added, setAdded] = useState(false);
   const comingSoon = product.availability === "coming_soon";
+  const preorderable = comingSoon && isPreorderable(product);
   const soldOut = !comingSoon && product.variants.length > 0 && product.variants.every((variant) => variant.stock <= 0);
   const releaseLabel = comingSoon ? formatReleaseDate(product.releaseAt) : null;
   const soleVariant = product.variants.length === 1 ? product.variants[0] : null;
   const directPurchase = Boolean(soleVariant) && !comingSoon && !soldOut;
   const priceCents = productPriceCents(product);
   const compareAtCents = comingSoon ? null : productCompareAtCents(product);
-  const discount = discountPct(priceCents, compareAtCents);
+  const discount = preorderable ? PREORDER_DISCOUNT_PCT : discountPct(priceCents, compareAtCents);
 
-  const addDirectlyToCart = () => {
-    if (!soleVariant || soleVariant.stock < 1) return;
-    const next = upsertCartItem(readStoredCart(), {
-      productSlug: product.slug,
-      variantSku: soleVariant.sku,
-      quantity: 1
-    });
+  const pushToCart = (variantSku: string) => {
+    const next = upsertCartItem(readStoredCart(), { productSlug: product.slug, variantSku, quantity: 1 });
     window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(next));
     window.dispatchEvent(new Event("tinned-cart-updated"));
     window.dispatchEvent(new CustomEvent("tinned-cart-toast", { detail: { name: product.name } }));
     window.dispatchEvent(new Event("tinned-cart-open"));
     setAdded(true);
+  };
+
+  const addDirectlyToCart = () => {
+    if (!soleVariant || soleVariant.stock < 1) return;
+    pushToCart(soleVariant.sku);
+  };
+
+  // Pré-commande : on ajoute la variante au panier même sans stock (payée −15 % au checkout).
+  const preorderToCart = () => {
+    const variant = preorderVariant(product);
+    if (variant) pushToCart(variant.sku);
   };
 
   return (
@@ -98,13 +105,33 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
       </Link>
       {comingSoon ? (
-        <div className="product-card-purchase product-card-purchase--soon">
-          <span className="product-card-soon-price">Prix dévoilé au lancement</span>
-          <Link className="button product-card-add" href={productHref(product)}>
-            <Bell size={16} aria-hidden />
-            Me prévenir
-          </Link>
-        </div>
+        preorderable ? (
+          <div className="product-card-purchase product-card-purchase--preorder">
+            <strong>
+              <small>Pré-commande −{PREORDER_DISCOUNT_PCT}%</small>
+              {money(preorderPriceCents(product), product.currency)}
+              <s className="product-card-compare">{money(priceCents, product.currency)}</s>
+            </strong>
+            <div className="product-card-preorder-actions">
+              <button className="button product-card-add" type="button" onClick={preorderToCart}>
+                <ShoppingCart size={16} aria-hidden />
+                Pré-commander
+              </button>
+              <Link className="product-card-notify" href={productHref(product)}>
+                <Bell size={15} aria-hidden />
+                Me prévenir
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="product-card-purchase product-card-purchase--soon">
+            <span className="product-card-soon-price">Prix dévoilé au lancement</span>
+            <Link className="button product-card-add" href={productHref(product)}>
+              <Bell size={16} aria-hidden />
+              Me prévenir
+            </Link>
+          </div>
+        )
       ) : (
         <div className="product-card-purchase">
           <strong>

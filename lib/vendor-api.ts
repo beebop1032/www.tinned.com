@@ -149,6 +149,7 @@ export type ProductInput = {
   active?: boolean;
   availability?: "available" | "coming_soon" | "preorder";
   releaseAt?: string | null;
+  hidePriceWhenUnavailable?: boolean;
   imagePath?: string;
 };
 
