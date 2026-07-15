@@ -18,7 +18,7 @@ export default async function StoreBoxPage() {
         <div>
           <span className="eyebrow">Store Box</span>
           <h1>Les boutiques disponibles maintenant.</h1>
-          <p>Consultez les Store Box, comparez les produits et ajoutez chaque sélection au bon panier boutique.</p>
+          <p>Chaque Store Box réunit l'univers d'une boutique — ses coffrets, ses coups de cœur, son histoire. Ouvrez, comparez, laissez-vous porter.</p>
           <form className="rounded-input-container" action="/search">
             <input name="q" placeholder="Rechercher une boutique ou un produit" />
             <button className="button" type="submit">Trouver</button>

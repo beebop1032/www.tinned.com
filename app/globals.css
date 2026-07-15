@@ -733,9 +733,12 @@ a.card:active,
   box-shadow: 0 5px 14px rgba(5, 46, 45, 0.22);
 }
 
-/* Les icônes des tags suivent la couleur du texte du tag (sinon `.card svg`
-   force le vert forêt → sparkles vert sur fond vert = invisible). */
-.product-card-tag svg {
+/* Les icônes suivent la couleur du texte de leur conteneur (sinon `.card svg`
+   force le vert forêt → icône verte sur fond vert = invisible : tag « Bientôt »,
+   cloche « Me prévenir », panier « Ajouter »…). */
+.product-card-tag svg,
+.product-card-add svg,
+.product-card-notify svg {
   color: inherit;
 }
 
@@ -950,7 +953,7 @@ a.card:active,
 
 .box-img {
   position: relative;
-  padding: 34px 24px 8px;
+  padding: 28px 18px 6px;
   background: linear-gradient(135deg, rgba(1, 126, 122, 0.08), rgba(196, 136, 42, 0.06)), var(--cream);
   overflow: hidden;
 }
@@ -962,7 +965,7 @@ a.card:active,
 
 .box-img img.box-img-container {
   display: block;
-  width: min(96%, 268px);
+  width: min(100%, 300px);
   margin: 0 auto;
 }
 
@@ -971,8 +974,8 @@ a.card:active,
   top: 50%;
   left: 50%;
   display: block;
-  width: 124px;
-  height: 124px;
+  width: 144px;
+  height: 144px;
   overflow: hidden;
   border: 1px solid var(--stone);
   border-radius: 6px;
@@ -983,9 +986,9 @@ a.card:active,
 
 .box .box-img__user-img img {
   width: 100%;
-  height: 124px;
+  height: 144px;
   object-fit: contain;
-  padding: 10px;
+  padding: 11px;
 }
 
 .box-content__like {

@@ -412,7 +412,7 @@ export default async function HomePage() {
                 <div style={{
                   display: "grid",
                   placeItems: "center",
-                  minHeight: "148px",
+                  minHeight: "176px",
                   background: bg,
                   borderBottom: "1px solid var(--stone)",
                   padding: "20px",
@@ -429,8 +429,8 @@ export default async function HomePage() {
                   <Image
                     src={img}
                     alt={label}
-                    width={90}
-                    height={90}
+                    width={116}
+                    height={116}
                     style={{ objectFit: "contain", filter: "drop-shadow(0 6px 12px rgba(44,24,0,0.14))" }}
                   />
                 </div>

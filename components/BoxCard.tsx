@@ -46,9 +46,9 @@ export function BoxCard({ box, type }: { box: Box; type: BoxType }) {
       </span>
       <div className="box-img">
         <div className="box-img__user">
-          <Image className="box-img-container box-shell" src="/tinned-assets/simple-box.svg" alt="" width={268} height={268} />
+          <Image className="box-img-container box-shell" src="/tinned-assets/simple-box.svg" alt="" width={300} height={300} />
           <picture className="box-img__user-img">
-            <Image src={box.logoPath || iconByType[type]} alt="" width={120} height={120} />
+            <Image src={box.logoPath || iconByType[type]} alt="" width={144} height={144} />
           </picture>
         </div>
       </div>
