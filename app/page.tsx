@@ -119,7 +119,7 @@ export default async function HomePage() {
               fontWeight: 400
             }}>
               Boutiques, créateurs et carnets de voyage — sélectionnés à la main.
-              Explorez, comparez, commandez.
+              Chaque boîte, un univers à ouvrir.
             </p>
 
             <form action="/search" style={{
@@ -204,33 +204,33 @@ export default async function HomePage() {
               }}>
                 <div style={{
                   position: "relative",
-                  minHeight: "340px",
-                  display: "grid",
-                  placeItems: "center",
+                  minHeight: "420px",
                   background: "linear-gradient(135deg, rgba(30, 77, 58, 0.06), rgba(196, 120, 26, 0.04)), var(--cream)"
                 }}>
                   <span style={{
                     position: "absolute",
+                    zIndex: 2,
                     top: "14px",
                     left: "14px",
-                    padding: "4px 10px",
+                    padding: "5px 12px",
                     background: "var(--forest)",
                     color: "#fff",
                     borderRadius: "999px",
                     fontSize: "11px",
                     fontWeight: 600,
                     letterSpacing: "0.06em",
-                    textTransform: "uppercase"
+                    textTransform: "uppercase",
+                    boxShadow: "0 6px 16px rgba(5, 46, 45, 0.28)"
                   }}>
                     {featuredSoon ? "Bientôt" : "À découvrir"}
                   </span>
                   <Image
                     src={featured.images[0] ?? "/tinned-assets/simple-box.svg"}
                     alt={featured.name}
-                    width={360}
-                    height={340}
+                    width={560}
+                    height={420}
                     priority
-                    style={{ objectFit: "contain", width: "82%", maxWidth: "360px", height: "auto", filter: "drop-shadow(0 20px 28px rgba(12, 26, 20, 0.20))" }}
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
                   />
                 </div>
                 <div style={{
@@ -374,7 +374,7 @@ export default async function HomePage() {
             {[
               {
                 href: "/store-box", label: "Store Box",
-                desc: "Boutiques et produits. Parcourez, comparez, commandez.",
+                desc: "Des boutiques et leurs coups de cœur. Parcourez, comparez, laissez-vous porter.",
                 img: "/tinned-assets/box-store.svg",
                 bg: "#FFF8EE", accent: "#C4882A"
               },
@@ -393,7 +393,7 @@ export default async function HomePage() {
               {
                 href: "/travel-box", label: "Travel Box",
                 desc: "Carnets de voyage. Destinations, adresses et coups de cœur.",
-                img: "/tinned-assets/simple-box.svg",
+                img: "/tinned-assets/box-travel.svg",
                 bg: "#F5F0E8", accent: "#8A6F4A"
               },
             ].map(({ href, label, desc, img, bg, accent }) => (
@@ -517,7 +517,7 @@ export default async function HomePage() {
               <h2 style={{ fontFamily: "var(--font-brand)", fontWeight: 700, letterSpacing: "-0.015em", margin: "8px 0 0" }}>
                 Un univers,<br />plusieurs facettes.
               </h2>
-              <p>Chaque boutique a son univers, son contenu, son histoire. Explorez librement, commandez ce qui vous parle.</p>
+              <p>Chaque boîte a son univers, son contenu, son histoire. Ouvrez-la, explorez, laissez-vous porter.</p>
               <Link className="button" href="/store-box">Découvrir les boutiques</Link>
             </div>
             <div className="grid box-grid">
@@ -536,7 +536,7 @@ export default async function HomePage() {
             <span style={{ display: "block", width: "32px", height: "1px", background: "var(--amber)", marginBottom: "12px" }} />
             <span className="eyebrow">Éditorial</span>
             <h2 style={{ fontFamily: "var(--font-brand)", fontWeight: 700, letterSpacing: "-0.015em" }}>
-              {hasArticles ? "À lire avant d'acheter" : "Les inspirations arrivent"}
+              {hasArticles ? "À lire avant d'ouvrir la boîte" : "Les inspirations arrivent"}
             </h2>
             <p>{hasArticles ? "Coulisses, portraits de créateurs et récits de voyage." : "Les articles et carnets arrivent avec les premières boutiques."}</p>
           </div>

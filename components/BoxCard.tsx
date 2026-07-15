@@ -23,10 +23,10 @@ const categoryByType: Record<BoxType, string> = {
 };
 
 const actionByType: Record<BoxType, string> = {
-  business: "Voir la marque",
-  store: "Voir la sélection",
-  blog: "Lire le journal",
-  travel: "Découvrir le carnet"
+  business: "Explorer la Business Box",
+  store: "Explorer la Store Box",
+  blog: "Ouvrir la Blog Box",
+  travel: "Ouvrir la Travel Box"
 };
 
 const fallbackByType: Record<BoxType, string> = {
@@ -46,9 +46,9 @@ export function BoxCard({ box, type }: { box: Box; type: BoxType }) {
       </span>
       <div className="box-img">
         <div className="box-img__user">
-          <Image className="box-img-container box-shell" src="/tinned-assets/simple-box.svg" alt="" width={230} height={230} />
+          <Image className="box-img-container box-shell" src="/tinned-assets/simple-box.svg" alt="" width={268} height={268} />
           <picture className="box-img__user-img">
-            <Image src={box.logoPath || iconByType[type]} alt="" width={72} height={72} />
+            <Image src={box.logoPath || iconByType[type]} alt="" width={120} height={120} />
           </picture>
         </div>
       </div>

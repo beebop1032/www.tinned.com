@@ -35,7 +35,12 @@ export function BoxHero({
     >
       <div className="hero-content">
         {hasLogo ? (
-          <Image className="hero-logo" src={logo!} alt="" width={200} height={56} style={{ objectFit: "contain", objectPosition: "left", height: "56px", width: "auto" }} />
+          <div className="hero-boxlogo" aria-hidden>
+            <Image className="hero-boxlogo__shell" src="/tinned-assets/simple-box.svg" alt="" width={168} height={168} />
+            <span className="hero-boxlogo__logo">
+              <Image src={logo!} alt="" width={96} height={96} />
+            </span>
+          </div>
         ) : null}
         {eyebrow ? <span className="eyebrow">{eyebrow}</span> : null}
         <h1>{title}</h1>

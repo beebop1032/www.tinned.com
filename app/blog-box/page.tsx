@@ -6,7 +6,7 @@ import { getArticles, getBoxes } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Blog Box",
-  description: "Guides, sélections et coulisses des boutiques Tinned."
+  description: "Guides, coulisses et récits des boutiques Tinned."
 };
 
 export default async function BlogBoxPage() {
@@ -17,8 +17,8 @@ export default async function BlogBoxPage() {
       <section className="container hero">
         <div>
           <span className="eyebrow">Blog Box</span>
-          <h1>Guides, sélections et nouveautés.</h1>
-          <p>Des contenus courts pour découvrir les produits autrement et mieux choisir.</p>
+          <h1>Guides, coulisses et récits.</h1>
+          <p>Des articles pour découvrir chaque univers autrement.</p>
           <form className="rounded-input-container" action="/search">
             <input name="q" placeholder="Rechercher un article" />
             <button className="button" type="submit">Trouver</button>
