@@ -2,6 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
+import { subscribe } from "@/lib/customer-api";
 import type { NewsletterBlockData } from "@/lib/newsletter-block";
 
 export function NewsletterBlock({ data }: { data: NewsletterBlockData }) {
@@ -15,15 +16,9 @@ export function NewsletterBlock({ data }: { data: NewsletterBlockData }) {
     setBusy(true);
     setError("");
     try {
-      const res = await fetch("/api/newsletter", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({})) as { error?: string };
-        throw new Error(err.error ?? "Erreur lors de l'inscription.");
-      }
+      // Inscription newsletter globale : passe par le système Subscription
+      // (targetType "tinned") — stockage en base + double opt-in via Resend.
+      await subscribe({ email, targetType: "tinned", consentTinned: true });
       setSuccess(true);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Erreur inconnue.");
