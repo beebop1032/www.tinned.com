@@ -80,7 +80,7 @@ export function NewsletterBlock({ data }: { data: NewsletterBlockData }) {
             fontWeight: 500,
             textAlign: "center",
           }}>
-            ✓ Vérifiez votre boîte email.
+            ✓ C&apos;est noté, à bientôt&nbsp;!
           </p>
         ) : (
           <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>

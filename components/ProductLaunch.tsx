@@ -63,6 +63,7 @@ function LaunchNotifyForm({ product }: { product: Product }) {
   const [sessionEmail, setSessionEmail] = useState("");
   const [ready, setReady] = useState(false);
   const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -78,6 +79,11 @@ function LaunchNotifyForm({ product }: { product: Product }) {
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
+    // Opt-in : les connectés ont déjà accepté à l'inscription ; les anonymes cochent ici.
+    if (!loggedIn && !consent) {
+      setError("Coche la case pour être prévenu·e.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -90,11 +96,7 @@ function LaunchNotifyForm({ product }: { product: Product }) {
         },
         token ?? undefined
       );
-      setMessage(
-        loggedIn
-          ? "C'est noté. Tu seras prévenu·e avant tout le monde."
-          : "Vérifie ta boîte mail pour confirmer ton inscription."
-      );
+      setMessage("C'est noté. Tu seras prévenu·e avant tout le monde — un seul email, promis.");
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Une erreur est survenue. Réessaie.");
     } finally {
@@ -135,6 +137,16 @@ function LaunchNotifyForm({ product }: { product: Product }) {
           {busy ? null : <ArrowRight size={16} aria-hidden />}
         </button>
       </div>
+      {!loggedIn ? (
+        <label className="launch-form-consent">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(event) => setConsent(event.target.checked)}
+          />
+          <span>J&apos;accepte d&apos;être prévenu·e par email du lancement de ce produit.</span>
+        </label>
+      ) : null}
       {error ? <p className="launch-form-error">{error}</p> : null}
     </form>
   );
