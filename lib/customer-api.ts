@@ -289,12 +289,6 @@ export async function submitReview(input: ReviewInput, token: string): Promise<R
   });
 }
 
-export async function confirmSubscription(token: string): Promise<{ confirmed: boolean }> {
-  return apiFetch<{ confirmed: boolean }>(`/subscriptions/confirm/${encodeURIComponent(token)}`, {
-    method: "GET"
-  });
-}
-
 export type VerifyEmailResult = {
   verified: boolean;
   hasPassword?: boolean;
