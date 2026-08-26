@@ -28,7 +28,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://tinned.com"),
+  metadataBase: new URL("https://www.tinned.com"),
   title: {
     default: "Tinned",
     template: "%s — Tinned"
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tinned — Boutiques artisanales, créateurs et carnets de voyage",
     description: "Boutiques artisanales, créateurs et carnets de voyage — sélectionnés à la main. Découvrez, comparez et commandez sur Tinned.",
-    url: "https://tinned.com",
+    url: "https://www.tinned.com",
     siteName: "Tinned",
     images: [{ url: "/tinned-assets/background-intro.jpg", width: 1200, height: 630, alt: "Tinned — Boutiques artisanales belges" }],
     locale: "fr_BE",

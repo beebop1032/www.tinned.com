@@ -45,7 +45,7 @@ export default async function HomePage() {
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Tinned",
-          url: "https://tinned.com",
+          url: "https://www.tinned.com",
           potentialAction: { "@type": "SearchAction", target: "/search?q={search_term_string}", "query-input": "required name=search_term_string" }
         }}
       />
@@ -54,8 +54,8 @@ export default async function HomePage() {
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Tinned",
-          url: "https://tinned.com",
-          logo: "https://tinned.com/tinned-assets/logo-tinned-color.svg",
+          url: "https://www.tinned.com",
+          logo: "https://www.tinned.com/tinned-assets/logo-tinned-color.svg",
           description: "Marketplace belge de boutiques et créateurs indépendants, organisée en boîtes thématiques.",
           areaServed: "BE"
         }}

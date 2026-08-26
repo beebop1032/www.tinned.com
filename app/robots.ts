@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin/", "/dashboard/", "/cart", "/checkout", "/orders", "/profile", "/auth", "/api/"],
       },
     ],
-    sitemap: "https://tinned.com/sitemap.xml",
+    sitemap: "https://www.tinned.com/sitemap.xml",
   };
 }

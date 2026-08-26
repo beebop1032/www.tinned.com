@@ -83,12 +83,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Accueil", item: "https://tinned.com" },
-            { "@type": "ListItem", position: 2, name: "Store Box", item: "https://tinned.com/store-box" },
+            { "@type": "ListItem", position: 1, name: "Accueil", item: "https://www.tinned.com" },
+            { "@type": "ListItem", position: 2, name: "Store Box", item: "https://www.tinned.com/store-box" },
             ...(product.storeBox
-              ? [{ "@type": "ListItem", position: 3, name: product.storeBox.name, item: `https://tinned.com/store-box/${product.storeBox.slug}` }]
+              ? [{ "@type": "ListItem", position: 3, name: product.storeBox.name, item: `https://www.tinned.com/store-box/${product.storeBox.slug}` }]
               : []),
-            { "@type": "ListItem", position: product.storeBox ? 4 : 3, name: product.name, item: `https://tinned.com${productHref(product)}` },
+            { "@type": "ListItem", position: product.storeBox ? 4 : 3, name: product.name, item: `https://www.tinned.com${productHref(product)}` },
           ],
         }}
       />

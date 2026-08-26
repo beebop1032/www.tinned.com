@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getBoxes, getArticles, getTrips, getProducts } from "@/lib/api";
 import { productHref } from "@/lib/commerce";
 
-const BASE = "https://tinned.com";
+const BASE = "https://www.tinned.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [stores, businesses, blogs, travels, articles, trips, products] = await Promise.all([

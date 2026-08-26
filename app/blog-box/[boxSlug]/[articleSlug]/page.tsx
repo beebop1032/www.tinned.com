@@ -31,8 +31,8 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
         image: article.imagePath,
         datePublished: article.publishedAt,
         author: { "@type": "Organization", name: article.blogBox?.name ?? "Tinned" },
-        publisher: { "@type": "Organization", name: "Tinned", logo: { "@type": "ImageObject", url: "https://tinned.com/tinned-assets/logo-tinned-color.svg" } },
-        url: article.blogBox?.slug ? `https://tinned.com/blog-box/${article.blogBox.slug}/${article.slug}` : undefined,
+        publisher: { "@type": "Organization", name: "Tinned", logo: { "@type": "ImageObject", url: "https://www.tinned.com/tinned-assets/logo-tinned-color.svg" } },
+        url: article.blogBox?.slug ? `https://www.tinned.com/blog-box/${article.blogBox.slug}/${article.slug}` : undefined,
       }} />
       <article className="container product-layout">
         <div className="product-image">
