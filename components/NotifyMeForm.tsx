@@ -51,7 +51,7 @@ export function NotifyMeForm(props: Props) {
     setError("");
     setMessage("");
     try {
-      await subscribe(
+      const result = await subscribe(
         {
           email: loggedIn ? sessionEmail : email,
           targetType,
@@ -61,7 +61,11 @@ export function NotifyMeForm(props: Props) {
         },
         token ?? undefined
       );
-      setMessage("C'est noté ! On vous préviendra.");
+      setMessage(
+        result.status === "pending"
+          ? "Presque ! Vérifiez votre boîte email pour confirmer votre inscription."
+          : "C'est noté ! On vous préviendra."
+      );
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Une erreur est survenue.");
     } finally {

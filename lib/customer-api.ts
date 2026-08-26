@@ -295,6 +295,53 @@ export async function confirmSubscription(token: string): Promise<{ confirmed: b
   });
 }
 
+export type VerifyEmailResult = {
+  verified: boolean;
+  hasPassword?: boolean;
+  email?: string;
+  token?: string;
+};
+
+/** Vérifie l'email (POST, pour éviter l'auto-validation par les scanners d'email). */
+export async function verifyEmail(token: string): Promise<VerifyEmailResult> {
+  return apiFetch<VerifyEmailResult>("/account/verify-email", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ token })
+  });
+}
+
+/** Définit un premier mot de passe (lead). Nécessite d'être connecté (JWT de la vérif). */
+export async function setAccountPassword(password: string, token: string): Promise<{ ok: boolean }> {
+  return apiFetch<{ ok: boolean }>("/account/set-password", {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+    body: JSON.stringify({ password })
+  });
+}
+
+export type UnsubscribeState = {
+  found: boolean;
+  email?: string;
+  marketing?: boolean;
+  notifications?: boolean;
+};
+
+export async function getUnsubscribeState(token: string): Promise<UnsubscribeState> {
+  return apiFetch<UnsubscribeState>(`/unsubscribe/${encodeURIComponent(token)}`, { method: "GET" });
+}
+
+export async function applyUnsubscribe(
+  token: string,
+  prefs: { marketing?: boolean; notifications?: boolean }
+): Promise<{ ok: boolean }> {
+  return apiFetch<{ ok: boolean }>(`/unsubscribe/${encodeURIComponent(token)}/apply`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(prefs)
+  });
+}
+
 export async function fetchDeliveryMethods(countryCode: string): Promise<CarrierOption[]> {
   const payload = await apiFetch<HydraCollection<CarrierOption> | CarrierOption[]>(
     `/delivery_methods?active=true&countryCode=${encodeURIComponent(countryCode)}&order[position]=asc`

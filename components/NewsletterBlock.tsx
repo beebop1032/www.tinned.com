@@ -9,6 +9,7 @@ export function NewsletterBlock({ data }: { data: NewsletterBlockData }) {
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
 
   const submit = async (e: FormEvent) => {
@@ -17,8 +18,13 @@ export function NewsletterBlock({ data }: { data: NewsletterBlockData }) {
     setError("");
     try {
       // Inscription newsletter globale : passe par le système Subscription
-      // (targetType "tinned") — stockage en base + double opt-in via Resend.
-      await subscribe({ email, targetType: "tinned", consentTinned: true });
+      // (targetType "tinned"). Un email non vérifié crée un compte en attente.
+      const result = await subscribe({ email, targetType: "tinned", consentTinned: true });
+      setSuccessMessage(
+        result.status === "pending"
+          ? "✓ Presque ! Vérifie ta boîte email pour confirmer."
+          : "✓ C'est noté, à bientôt !"
+      );
       setSuccess(true);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Erreur inconnue.");
@@ -80,7 +86,7 @@ export function NewsletterBlock({ data }: { data: NewsletterBlockData }) {
             fontWeight: 500,
             textAlign: "center",
           }}>
-            ✓ C&apos;est noté, à bientôt&nbsp;!
+            {successMessage}
           </p>
         ) : (
           <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>

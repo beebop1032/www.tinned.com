@@ -87,7 +87,7 @@ function LaunchNotifyForm({ product }: { product: Product }) {
     setBusy(true);
     setError("");
     try {
-      await subscribe(
+      const result = await subscribe(
         {
           email: loggedIn ? sessionEmail : email,
           targetType: "product",
@@ -96,7 +96,11 @@ function LaunchNotifyForm({ product }: { product: Product }) {
         },
         token ?? undefined
       );
-      setMessage("C'est noté. Tu seras prévenu·e avant tout le monde — un seul email, promis.");
+      setMessage(
+        result.status === "pending"
+          ? "Presque ! Vérifie ta boîte email pour confirmer — c'est ça qui active ton suivi."
+          : "C'est noté. Tu seras prévenu·e avant tout le monde — un seul email, promis."
+      );
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Une erreur est survenue. Réessaie.");
     } finally {
