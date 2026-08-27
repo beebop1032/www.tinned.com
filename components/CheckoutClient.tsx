@@ -21,7 +21,6 @@ import {
 } from "@/lib/cart";
 import { createCheckoutOrder, createMyAddress, fetchDeliveryMethods, fetchMyAddresses, validateCoupon, type CustomerAddress } from "@/lib/customer-api";
 import {
-  ADDRESS_SUGGESTIONS,
   CARRIER_OPTIONS,
   carrierForOptions,
   carrierPriceFor,
@@ -55,7 +54,6 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
   const [session, setSession] = useState<TinnedSession | null>(null);
   const [carrierSelections, setCarrierSelections] = useState<CarrierSelection[]>([]);
   const [carrierOptions, setCarrierOptions] = useState(CARRIER_OPTIONS);
-  const [addressSearch, setAddressSearch] = useState("");
   const [address, setAddress] = useState<AddressSuggestion>({
     id: "manual",
     label: "",
@@ -97,9 +95,6 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
   const discountCents = appliedCoupon ? Math.min(appliedCoupon.discountCents, subtotalCents) : 0;
   const totalCents = Math.max(0, subtotalCents - discountCents) + shippingCents;
   const currency = selectedGroups[0]?.currency ?? "EUR";
-  const addressMatches = addressSearch.trim().length < 2 || addressSearch === address.label
-    ? []
-    : ADDRESS_SUGGESTIONS.filter((suggestion) => suggestion.label.toLowerCase().includes(addressSearch.toLowerCase())).slice(0, 4);
 
   useEffect(() => {
     let active = true;
@@ -151,11 +146,6 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
     });
   };
 
-  const selectAddress = (suggestion: AddressSuggestion) => {
-    setAddress(suggestion);
-    setAddressSearch(suggestion.label);
-  };
-
   const applySavedAddress = (entry: CustomerAddress) => {
     setSelectedSavedId(entry.id);
     setAddress({
@@ -166,13 +156,11 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
       country: entry.countryCode,
       label: `${entry.street}, ${entry.postalCode} ${entry.city}`,
     });
-    setAddressSearch(`${entry.street}, ${entry.postalCode} ${entry.city}`);
   };
 
   const useNewAddress = () => {
     setSelectedSavedId("new");
     setAddress({ id: "", street: "", postalCode: "", city: "", country: "BE", label: "" });
-    setAddressSearch("");
   };
 
   // Load the buyer's saved addresses and pre-select the default (or first) one.
@@ -370,25 +358,6 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
                 </label>
               </div>
             ) : null}
-            <label className="field address-search">
-              <span>Rechercher une adresse</span>
-              <input
-                value={addressSearch}
-                onChange={(event) => setAddressSearch(event.target.value)}
-                placeholder="Rue, code postal, ville..."
-                autoComplete="street-address"
-              />
-              <small className="field-help">Choisissez une suggestion pour remplir les champs automatiquement, ou encodez l'adresse manuellement.</small>
-              {addressMatches.length ? (
-                <div className="address-suggestions">
-                  {addressMatches.map((suggestion) => (
-                    <button type="button" key={suggestion.id} onClick={() => selectAddress(suggestion)}>
-                      {suggestion.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </label>
             <div className="form-grid">
               <label className="field field-full"><span>Adresse</span><input name="street" required value={address.street} onChange={(event) => setAddress({ ...address, street: event.target.value })} /></label>
               <label className="field"><span>Code postal</span><input name="postalCode" required value={address.postalCode} onChange={(event) => setAddress({ ...address, postalCode: event.target.value })} /></label>

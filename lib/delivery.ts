@@ -59,33 +59,27 @@ export const ADDRESS_SUGGESTIONS: AddressSuggestion[] = [
   }
 ];
 
+// Repli local ; les vraies méthodes viennent de l'API (fetchDeliveryMethods).
+// Doit rester aligné avec app:seed-delivery-methods côté API : Bpost domicile + Point Colis.
 export const CARRIER_OPTIONS: CarrierOption[] = [
   {
-    code: "mondial-relay-pickup",
-    name: "Mondial Relay",
-    mode: "pickup",
-    description: "Point relais proche de l'adresse",
-    eta: "2 à 4 jours ouvrables",
-    priceCents: 499,
-    freeFromCents: 6900
-  },
-  {
-    code: "dpd-home",
-    name: "DPD domicile",
+    code: "bpost-home",
+    name: "Bpost à domicile",
     mode: "home",
     description: "Livraison à domicile avec suivi",
     eta: "2 à 3 jours ouvrables",
-    priceCents: 799,
-    freeFromCents: 6900
+    recommended: true,
+    priceCents: 595,
+    freeFromCents: 6000
   },
   {
     code: "bpost-locker",
-    name: "Bpost distributeur",
+    name: "Bpost Point Colis",
     mode: "locker",
-    description: "Distributeur de paquets disponible 24/7",
+    description: "Point d'enlèvement Bpost proche de chez vous",
     eta: "2 à 3 jours ouvrables",
-    priceCents: 799,
-    freeFromCents: 6900
+    priceCents: 395,
+    freeFromCents: 6000
   }
 ];
 
