@@ -65,7 +65,6 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
   const [savedAddresses, setSavedAddresses] = useState<CustomerAddress[]>([]);
   const [selectedSavedId, setSelectedSavedId] = useState<number | "new">("new");
   const [saveAddress, setSaveAddress] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("card");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [couponInput, setCouponInput] = useState("");
@@ -240,7 +239,7 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
         items: orderItems,
         selectedStoreSlugs: selectedGroups.map((group) => group.storeSlug),
         carrierSelections: effectiveCarrierSelections,
-        paymentMethod,
+        paymentMethod: "mollie",
         couponCode: appliedCoupon?.code
       }, session?.token);
 
@@ -405,20 +404,11 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
           <section className="checkout-panel">
             <header className="panel-title">
               <CreditCard size={19} aria-hidden />
-              <h2>Méthode de paiement</h2>
+              <h2>Paiement</h2>
             </header>
-            <div className="payment-methods" role="radiogroup" aria-label="Méthode de paiement">
-              {[
-                ["card", "Carte"],
-                ["bancontact", "Bancontact"],
-                ["paypal", "PayPal"]
-              ].map(([value, label]) => (
-                <label className={paymentMethod === value ? "is-selected" : ""} key={value}>
-                  <input type="radio" name="payment" value={value} checked={paymentMethod === value} onChange={() => setPaymentMethod(value)} />
-                  <span>{label}</span>
-                </label>
-              ))}
-            </div>
+            <p className="field-help">
+              Vous serez redirigé vers le paiement sécurisé Mollie (carte, Bancontact…) pour finaliser votre commande.
+            </p>
             <label className="terms-row">
               <input type="checkbox" required defaultChecked />
               <span>J'accepte les conditions de vente et le traitement de la commande.</span>
@@ -429,7 +419,7 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
 
           <button className="button checkout-submit" type="submit" disabled={submitting}>
             <LockKeyhole size={18} aria-hidden />
-            {submitting ? "Commande en cours..." : "Confirmer la commande"}
+            {submitting ? "Redirection vers le paiement…" : "Payer"}
           </button>
         </form>
 
