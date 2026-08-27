@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, LayoutTemplate, Loader2, PackagePlus, Pencil, Plus, Store, Trash2, UploadCloud } from "lucide-react";
+import { ArrowLeft, Image as ImageIcon, LayoutTemplate, Loader2, PackagePlus, Pencil, Plus, Store, Trash2, UploadCloud } from "lucide-react";
 import {
   centsFromPrice,
   createAdminProduct,
@@ -24,7 +24,7 @@ type ProductFormState = {
   description: string;
   basePrice: string;
   currency: string;
-  imagePath: string;
+  images: string[];
   availability: ProductAvailability;
   releaseDate: string;
 };
@@ -46,7 +46,7 @@ const initialProductForm: ProductFormState = {
   description: "",
   basePrice: "29,00",
   currency: "EUR",
-  imagePath: "",
+  images: [],
   availability: "available",
   releaseDate: ""
 };
@@ -199,7 +199,7 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
       description: product.description ?? "",
       basePrice: (product.basePriceCents / 100).toFixed(2).replace(".", ","),
       currency: product.currency,
-      imagePath: product.images[0] ?? "",
+      images: product.images ?? [],
       availability: product.availability ?? "available",
       releaseDate: product.releaseAt ? product.releaseAt.slice(0, 10) : ""
     });
@@ -216,8 +216,12 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
     setStatus("");
     setError("");
     try {
+      // Galerie multi-images : les URLs saisies + l'éventuel fichier uploadé (ajouté à la fin).
       const uploaded = productImageFile ? await uploadAdminMedia(productImageFile, session.token) : null;
-      const imagePath = uploaded?.url ?? productForm.imagePath;
+      const images = [
+        ...productForm.images.map((url) => url.trim()),
+        ...(uploaded?.url ? [uploaded.url] : [])
+      ].filter(Boolean);
       const cleanVariants: AdminVariantInput[] = variants.map((variant, index) => ({
         id: variant.id,
         sku: variant.sku.trim() || `${productForm.slug.toUpperCase()}-${String(index + 1).padStart(3, "0")}`,
@@ -238,7 +242,7 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
           ? Math.min(...cleanVariants.map((variant) => variant.priceCents))
           : centsFromPrice(productForm.basePrice),
         currency: productForm.currency || "EUR",
-        imagePath,
+        images,
         availability: productForm.availability,
         releaseAt: productForm.availability !== "available" && productForm.releaseDate ? productForm.releaseDate : null,
         variants: cleanVariants
@@ -364,10 +368,43 @@ export function StoreBoxDetailClient({ storeBoxId }: { storeBoxId: number }) {
             <div className="admin-media-row">
               <label className="admin-uploader">
                 <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif" onChange={chooseProductImage} />
-                <span className="admin-upload-preview">{productImagePreview || productForm.imagePath ? <img src={productImagePreview || productForm.imagePath} alt="" /> : <UploadCloud size={23} aria-hidden />}</span>
-                <span>{fileLabel(productImageFile, "Image produit")}</span>
+                <span className="admin-upload-preview">{productImagePreview ? <img src={productImagePreview} alt="" /> : <UploadCloud size={23} aria-hidden />}</span>
+                <span>{fileLabel(productImageFile, "Ajouter une image")}</span>
               </label>
-              <label className="field field-grow"><span>Image URL</span><input value={productForm.imagePath} onChange={(event) => setProductForm((current) => ({ ...current, imagePath: event.target.value }))} placeholder="https://..." /></label>
+              <div className="field field-grow">
+                <span>Images (la 1re est l&apos;image principale)</span>
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {productForm.images.map((url, index) => (
+                    <div key={index} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span className="admin-thumb" style={{ flexShrink: 0 }}>{url ? <img src={url} alt="" /> : <ImageIcon size={16} aria-hidden />}</span>
+                      <input
+                        style={{ flex: 1 }}
+                        value={url}
+                        placeholder="https://..."
+                        onChange={(event) => setProductForm((current) => ({
+                          ...current,
+                          images: current.images.map((item, i) => (i === index ? event.target.value : item))
+                        }))}
+                      />
+                      <button
+                        type="button"
+                        className="text-button"
+                        onClick={() => setProductForm((current) => ({ ...current, images: current.images.filter((_, i) => i !== index) }))}
+                      >
+                        Retirer
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    className="button secondary"
+                    style={{ alignSelf: "flex-start" }}
+                    onClick={() => setProductForm((current) => ({ ...current, images: [...current.images, ""] }))}
+                  >
+                    <Plus size={16} aria-hidden />Ajouter une URL d&apos;image
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="admin-variants">
               <div className="admin-variants-head">

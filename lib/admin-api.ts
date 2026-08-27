@@ -75,7 +75,7 @@ export type AdminProductInput = {
   description?: string;
   basePriceCents: number;
   currency: string;
-  imagePath?: string;
+  images?: string[];
   availability: "available" | "coming_soon" | "preorder";
   releaseAt?: string | null;
   variants: AdminVariantInput[];
@@ -510,7 +510,7 @@ export async function createAdminProduct(input: AdminProductInput, token: string
     active: true,
     availability: input.availability,
     releaseAt: input.releaseAt || null,
-    images: input.imagePath ? [input.imagePath] : []
+    images: (input.images ?? []).map((url) => url.trim()).filter(Boolean)
   }));
 
   const productIri = resourceIri("products", product);
@@ -522,7 +522,7 @@ export async function createAdminProduct(input: AdminProductInput, token: string
       priceCents: variant.priceCents,
       stock: variant.stock,
       active: true,
-      images: variant.imagePath ? [variant.imagePath] : input.imagePath ? [input.imagePath] : [],
+      images: variant.imagePath ? [variant.imagePath] : (input.images?.[0] ? [input.images[0]] : []),
       attributeValues
     }));
   }
@@ -541,7 +541,7 @@ export async function updateAdminProduct(input: AdminProductInput, product: Prod
     currency: input.currency,
     availability: input.availability,
     releaseAt: input.releaseAt || null,
-    images: input.imagePath ? [input.imagePath] : []
+    images: (input.images ?? []).map((url) => url.trim()).filter(Boolean)
   }));
 
   const productIri = resourceIri("products", product);
@@ -554,7 +554,7 @@ export async function updateAdminProduct(input: AdminProductInput, product: Prod
       priceCents: variant.priceCents,
       stock: variant.stock,
       active: true,
-      images: variant.imagePath ? [variant.imagePath] : input.imagePath ? [input.imagePath] : [],
+      images: variant.imagePath ? [variant.imagePath] : (input.images?.[0] ? [input.images[0]] : []),
       attributeValues
     };
 
