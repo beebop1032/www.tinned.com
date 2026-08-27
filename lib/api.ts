@@ -31,8 +31,11 @@ function tagsFor(path: string): string[] {
 async function fetchApi<T>(path: string): Promise<T | null> {
   try {
     const response = await fetch(`${requireApiUrl()}/api${path}`, {
-      // Long TTL as a safety net; freshness is driven by on-demand tag revalidation.
-      next: { revalidate: 3600, tags: tagsFor(path) },
+      // TTL court comme filet de sécurité : la fraîcheur vient d'abord de l'invalidation
+      // par tag (revalidateTag) à l'écriture, mais celle-ci peut ne pas traverser quand le
+      // dashboard et le site public sont sur des déploiements distincts (Data Cache séparés).
+      // 60 s borne alors la péremption à ≤ 1 min au lieu de 1 h.
+      next: { revalidate: 60, tags: tagsFor(path) },
       headers: { Accept: "application/ld+json, application/json" },
     });
     if (!response.ok) return null;

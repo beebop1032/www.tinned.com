@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { VariantSelector } from "@/components/VariantSelector";
 import { ProductGallery } from "@/components/ProductGallery";
 import { ProductLaunch } from "@/components/ProductLaunch";
@@ -92,7 +93,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           ],
         }}
       />
-      {landing ? <LandingBlocks landing={landing} box={product.storeBox} /> : null}
       <div className="container product-layout">
         <ProductGallery images={product.images} alt={product.name} />
         <article>
@@ -104,12 +104,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <span>{ratingAverage.toFixed(1)} · {ratingCount} avis</span>
             </Link>
           ) : null}
-          {product.description
-            ?.split(/\n{2,}/)
-            .filter((paragraph) => paragraph.trim())
-            .map((paragraph, index) => (
-              <p className="lead product-desc" key={index}>{paragraph}</p>
-            ))}
+          {product.description?.trim() ? (
+            <div className="prose product-desc"><ReactMarkdown>{product.description}</ReactMarkdown></div>
+          ) : null}
           {product.variants.length > 1 && !teaserKind ? <p className="muted">Prix à partir de {money(productPriceCents(product), product.currency)}</p> : null}
           {teaserKind === "coming_soon" && preorderable ? (
             <>
@@ -129,6 +126,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           )}
         </article>
       </div>
+      {/* Landing (argumentaire) sous le produit : l'acheteur voit d'abord l'image, le prix
+          et le bouton d'achat, puis lit le « pourquoi celui-là ». */}
+      {landing ? <LandingBlocks landing={landing} box={product.storeBox} /> : null}
       {/* Pas d'appel aux avis sur un produit pas encore lancé (personne n'a pu l'acheter). */}
       {availability === "coming_soon" && ratingCount === 0 ? null : (
         <div className="container section">
