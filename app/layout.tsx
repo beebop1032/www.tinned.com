@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Bricolage_Grotesque, Inter, Geist_Mono } from "next/font/google";
 import { SiteFrame } from "@/components/SiteFrame";
@@ -46,6 +46,10 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#017E7A",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
