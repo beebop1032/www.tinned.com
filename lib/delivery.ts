@@ -71,16 +71,8 @@ export const CARRIER_OPTIONS: CarrierOption[] = [
     recommended: true,
     priceCents: 595,
     freeFromCents: 6000
-  },
-  {
-    code: "bpost-locker",
-    name: "Bpost Point Colis",
-    mode: "locker",
-    description: "Point d'enlèvement Bpost proche de chez vous",
-    eta: "2 à 3 jours ouvrables",
-    priceCents: 395,
-    freeFromCents: 6000
   }
+  // Bpost Point Colis : réactivé une fois la sélection de point relais intégrée (geowidget Bpost).
 ];
 
 export function carrierFor(code?: string) {
