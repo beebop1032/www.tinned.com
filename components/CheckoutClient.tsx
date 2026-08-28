@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CreditCard, LockKeyhole, MapPin, Truck, UserRound } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { readStoredSession, type TinnedSession } from "@/lib/auth";
+import { PaymentMethods, type PaymentMethodsHandle } from "@/components/PaymentMethods";
 import {
   buildStoreCartGroups,
   cartItemKey,
@@ -72,6 +73,8 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
   const [couponBusy, setCouponBusy] = useState(false);
   const [pendingCoupon, setPendingCoupon] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState("mollie");
+  const paymentRef = useRef<PaymentMethodsHandle>(null);
 
   useEffect(() => {
     const cart = readCart();
@@ -229,6 +232,19 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
     setError(null);
     setSubmitting(true);
 
+    // For an on-page card, turn the Mollie Components fields into a single-use token before
+    // creating the order. A token error (invalid card) stops here — no order is created.
+    let cardToken: string | undefined;
+    if (paymentMethod === "creditcard") {
+      const tokenResult = await paymentRef.current?.createToken();
+      if (tokenResult?.error) {
+        setError(tokenResult.error);
+        setSubmitting(false);
+        return;
+      }
+      cardToken = tokenResult?.token;
+    }
+
     try {
       const order: StoredOrder = await createCheckoutOrder({
         email: String(formData.get("email") ?? ""),
@@ -239,7 +255,8 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
         items: orderItems,
         selectedStoreSlugs: selectedGroups.map((group) => group.storeSlug),
         carrierSelections: effectiveCarrierSelections,
-        paymentMethod: "mollie",
+        paymentMethod,
+        cardToken,
         couponCode: appliedCoupon?.code
       }, session?.token);
 
@@ -406,9 +423,15 @@ export function CheckoutClient({ products }: { products: CartProduct[] }) {
               <CreditCard size={19} aria-hidden />
               <h2>Paiement</h2>
             </header>
-            <p className="field-help">
-              Vous serez redirigé vers le paiement sécurisé Mollie (carte, Bancontact…) pour finaliser votre commande.
-            </p>
+            <PaymentMethods
+              ref={paymentRef}
+              amountCents={totalCents}
+              currency={currency}
+              country={address.country}
+              locale={address.country === "FR" ? "fr_FR" : "fr_BE"}
+              value={paymentMethod}
+              onChange={setPaymentMethod}
+            />
             <label className="terms-row">
               <input type="checkbox" required defaultChecked />
               <span>J'accepte les conditions de vente et le traitement de la commande.</span>

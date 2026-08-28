@@ -87,7 +87,15 @@ export type CheckoutPayload = {
     carrierCode: string;
   }>;
   paymentMethod: string;
+  // Single-use Mollie Components token, set only for a card paid on-page.
+  cardToken?: string;
   couponCode?: string;
+};
+
+export type PaymentMethodOption = {
+  id: string;
+  description: string;
+  image: { size1x: string; size2x: string };
 };
 
 export type CouponValidation = {
@@ -218,6 +226,45 @@ export async function createCheckoutOrder(payload: CheckoutPayload, token?: stri
     },
     body: JSON.stringify(payload)
   });
+}
+
+export type PaymentMethodsResult = {
+  methods: PaymentMethodOption[];
+  // Public Mollie profile id (pfl_...) for embedding the card fields; null when unavailable.
+  profileId: string | null;
+  // Whether the Mollie API key is a test key — mollie.js must match.
+  testmode: boolean;
+};
+
+/**
+ * Payment methods Mollie has enabled for this cart amount and billing country, plus the
+ * account's public profile id (for the embedded card fields). Returns an empty result when
+ * the API isn't configured (mock mode) or Mollie is unreachable — the checkout form then
+ * falls back to the hosted-Mollie option.
+ */
+export async function fetchPaymentMethods(
+  amountCents: number,
+  country = "BE",
+  locale = "fr_BE"
+): Promise<PaymentMethodsResult> {
+  if (!apiUrl) return { methods: [], profileId: null, testmode: false };
+  const query = new URLSearchParams({
+    amount: String(Math.max(0, Math.round(amountCents))),
+    country,
+    locale
+  });
+  try {
+    const payload = await apiFetch<{ methods: PaymentMethodOption[]; profileId: string | null; testmode?: boolean }>(
+      `/payment-methods?${query.toString()}`
+    );
+    return {
+      methods: payload.methods ?? [],
+      profileId: payload.profileId ?? null,
+      testmode: payload.testmode ?? false
+    };
+  } catch {
+    return { methods: [], profileId: null, testmode: false };
+  }
 }
 
 export async function validateCoupon(code: string, subtotalCents: number): Promise<CouponValidation> {
